@@ -6,7 +6,7 @@ const int RETRO_HSV_MAX = 78;
 const int RETRO_VALUE_MIN = 100;
 const int RETRO_VALUE_MAX = 255;
 
-cv::Mat wml::VisionTracking::SetupVision(int CamPort, int FPS, int ResHeight, int ResWidth, int Exposure, std::string Name, bool RetroTrack) {
+cv::Mat CJ::VisionTracking::SetupVision(int CamPort, int FPS, int ResHeight, int ResWidth, int Exposure, std::string Name, bool RetroTrack) {
   if (RetroTrack == true){ Exposure = -100; }
   cam = Camera.cam.CamSetup(CamPort, FPS, ResHeight, ResWidth, Exposure, Name);
 
@@ -15,7 +15,7 @@ cv::Mat wml::VisionTracking::SetupVision(int CamPort, int FPS, int ResHeight, in
   return ImageSrc;
 }
 
-cv::Mat wml::VisionTracking::RetroTrack(cv::Mat Img, int ErosionSize, int DialationSize) {
+cv::Mat CJ::VisionTracking::RetroTrack(cv::Mat Img, int ErosionSize, int DialationSize) {
   if (Camera.cam.sink.GrabFrame(Img) != 0) {
     cv::cvtColor(Img, imgTracking, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
 
@@ -34,7 +34,7 @@ cv::Mat wml::VisionTracking::RetroTrack(cv::Mat Img, int ErosionSize, int Dialat
   return imgTracking;
 }
 
-cv::Mat wml::VisionTracking::CustomTrack(cv::Mat Img, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
+cv::Mat CJ::VisionTracking::CustomTrack(cv::Mat Img, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
   if (Camera.cam.sink.GrabFrame(Img) != 0) {
     cv::cvtColor(Img, imgTracking, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
 

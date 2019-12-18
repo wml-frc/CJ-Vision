@@ -13,7 +13,7 @@
 #include <cameraserver/CameraServer.h>
 #include <cscore.h>
 
-namespace wml {
+namespace CJ {
   struct VisionCamera {
 
     struct Camera {

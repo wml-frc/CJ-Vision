@@ -18,7 +18,7 @@
 #include <cameraserver/CameraServer.h>
 #include <cscore.h>
 
-namespace wml {
+namespace CJ {
   class VisionTracking {
     public:
       cv::Mat ImageSrc;
