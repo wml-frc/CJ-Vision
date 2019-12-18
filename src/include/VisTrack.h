@@ -21,26 +21,26 @@
 namespace CJ {
   class VisionTracking {
     public:
-      cv::Mat ImageSrc;
-      cv::Mat imgTracking;
+      //cv::Mat ImageSrc;
+      //cv::Mat imgTracking;
       cs::UsbCamera cam;
       
       /** 
        * Sets up vision using OpenCV & Camera Servers
        */
-      cv::Mat SetupVision(int CamPort, int FPS, int ResHeight, int ResWidth, int Exposure, std::string CamName, bool RetroTrack);
+      void SetupVision(cv::Mat *ImageImage , int CamPort, int FPS, int ResHeight, int ResWidth, int Exposure, std::string CamName, bool RetroTrack);
 
 
       /**
        * Track using retro reflective tape, Using low exposure and Green pixle filtering
        * Using the defaults for the colour spectrum and exposure settings.
        */
-      cv::Mat RetroTrack(cv::Mat Img, int ErosionSize, int DialationSize);
+      void RetroTrack(cv::Mat *OutputImage , cv::Mat InputImage, int ErosionSize, int DialationSize);
 
       /**
        * Track using your own adjusted settings for the colour spectrum and exposure
        */
-      cv::Mat CustomTrack(cv::Mat Img, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam);
+      void CustomTrack(cv::Mat *OutputImage, cv::Mat InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam);
 
       // Instances
       VisionCamera Camera;
