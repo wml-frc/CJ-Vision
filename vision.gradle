@@ -11,7 +11,7 @@ deploy {
       locations {
         // Change this if you've changed the target hostname, username or password.
         ssh {
-          address = 'wmlvision.local'
+          address = 'curtinvision.local'
           // address = '192.168.0.100'
           user = 'vision'
           password = 'wmlfrc'
@@ -113,4 +113,4 @@ model {
   }
 }
 
-task runVision(dependsOn: "simulatewmlFrcVision${wpi.platforms.desktop.capitalize()}DebugExecutable")
+task runVision(dependsOn: "simulateWmlFrcVision${wpi.platforms.desktop.capitalize()}DebugExecutable")
