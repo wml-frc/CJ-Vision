@@ -28,6 +28,7 @@ namespace CJ {
       //cv::Mat ImageSrc;
       //cv::Mat imgTracking;
       cs::UsbCamera cam;
+      cv::Mat *MatPtr;
 
 
       /** 

@@ -16,23 +16,22 @@ void CJ::VisionTracking::SetupVision(cv::Mat *ImageSrc, int CamPort, int FPS, in
 }
 
 void RetroTrackThread(cv::Mat *OutputImage, cv::Mat InputImage, int ErosionSize, int DialationSize) {
-  do {
-    cv::cvtColor(InputImage, *OutputImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
+  cv::cvtColor(InputImage, *OutputImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
 
-    // Keeps Only green pixles
-    cv::inRange(*OutputImage, cv::Scalar(RETRO_HSV_MIN, RETRO_VALUE_MIN, RETRO_VALUE_MIN), cv::Scalar(RETRO_HSV_MAX, RETRO_VALUE_MAX, RETRO_VALUE_MAX), *OutputImage);
+  // Keeps Only green pixles
+  cv::inRange(*OutputImage, cv::Scalar(RETRO_HSV_MIN, RETRO_VALUE_MIN, RETRO_VALUE_MIN), cv::Scalar(RETRO_HSV_MAX, RETRO_VALUE_MAX, RETRO_VALUE_MAX), *OutputImage);
 
-    // Removes pixles at a certain size, And dilates the image to get rid of gaps
-    if (ErosionSize > 0) {
-      cv::erode(*OutputImage, *OutputImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(ErosionSize, ErosionSize)));
-      cv::dilate(*OutputImage, *OutputImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(DialationSize, DialationSize)));
-    }
-  } while (true);
+  // Removes pixles at a certain size, And dilates the image to get rid of gaps
+  if (ErosionSize > 0) {
+    cv::erode(*OutputImage, *OutputImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(ErosionSize, ErosionSize)));
+    cv::dilate(*OutputImage, *OutputImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(DialationSize, DialationSize)));
+  }
 }
 
 void CJ::VisionTracking::RetroTrack(cv::Mat *OutputImage, cv::Mat InputImage, int ErosionSize, int DialationSize) {
   if (Camera.cam.sink.GrabFrame(InputImage) != 0) {
     std::thread RetroThread(RetroTrackThread, OutputImage, InputImage, ErosionSize, DialationSize);
+    RetroThread.join();
   } else {
     std::cout << "Error Getting Image (Function Retro Track)" << std::endl;
   }
