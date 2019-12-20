@@ -7,6 +7,7 @@ const int RETRO_VALUE_MIN = 100;
 const int RETRO_VALUE_MAX = 255;
 
 CJ::VisionTracking vision;
+cv::Mat LocalProcessImage;
 
 void CJ::VisionTracking::SetupVision(cv::Mat *ImageSrc, int CamPort, int FPS, int ResHeight, int ResWidth, int Exposure, std::string Name, bool RetroTrack) {
   if (RetroTrack == true){ Exposure = -100; }
@@ -15,42 +16,48 @@ void CJ::VisionTracking::SetupVision(cv::Mat *ImageSrc, int CamPort, int FPS, in
   *ImageSrc = Camera.cam.ImageReturn(cam, Name);
 }
 
-void RetroTrackThread(cv::Mat *OutputImage, cv::Mat InputImage, int ErosionSize, int DialationSize) {
-  cv::cvtColor(InputImage, *OutputImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
-
-  // Keeps Only green pixles
-  cv::inRange(*OutputImage, cv::Scalar(RETRO_HSV_MIN, RETRO_VALUE_MIN, RETRO_VALUE_MIN), cv::Scalar(RETRO_HSV_MAX, RETRO_VALUE_MAX, RETRO_VALUE_MAX), *OutputImage);
-
-  // Removes pixles at a certain size, And dilates the image to get rid of gaps
-  if (ErosionSize > 0) {
-    cv::erode(*OutputImage, *OutputImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(ErosionSize, ErosionSize)));
-    cv::dilate(*OutputImage, *OutputImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(DialationSize, DialationSize)));
-  }
-}
-
-void CJ::VisionTracking::RetroTrack(cv::Mat *OutputImage, cv::Mat InputImage, int ErosionSize, int DialationSize) {
-  if (Camera.cam.sink.GrabFrame(InputImage) != 0) {
-    std::thread RetroThread(RetroTrackThread, OutputImage, InputImage, ErosionSize, DialationSize);
-    RetroThread.join();
-  } else {
-    std::cout << "Error Getting Image (Function Retro Track)" << std::endl;
-  }
-}
-
-
-void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
-  if (Camera.cam.sink.GrabFrame(InputImage) != 0) {
-    cv::cvtColor(InputImage, *OutputImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
+void RetroTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int ErosionSize, int DialationSize) {
+  while (true) {
+    cv::cvtColor(*InputImage, LocalProcessImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
 
     // Keeps Only green pixles
-    cv::inRange(*OutputImage, cv::Scalar(HSVColourLowRange, ValueColourLowRange, ValueColourLowRange), cv::Scalar(HSVColourHighRange, ValueColourHighRange, ValueColourHighRange), *OutputImage);
-    
+    cv::inRange(LocalProcessImage, cv::Scalar(RETRO_HSV_MIN, RETRO_VALUE_MIN, RETRO_VALUE_MIN), cv::Scalar(RETRO_HSV_MAX, RETRO_VALUE_MAX, RETRO_VALUE_MAX), LocalProcessImage);
+
     // Removes pixles at a certain size, And dilates the image to get rid of gaps
     if (ErosionSize > 0) {
-      cv::erode(*OutputImage, *OutputImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(ErosionSize, ErosionSize)));
-      cv::dilate(*OutputImage, *OutputImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(DialationSize, DialationSize)));
+      cv::erode(LocalProcessImage, LocalProcessImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(ErosionSize, ErosionSize)));
+      cv::dilate(LocalProcessImage, LocalProcessImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(DialationSize, DialationSize)));
     }
-  } else {
-    std::cout << "Error Getting Image" << std::endl;
+    LocalProcessImage.copyTo(*OutputImage);
   }
+}
+
+void CJ::VisionTracking::RetroTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int ErosionSize, int DialationSize) {
+  while (Camera.cam.sink.GrabFrame(*InputImage) == 0) {
+    std::cout << "Can't Get Input Frame (Retro Track Thread)" << std::endl;
+  } 
+  std::thread RetroThread(RetroTrackThread, OutputImage, InputImage, ErosionSize, DialationSize);
+  RetroThread.detach();
+}
+
+void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
+  cv::cvtColor(*InputImage, LocalProcessImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
+
+  // Keeps Only green pixles
+  cv::inRange(LocalProcessImage, cv::Scalar(HSVColourLowRange, ValueColourLowRange, ValueColourLowRange), cv::Scalar(HSVColourHighRange, ValueColourHighRange, ValueColourHighRange), LocalProcessImage);
+  
+  // Removes pixles at a certain size, And dilates the image to get rid of gaps
+  if (ErosionSize > 0) {
+    cv::erode(LocalProcessImage, LocalProcessImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(ErosionSize, ErosionSize)));
+    cv::dilate(LocalProcessImage, LocalProcessImage, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(DialationSize, DialationSize)));
+  }
+  LocalProcessImage.copyTo(*OutputImage);
+}
+
+void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
+  while (Camera.cam.sink.GrabFrame(*InputImage) == 0) {
+    std::cout << "Can't Get Input Frame (Retro Track Thread)" << std::endl;
+  } 
+  std::thread CustomThread(CustomTrackThread, OutputImage, InputImage, ErosionSize, DialationSize);
+  CustomThread.detach();
 }

@@ -41,13 +41,13 @@ namespace CJ {
        * Track using retro reflective tape, Using low exposure and Green pixle filtering
        * Using the defaults for the colour spectrum and exposure settings.
        */
-      void RetroTrack(cv::Mat *OutputImage, cv::Mat InputImage, int ErosionSize, int DialationSize);
+      void RetroTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int ErosionSize, int DialationSize);
 
 
       /**
        * Track using your own adjusted settings for the colour spectrum and exposure
        */
-      void CustomTrack(cv::Mat *OutputImage, cv::Mat InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam);
+      void CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam);
 
 
       // Instances
