@@ -20,6 +20,6 @@ namespace CJ {
      * Displays Images passed to function on computer and coprocessor.
      * You can dissable the coprocessors display by `DisplayOnCoProcessor false` (This won't dissable the images being sent to network tables)
     */
-    void Display(cv::Mat *Image, std::string ImageName);
+    void Display(std::string ImageName, cv::Mat *Image);
   };
 } 
