@@ -25,10 +25,9 @@
 namespace CJ {
   class VisionTracking {
     public:
-      //cv::Mat ImageSrc;
-      //cv::Mat imgTracking;
       cs::UsbCamera cam;
       cv::Mat *MatPtr;
+      bool DisplayOnCoProcessor = true;
 
 
       /** 
@@ -49,10 +48,9 @@ namespace CJ {
        */
       void CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam);
 
-
       // Instances
       VisionCamera Camera;
-      VisionOutput Output;
       VisionProcessing Processing;
+      VisionOutput Output;
   };
 }

@@ -68,6 +68,5 @@ namespace CJ {
       void CircleDetect(cv::Mat img);
     };
     VisionDetectionType visionDetectionType;
-
   };
 }

@@ -1,11 +1,13 @@
-#include "VisionProcessingType.h"
+#include "VisTrack.h"
+
+CJ::VisionTracking visionProcessing;
 
 void CannyTrackThread(cv::Mat, int Threshold) {
-
+  //@todo
 }
-void CJ::VisionProcessing::VisionEdgeDetection::CannyTrack(cv::Mat img, int Threshold) {
-  std::thread CannyThread(CannyTrackThread, img, Threshold);
-  if (CannyThread.joinable()) {CannyThread.join();}
+void CJ::VisionProcessing::VisionEdgeDetection::CannyTrack(cv::Mat Image, int Threshold) {
+  std::thread CannyThread(CannyTrackThread, Image, Threshold);
+  CannyThread.detach();
 }
 
 void CJ::VisionProcessing::VisionEdgeDetection::ContourDetect(cv::Mat img) {

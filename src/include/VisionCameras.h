@@ -47,6 +47,5 @@ namespace CJ {
       //@todo
     };
     Kinect kinect;
-
   };
 }
