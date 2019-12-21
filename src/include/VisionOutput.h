@@ -15,19 +15,11 @@
 
 namespace CJ {
   struct VisionOutput {
-    struct ImageOutput {
-    
-      /**
-       * Outputs the Image to a window when running the program locally
-       */ 
-      void DesktopOutput(cv::Mat ProcessedImg);
 
-
-      /** 
-       * Outputs the Image to CS when running on Sub Processor
-       */
-      void RobotOutput(cv::Mat ProcessedImg);
-    };
-    ImageOutput imageOutput;
+    /**
+     * Displays Images passed to function on computer and coprocessor.
+     * You can dissable the coprocessors display by `DisplayOnCoProcessor false` (This won't dissable the images being sent to network tables)
+    */
+    void Display(cv::Mat *Image, std::string ImageName);
   };
-}
+} 
