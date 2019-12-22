@@ -29,7 +29,12 @@ namespace CJ {
       /**
        * Detect contours using point to point algorithms, And then stored within vectors
        */
-      void ContourDetect(cv::Mat *Image, int Threshold, int MaxVal);
+      void ContourDetect(cv::Mat *Image, cv::Mat *OutputImage, int Threshold, int MaxVal);
+
+      /**
+       * Detect Edges by thresholding the image.
+       */
+      void ThresholdImage(cv::Mat *Image, int ThreshMin, int ThreshMax);
 
       //@Todo, Allow a different edge track for on Rio services
     };

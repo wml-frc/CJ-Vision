@@ -57,9 +57,9 @@ void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourL
   }
 }
 
-void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
+void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize) {
   while (Camera.cam.sink.GrabFrame(*InputImage) == 0) {
-    std::cout << "Can't Get Input Frame (Retro Track Thread)" << std::endl;
+    std::cout << "Can't Get Input Frame (Custom Track Thread)" << std::endl;
   }
   std::thread CustomThread(CustomTrackThread, OutputImage, InputImage, HSVColourLowRange, HSVColourHighRange, ValueColourLowRange, ValueColourHighRange, CamExposure, ErosionSize, DialationSize, cam);
   CustomThread.detach();

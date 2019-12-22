@@ -15,25 +15,43 @@ void CJ::VisionProcessing::VisionEdgeDetection::CannyTrack(cv::Mat *Image, cv::M
   CannyThread.detach();
 }
 
-
-void ContourDetectThread(cv::Mat *Image, int Threshold, int MaxVal) {
-  cv::RNG rng(12345);
+void ThreshImageThreadFunction(cv::Mat *Image, int ThreshMin, int ThreshMax) {
   while (true) {
-    std::vector<std::vector<cv::Point> > contours;
-    std::vector<cv::Vec4i> hierarchy;
-    cv::threshold(*Image, *Image, Threshold, MaxVal, cv::THRESH_BINARY);
-    cv::findContours(*Image, contours, hierarchy, cv::RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+    cv::threshold(*Image, *Image, ThreshMin, ThreshMax, cv::THRESH_BINARY);
+  }
+}
+void CJ::VisionProcessing::VisionEdgeDetection::ThresholdImage(cv::Mat *Image, int ThreshMin, int ThreshMax) {
+  std::thread ThresholdImageThread(ThreshImageThreadFunction, Image, ThreshMin, ThreshMax);
+  ThresholdImageThread.detach();
+}
 
-    // draw contours onto image
-    *Image = cv::Mat::zeros(LocalProcessImage_Contours.size(), CV_8UC3);
-    for (int i = 0; i < contours.size(); i++) {
-      cv::Scalar color = cv::Scalar(rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255));
-      cv::drawContours(*Image, contours, i, color, 2, 8, hierarchy, 0, cv::Point());
+void ContourDetectThread(cv::Mat *Image, cv::Mat *OutputImage, int Threshold, int MaxVal) {
+  cv::RNG rng(12345);
+  std::vector<std::vector<cv::Point> > contours;
+  
+  while (true) {
+    cv::findContours(*Image, contours, cv::RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
+    std::vector<std::vector<cv::Point> > contours_poly(contours.size());
+    std::vector<cv::Rect> boundRect(contours.size());
+    std::vector<cv::Point2f> centers(contours.size());
+    std::vector<float> radius( contours.size());
+    for (size_t i = 0; i < contours.size(); i++) {
+      cv::approxPolyDP(contours[i], contours_poly[i], 3, true);
+      boundRect[i] = cv::boundingRect(contours_poly[i]);
+      cv::minEnclosingCircle(contours_poly[i], centers[i], radius[i]);
+    }
+    *OutputImage = cv::Mat::zeros(Image->size(), CV_8UC3);
+    for( size_t i = 0; i< contours.size(); i++ )
+    {
+        cv::Scalar color = cv::Scalar( rng.uniform(0, 256), rng.uniform(0,256), rng.uniform(0,256) );
+        drawContours( *OutputImage, contours_poly, (int)i, color );
+        rectangle( *OutputImage, boundRect[i].tl(), boundRect[i].br(), color, 2 );
+        circle( *OutputImage, centers[i], (int)radius[i], color, 2 );
     }
   }
 }
-void CJ::VisionProcessing::VisionEdgeDetection::ContourDetect(cv::Mat *Image, int Threshold, int MaxVal) {
-  std::thread ContourThread(ContourDetectThread, Image, Threshold, MaxVal);
+void CJ::VisionProcessing::VisionEdgeDetection::ContourDetect(cv::Mat *Image, cv::Mat *OutputImage, int Threshold, int MaxVal) {
+  std::thread ContourThread(ContourDetectThread, Image, OutputImage, Threshold, MaxVal);
   ContourThread.detach();
 }
 
