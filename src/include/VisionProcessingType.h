@@ -29,7 +29,12 @@ namespace CJ {
       /**
        * Detect contours using point to point algorithms, And then stored within vectors
        */
-      void ContourDetect(cv::Mat *Image, int Threshold, int MaxVal);
+      void ContourDetect(cv::Mat *Image, std::vector<std::vector<cv::Point> > *Contours);
+
+      /**
+       * Detect Edges by thresholding the image.
+       */
+      void ThresholdImage(cv::Mat *Image, int ThreshMin, int ThreshMax);
 
       //@Todo, Allow a different edge track for on Rio services
     };
@@ -44,9 +49,10 @@ namespace CJ {
       void GetHull(cv::Mat *Image);
 
       /**
-       * Draws a bounding box around an object
+       * Draws a bounding box around an object & pushes back x,y center of box
+       * Also sends x,y values to network tables
        */
-      void BoundingBox(cv::Mat *Image);
+      void BoundingBox(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY);
     };
     VisionHullGeneration visionHullGeneration;
 
