@@ -5,7 +5,7 @@ You may be wondering why it's called CJ Vision... well it was either that or Pot
 
 ## Setting up Vision in your own project
 
-- First you will need to install the submodule to your root directory. Navigate to your root dir and install via `git submodule add https://github.com/CJBuchel/CJ-Vision/`. 
+- First you will need to install the submodule to your root directory. Navigate to your root dir and install via `git submodule add https://github.com/wml-frc/CJ-Vision/`. 
 
 - If you havent already, you will need to make a vision dir, e.g `4788/src/coprocessor/`. You can build it how you like, Similar to your teamCode folder. With a cpp and include file. (For an example you can view https://github.com/CJBuchel/2020CodeBase/tree/CJ-Patch1/4788/src/coprocessor for more detail)
 
