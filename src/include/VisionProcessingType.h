@@ -52,7 +52,7 @@ namespace CJ {
        * Draws a bounding box around an object & pushes back x,y center of box
        * Also sends x,y values to network tables
        */
-      void BoundingBox(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY);
+      void BoundingBox(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY, double Contour_Size_Threshold);
     };
     VisionHullGeneration visionHullGeneration;
 
