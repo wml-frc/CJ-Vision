@@ -49,3 +49,64 @@ Also due to a bug in Camera servers the exposure will not change when running lo
 
 once complete just do a quick test run using the command `.\gradlew runVision` in your root dir.
 If all goes well it will build perfectly fine and a window should open up. If it fails to build, you might need to recheck if the project has been setup correctly.
+
+- The next common function to use is the main tracking functions, These will filter out specific colours using the HSV spectrum. The most basic of the two is the RetroTrack() function. You can use this as an easy mode if you are tracking Retro tape, and the colour green. You can then display the image using the included display function in a while loop. (Unlike every other function, the `Display()` function is not threaded. There are a few reasons for this, issues with the image being passed into a thread to be displayed via networktables and whatnot. But the main reason is your code needs to do something while the other threads are running. And in most cases the final product being displayed is mostly used to keep the main thread from ending in opencv.)
+
+Below is an example using the RetroTrack and Display function.
+```cpp
+int ResWidth = 640, ResHeight = 480;
+
+cv::Mat Image; // Origin Image
+cv::Mat TrackingImage; // Imaged After it has been procesed
+
+void curtin_frc_vision::run() {
+
+	vision.SetupVision(&Image, 1, 60, ResHeight, ResWidth, 30, "TestCam", true);
+	vision.RetroTrack(&TrackingImage, &Image, 2, 2);
+
+	while (true) {
+		if (vision.Camera.cam.sink.GrabFrame(Image) != 0) {
+			vision.Output.Display("Origin Image", &Image);
+			vision.Output.Display("Green Filtered Image", &TrackingImage);
+		}
+	}
+}
+```
+
+If your not wanting to track retro tape. Or your wanting some extra options. You can replace `RetroTrack()` with `CustomTrack`. which will give you the options to change the colour detection range and the value range, cam exposure and the erosion/dilation values.
+e.g for detecting green with low exposure
+```cpp
+vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, -100, 2, 2);
+```
+
+After the basics are complete you can use some of the provided processing types currently available to speed up your vision tracking. e.g
+
+```cpp
+#include "vision.h"
+#include <iostream>
+
+float height_offset, width_offset;
+int ResWidth = 640, ResHeight = 480;
+
+double cx, cy;
+
+cv::Mat Image; // Origin Image
+cv::Mat ProcessingOutput; // Image in processing
+cv::Mat TrackingImage; // Imaged After it has been procesed
+
+void curtin_frc_vision::run() {
+
+	vision.SetupVision(&Image, 1, 60, ResHeight, ResWidth, 30, "TestCam", true);
+	vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, 100, 2, 2);
+	cv::waitKey(1000);
+	vision.Processing.visionHullGeneration.BoundingBox(&TrackingImage, &ProcessingOutput, &cx, &cy, 10);
+	while (true) {
+		if (vision.Camera.cam.sink.GrabFrame(Image) != 0) {
+			vision.Output.Display("Origin Image", &Image);
+			vision.Output.Display("Green Filtered Image", &TrackingImage);
+			vision.Output.Display("Contour Detection", &ProcessingOutput);
+		}
+	}
+}
+```
+The above tracks green pixles at a regular exposure then detects and draws bounding boxes on everything that is green. It then sends the center values through network tables. So you can use it on your roborio and shuffleboard for autonomous.
