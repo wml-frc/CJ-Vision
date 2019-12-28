@@ -27,7 +27,7 @@ sources.cpp {
 
 ## Using the library
 
-- The code is still in it's prototype stage and will have improvements done over time. Also note this code is not designed to replace your own vision tracking code. Merely make the process a little easier. It's recommeded that you look through OpenCV's documentation before using this library. `https://opencv.org/`
+- The code is still in it's prototype stage and will have improvements done over time. Also note this code is not designed to replace your own vision tracking code. Merely make the process a little easier. It's recommeded that you look through OpenCV's documentation before using this library. https://opencv.org/
 
 - That all being said. The library comes with a few functions to start your project off with. To begin grabing the image from a camera you will need to add a cv::Mat as your origin image. Then create an instance of CJVision and call the Setup Function. 
 ```cpp
@@ -42,7 +42,7 @@ void curtin_frc_vision::run() {
 ```
 The `SetupVision()` function sets up vision using the Input Image, the port number of the camera, reselution both Height and Width, The Exposure of the camera, the name of the camera and a true or false if you are tracking Retroreflective tape.
 
-Note that while running the vision simulation on your computer, you will most likely need an external webcam plugged in via usb. Built in webcams sometimes doesn't work. Which is why often the port number will need to be 1 to connect to the second webcam. And for tinkerboards and Pi's you will most likely need to change the port number from 4 onwards. as ports 0-3 are taken by other processes.
+Note that while running the vision simulation on your computer, you will most likely need an external webcam plugged in via usb. Built in webcams sometimes don't work. Which is why often the port number will need to be 1 to connect to the second webcam. And for tinkerboards and Pi's you will most likely need to change the port number from 4 onwards. as ports 0-3 are taken by other processes.
 
 Also due to a bug in Camera servers the exposure will not change when running locally. Most of your colour testing and contour detection can still be done locally. But it's a good idea to test on your coprocessor a few times to get the final result.
 
@@ -73,7 +73,7 @@ void curtin_frc_vision::run() {
 }
 ```
 
-If your not wanting to track retro tape. Or your wanting some extra options. You can replace `RetroTrack()` with `CustomTrack`. which will give you the options to change the colour detection range and the value range, cam exposure and the erosion/dilation values.
+If your not wanting to track retro tape. Or your wanting some extra options. You can replace `RetroTrack()` with `CustomTrack()`. which will give you the options to change the colour detection range and the value range, cam exposure and the erosion/dilation values.
 e.g for detecting green with low exposure
 ```cpp
 vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, -100, 2, 2);
@@ -96,7 +96,7 @@ cv::Mat TrackingImage; // Imaged After it has been procesed
 
 void curtin_frc_vision::run() {
 
-	vision.SetupVision(&Image, 1, 60, ResHeight, ResWidth, 30, "TestCam", true);
+	vision.SetupVision(&Image, 1, 60, ResHeight, ResWidth, 30, "TestCam", false);
 	vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, 100, 2, 2);
 	cv::waitKey(1000);
 	vision.Processing.visionHullGeneration.BoundingBox(&TrackingImage, &ProcessingOutput, &cx, &cy, 10);
