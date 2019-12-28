@@ -65,8 +65,7 @@ void CJ::VisionProcessing::VisionHullGeneration::GetHull(cv::Mat *Image) {
   HullThread.detach();
 }
 
-void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY) {
-  double contour_length_threshold = 10;
+void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY, double Contour_Size_Threshold) {
   cv::Point CenterOfBoundingBox;
   cv::Point TextOffset;
 
@@ -85,7 +84,7 @@ void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, do
     std::stringstream cy;
 
     for (std::vector<std::vector<cv::Point> >::iterator it = contours.begin(); it!=contours.end(); ) {
-      if (it->size()<contour_length_threshold)
+      if (it->size() < Contour_Size_Threshold)
         it=contours.erase(it);
       else
         ++it;
@@ -114,8 +113,8 @@ void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, do
     cv::putText(*OutputImage, "xy(" + cx.str() + "," + cy.str() + ")", TextOffset, cv::FONT_HERSHEY_COMPLEX_SMALL, 1, cv::Scalar(0,30,255));
   }
 }
-void CJ::VisionProcessing::VisionHullGeneration::BoundingBox(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY) {
-  std::thread BoundingThread(BoundingBoxThread, Image, OutputImage, CenterX, CenterY);
+void CJ::VisionProcessing::VisionHullGeneration::BoundingBox(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY, double Contour_Size_Threshold) {
+  std::thread BoundingThread(BoundingBoxThread, Image, OutputImage, CenterX, CenterY, Contour_Size_Threshold);
   BoundingThread.detach();
 }
 
