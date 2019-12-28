@@ -66,7 +66,7 @@ void CJ::VisionProcessing::VisionHullGeneration::GetHull(cv::Mat *Image) {
 }
 
 void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY) {
-  //double cx, cy;
+  double contour_length_threshold = 10;
   cv::Point CenterOfBoundingBox;
   cv::Point TextOffset;
 
@@ -84,6 +84,13 @@ void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, do
     std::stringstream cx;
     std::stringstream cy;
 
+    for (std::vector<std::vector<cv::Point> >::iterator it = contours.begin(); it!=contours.end(); ) {
+      if (it->size()<contour_length_threshold)
+        it=contours.erase(it);
+      else
+        ++it;
+    }
+
     for (size_t i = 0; i < contours.size(); i++) {
       convexHull( contours[i], hull[i] );
       cv::approxPolyDP(contours[i], contours_poly[i], 3, true);
@@ -95,13 +102,12 @@ void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, do
       cx << *CenterX;
       cy << *CenterY;
     }
-    //*OutputImage = cv::Mat::zeros(Image->size(), CV_8UC3);
+
     cv::cvtColor(*Image, *OutputImage, CV_GRAY2RGB);
     TextOffset = CenterOfBoundingBox + cv::Point(-25, 25);
     for( size_t i = 0; i< contours.size(); i++ ) {
       cv::Scalar color = cv::Scalar( rng.uniform(0,256), rng.uniform(0,256), rng.uniform(0,256));
       drawContours(*OutputImage, contours_poly, (int)i, color );
-      //drawContours(*OutputImage, contours, (int)i, color );
       rectangle(*OutputImage, boundRect[i].tl(), boundRect[i].br(), color, 2 );
     }
     circle(*OutputImage, CenterOfBoundingBox, 3, cv::Scalar(0, 30, 255));
