@@ -12,7 +12,7 @@ You may be wondering why it's called CJ Vision... well it was either that or Pot
 - Then you will need to apply the libraries `vision.gradle` with your own `src/coprocessor/build.gradle` and just add `apply from: rootProject.file('CJ-Vision/vision.gradle')` assuming you have placed the submodule in it's default location in the root dir. If you havent you will need to change the previous lines, and also edit the `CJ-Vision/vision.gradle` file inside the library. 
 
 Change the following lines if you have placed the vision Library somewhere else.
-```
+```gradle
 sources.cpp {
         source {
           srcDir 'src/main/cpp'
