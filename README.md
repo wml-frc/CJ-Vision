@@ -44,7 +44,7 @@ The `SetupVision()` function sets up vision using the Input Image, the port numb
 
 Note that while running the vision simulation on your computer, you will most likely need an external webcam plugged in via usb. Built in webcams sometimes don't work. Which is why often the port number will need to be 1 to connect to the second webcam. And for tinkerboards and Pi's you will most likely need to change the port number from 4 onwards. as ports 0-3 are taken by other processes.
 
-Also due to a bug in Camera servers the exposure will not change when running locally. Most of your colour testing and contour detection can still be done locally. But it's a good idea to test on your coprocessor a few times to get the final result.
+Also due to a bug in Camera Servers, the exposure of the camera will not change when running locally. Most of your colour testing and contour detection can still be done locally. But it's a good idea to test on your coprocessor a few times to get the final result.
 
 
 once complete just do a quick test run using the command `.\gradlew runVision` in your root dir.
@@ -54,6 +54,8 @@ If all goes well it will build perfectly fine and a window should open up. If it
 
 Below is an example using the RetroTrack and Display function.
 ```cpp
+CJ::VisionTracking vision;
+
 int ResWidth = 640, ResHeight = 480;
 
 cv::Mat Image; // Origin Image
@@ -85,7 +87,8 @@ After the basics are complete you can use some of the provided processing types 
 #include "vision.h"
 #include <iostream>
 
-float height_offset, width_offset;
+CJ::VisionTracking vision;
+
 int ResWidth = 640, ResHeight = 480;
 
 double cx, cy;
@@ -97,7 +100,7 @@ cv::Mat TrackingImage; // Imaged After it has been procesed
 void curtin_frc_vision::run() {
 
 	vision.SetupVision(&Image, 1, 60, ResHeight, ResWidth, 30, "TestCam", false);
-	vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, 100, 2, 2);
+	vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, 50, 2, 2);
 	cv::waitKey(1000);
 	vision.Processing.visionHullGeneration.BoundingBox(&TrackingImage, &ProcessingOutput, &cx, &cy, 10);
 	while (true) {
@@ -126,7 +129,10 @@ The above tracks green pixles at a regular exposure then detects and draws bound
     - Hostname: `linaro-alip`, Username: `linaro`, Password: `linaro`
   - Raspberry Pi:
     - Hostname: `raspberrypi`, Username: `pi`, Password: `raspberry`
+
+	- If your unable to ssh into the coprocessor for any reason. Like for instance, you exist at Curtin University where the network is encypted beyond the point of frustration. You can connect the tinkerboard up as a regular PC with a keyboard, mouse, screen & of course ethernet. Then login via that way and run the below command in the terminal.
 ### 4. Run the following command:
   - `wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap.sh?raw=1 | bash`
 ### 5. Your Coprocessor will now restart
-### 6. Run `./gradlew :vision:deploy` (`./gradlew :vision:deploy -Praspberry` for the Raspberry Pi) to deploy your code!
+### 6. Run `./gradlew :4788:src:coprocessor:deploy` (`./gradlew :4788:src:coprocessor:deploy -Praspberry` for the Raspberry Pi) to deploy your code!
+- `./gradlew :4788:src:coprocessor:` is our config, please read through your gradle files to use your own variation as mentioned in the project setup.
