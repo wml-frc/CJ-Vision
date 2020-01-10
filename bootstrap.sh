@@ -12,11 +12,11 @@ sudo adduser vision --disabled-password --gecos ""
 sudo adduser vision sudo
 sudo adduser vision video
 sudo adduser vision audio
-echo "vision:wmlfrc" | sudo chpasswd
+echo "vision:CJfrc" | sudo chpasswd
 
 # Set hostname, user and password
-echo wmlvision | sudo tee /etc/hostname
-echo "127.0.0.1 wmlvision" | sudo tee /etc/hosts
+echo CJvision | sudo tee /etc/hostname
+echo "127.0.0.1 CJvision" | sudo tee /etc/hosts
 
 # Set Team #
 echo Team Number?
