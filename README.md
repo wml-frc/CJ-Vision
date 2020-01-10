@@ -126,13 +126,16 @@ The above tracks green pixles at a regular exposure then detects and draws bound
   - On Mac/Linux, use `ssh username@hostname`
   - On Windows, download [puTTY](https://the.earth.li/~sgtatham/putty/latest/w64/putty-64bit-0.70-installer.msi) and use that.
   - Tinkerboard:
-    - Hostname: `linaro-alip`, Username: `linaro`, Password: `linaro`
+    - Hostname: `tinkerboard`, Username: `linaro`, Password: `linaro`
   - Raspberry Pi:
     - Hostname: `raspberrypi`, Username: `pi`, Password: `raspberry`
 
 	- If your unable to ssh into the coprocessor for any reason. Like for instance, you exist at Curtin University where the network is encypted beyond the point of frustration. You can connect the tinkerboard up as a regular PC with a keyboard, mouse, screen & of course ethernet. Then login via that way and run the below command in the terminal.
 ### 4. Run the following command:
   - `wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap.sh?raw=1 | bash`
+  - When prompted input team number.
 ### 5. Your Coprocessor will now restart
-### 6. Run `./gradlew :4788:src:coprocessor:deploy` (`./gradlew :4788:src:coprocessor:deploy -Praspberry` for the Raspberry Pi) to deploy your code!
+### 6. Changes made
+  - Hostname is now: `CJVision`, Username: `vision`, Password: `CJfrc`
+### 7. Run `./gradlew :TEAMNUMBER:src:coprocessor:deploy` (`./gradlew :TEAMNUMBER:src:coprocessor:deploy -Praspberry` for the Raspberry Pi) to deploy your code!
 - `./gradlew :4788:src:coprocessor:` is our config, please read through your gradle files to use your own variation as mentioned in the project setup.

@@ -11,8 +11,8 @@ deploy {
       locations {
         // Change this if you've changed the target hostname, username or password.
         ssh {
-          address = 'CJvision.local'
-          // address = '192.168.0.100'
+          address = 'CJvision'
+          //address = '192.167.178.144'
           user = 'vision'
           password = 'CJfrc'
         }
@@ -29,12 +29,12 @@ deploy {
       targetPlatform = project.hasProperty('raspberry') ? wpi.platforms.raspbian : TinkerboardPlugin.tinkerboardPlatform
 
       targets << 'coprocessor'
-      component = 'CJFrcVision'
+      component = 'cjFrcVision'
       buildType = 'debug'
 
       predeploy << { execute('sudo systemctl stop vision || true') }
       // Make sure we can run our program!
-      postdeploy << { execute('chmod +x CJFrcVision'); execute('sudo systemctl restart vision || true') }
+      postdeploy << { execute('chmod +x cjFrcVision'); execute('sudo systemctl restart vision || true') }
     }
 
     // Some extra stuff for our vision program. Includes system configs, also!
