@@ -139,3 +139,5 @@ The above tracks green pixles at a regular exposure then detects and draws bound
   - Hostname is now: `CJVision`, Username: `vision`, Password: `CJfrc`
 ### 7. Run `./gradlew :TEAMNUMBER:src:coprocessor:deploy` (`./gradlew :TEAMNUMBER:src:coprocessor:deploy -Praspberry` for the Raspberry Pi) to deploy your code!
 - `./gradlew :4788:src:coprocessor:` is our config, please read through your gradle files to use your own variation as mentioned in the project setup.
+
+<sub><sup>readme written by [@CJBuchel](https://github.com/CJBuchel), 10/01/20</sup></sub>
