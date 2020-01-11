@@ -1,0 +1,11 @@
+[Unit]
+Description=CJ-Vision FRC Vision Service
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/home/vision/cjFrcVision
+WorkingDirectory=/home/vision
+
+[Install]
+WantedBy=multi-user.target

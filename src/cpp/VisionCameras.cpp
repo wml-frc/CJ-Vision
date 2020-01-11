@@ -2,13 +2,13 @@
 
 
 cs::UsbCamera CJ::VisionCamera::Camera::CamSetup(int Port,  double FPS,  int ResHeight,  int ResWidth,  int Exposure,  std::string CamName) {
-  cs::UsbCamera cam{CamName, Port};
+  cs::UsbCamera cam{CamName, 4};
   cam.SetResolution(ResWidth, ResHeight);
   sink.SetSource(cam);
 
   cam.SetExposureManual(Exposure);
   cam.SetFPS(FPS);
-  
+  std::this_thread::sleep_for(std::chrono::seconds(2));
   return cam;
 }
 

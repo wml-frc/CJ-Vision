@@ -15,6 +15,8 @@ void CJ::VisionTracking::SetupVision(cv::Mat *ImageSrc, int CamPort, int FPS, in
   cam = Camera.cam.CamSetup(CamPort, FPS, ResHeight, ResWidth, Exposure, Name);
 
   *ImageSrc = Camera.cam.ImageReturn(cam, Name);
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+  std::cout << "CJ-Vision Setup Complete" << std::endl;
 }
 
 void RetroTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int ErosionSize, int DialationSize) {
@@ -63,4 +65,6 @@ void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, 
   }
   std::thread CustomThread(CustomTrackThread, OutputImage, InputImage, HSVColourLowRange, HSVColourHighRange, ValueColourLowRange, ValueColourHighRange, CamExposure, ErosionSize, DialationSize, cam);
   CustomThread.detach();
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+  std::cout << "Custom Tracking Setup Complete" << std::endl;
 }

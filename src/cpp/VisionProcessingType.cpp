@@ -116,6 +116,8 @@ void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, do
 void CJ::VisionProcessing::VisionHullGeneration::BoundingBox(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY, double Contour_Size_Threshold) {
   std::thread BoundingThread(BoundingBoxThread, Image, OutputImage, CenterX, CenterY, Contour_Size_Threshold);
   BoundingThread.detach();
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+  std::cout << "Bounding Box Setup Complete" << std::endl;
 }
 
 void CJ::VisionProcessing::VisionDetectionType::CentroidDetect(cv::Mat *Image) {

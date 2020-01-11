@@ -40,7 +40,7 @@ deploy {
     // Some extra stuff for our vision program. Includes system configs, also!
     fileTreeArtifact('visionResources') {
       targets << 'coprocessor'
-      files = fileTree(dir: 'src/main/resources')
+      files = rootProject.fileTree(dir: 'CJ-Vision/src/resources')
 
       // Install the systemd service. This makes our vision run on startup!
       postdeploy << { 
