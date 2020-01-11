@@ -141,6 +141,7 @@ The above tracks green pixles at a regular exposure then detects and draws bound
   - If you have an error in the vision tracking coprocessor side. run `sudo journalctl -u vision`
 ### 7. Run `./gradlew :TEAMNUMBER:src:coprocessor:deploy` (`./gradlew :TEAMNUMBER:src:coprocessor:deploy -Praspberry` for the Raspberry Pi) to deploy your code!
 - `./gradlew :4788:src:coprocessor:` is our config, please read through your gradle files to use your own variation as mentioned in the project setup.
-- Something to note is the line endings under `resources/run.sh` in CJ-Vision must be `LF` not `CRLF`. It shouldn't be anyway if it's been pulled from github. But just check if the code is crashing on the tinkerboard/Pi. Happy Tracking :)
+- If you have the code deployed to the coprocessor, you can either view it in network tables (if setup), Or you can put `CJVision:1181` to see the camera output. and increment by 1 depending on how many cameras you have.
+- Something to note is the line endings under `src/resources/run.sh` in CJ-Vision must be `LF` not `CRLF`. It shouldn't be anyway if it's been pulled from github. But just check if the code is crashing on the tinkerboard/Pi. Happy Tracking :)
 
 <sub><sup>readme written by [@CJBuchel](https://github.com/CJBuchel), 11/01/20</sup></sub>

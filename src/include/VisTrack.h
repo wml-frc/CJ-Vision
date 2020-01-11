@@ -14,6 +14,7 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <condition_variable>
 
 // Tracking Libraires
 #include "VisionCameras.h"

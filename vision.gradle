@@ -11,8 +11,8 @@ deploy {
       locations {
         // Change this if you've changed the target hostname, username or password.
         ssh {
-          address = 'CJvision'
-          //address = '192.167.178.144'
+          // address = 'CJvision'
+          address = '192.168.178.144'
           user = 'vision'
           password = 'CJfrc'
         }
@@ -40,7 +40,7 @@ deploy {
     // Some extra stuff for our vision program. Includes system configs, also!
     fileTreeArtifact('visionResources') {
       targets << 'coprocessor'
-      files = fileTree(dir: 'src/main/resources')
+      files = rootProject.fileTree(dir: 'src/resources')
 
       // Install the systemd service. This makes our vision run on startup!
       postdeploy << { 
