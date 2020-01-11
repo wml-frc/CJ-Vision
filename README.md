@@ -117,11 +117,11 @@ The above tracks green pixles at a regular exposure then detects and draws bound
 
 # Getting started with your coprocessor
 ### 1. Grab the image:
-  - [Tinkerboard Image](http://dlcdnet.asus.com/pub/ASUS/mb/Linux/Tinker_Board_2GB/20170417-tinker-board-linaro-stretch-alip-v1.8.zip)
+  - [Tinkerboard Image](https://dlcdnets.asus.com/pub/ASUS/mb/Linux/Tinker_Board_2GB/20190821-tinker-board-linaro-stretch-alip-v2.0.11.img.zip)
   - [Raspberry Pi](https://downloads.raspberrypi.org/raspbian_lite_latest)
 ### 2. Flash the image onto a microsd card using etcher: https://etcher.io/
   - You will need to grab the .img file from the zip. The .img file is what you give to etcher.
-  - After complete, insert the microSD card and startup the coprocessor. It may take a minute or two.
+  - After complete, insert the microSD card and startup the coprocessor. It may take a minute or two
 ### 3. SSH into the Coprocessor
   - On Mac/Linux, use `ssh username@hostname`
   - On Windows, download [puTTY](https://the.earth.li/~sgtatham/putty/latest/w64/putty-64bit-0.70-installer.msi) and use that.
@@ -137,7 +137,10 @@ The above tracks green pixles at a regular exposure then detects and draws bound
 ### 5. Your Coprocessor will now restart
 ### 6. Changes made
   - Hostname is now: `CJVision`, Username: `vision`, Password: `CJfrc`
+  - If you want to check the status of your vision tracking. ssh into the coprocessor and run `systemctl vision`.
+  - If you have an error in the vision tracking coprocessor side. run `sudo journalctl -u vision`
 ### 7. Run `./gradlew :TEAMNUMBER:src:coprocessor:deploy` (`./gradlew :TEAMNUMBER:src:coprocessor:deploy -Praspberry` for the Raspberry Pi) to deploy your code!
 - `./gradlew :4788:src:coprocessor:` is our config, please read through your gradle files to use your own variation as mentioned in the project setup.
+- Something to note is the line endings under `resources/run.sh` in CJ-Vision must be `LF` not `CRLF`. It shouldn't be anyway if it's been pulled from github. But just check if the code is crashing on the tinkerboard/Pi. Happy Tracking :)
 
-<sub><sup>readme written by [@CJBuchel](https://github.com/CJBuchel), 10/01/20</sup></sub>
+<sub><sup>readme written by [@CJBuchel](https://github.com/CJBuchel), 11/01/20</sup></sub>
