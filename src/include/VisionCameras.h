@@ -28,7 +28,7 @@ namespace CJ {
       /** 
        * Sets up the camera up using a Port, Framerate, Height, Width, Exposure level and the Name of the Camera e.g Front
        */
-      cs::UsbCamera CamSetup(int Port, double FPS, int ResHeight, int ResWidth, int Exposure, std::string CamName);
+      cs::UsbCamera CamSetup(int Port, double FPS, int ResHeight, int ResWidth, int Exposure, std::string CamName, bool RetroTrack);
 
       /**
        * Get's the Video Mode from the camera
