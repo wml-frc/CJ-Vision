@@ -1,10 +1,10 @@
 [Unit]
-Description=Curtin FRC Vision Service
+Description=CJ-Vision FRC Vision Service
 
 [Service]
 Type=simple
 Restart=always
-ExecStart=/home/vision/run.sh
+ExecStart=/home/vision/cjFrcVision
 WorkingDirectory=/home/vision
 
 [Install]
