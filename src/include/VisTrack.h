@@ -46,9 +46,9 @@ namespace CJ {
 
 
       /**
-       * Track using your own adjusted settings for the colour spectrum and exposure
+       * Track using your own adjusted settings for the colour spectrum using HSV
        */
-      void CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize);
+      void CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int ErosionSize, int DialationSize);
 
       // Instances
       VisionCamera Camera;

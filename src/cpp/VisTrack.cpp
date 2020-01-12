@@ -47,7 +47,7 @@ void CJ::VisionTracking::RetroTrack(cv::Mat *OutputImage, cv::Mat *InputImage, i
   RetroThread.detach();
 }
 
-void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
+void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
   while (true) {
     cv::cvtColor(*InputImage, LocalProcessImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
 
@@ -63,11 +63,11 @@ void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourL
   }
 }
 
-void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int CamExposure, int ErosionSize, int DialationSize) {
+void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int ErosionSize, int DialationSize) {
   while (Camera.cam.sink.GrabFrame(*InputImage) == 0) {
     std::cout << "Can't Get Input Frame (Custom Track Thread)" << std::endl;
   }
-  std::thread CustomThread(CustomTrackThread, OutputImage, InputImage, HSVColourLowRange, HSVColourHighRange, ValueColourLowRange, ValueColourHighRange, CamExposure, ErosionSize, DialationSize, cam);
+  std::thread CustomThread(CustomTrackThread, OutputImage, InputImage, HSVColourLowRange, HSVColourHighRange, ValueColourLowRange, ValueColourHighRange, ErosionSize, DialationSize, cam);
   CustomThread.detach();
   std::this_thread::sleep_for(std::chrono::seconds(2));
   std::cout << "Custom Tracking Setup Complete" << std::endl;
