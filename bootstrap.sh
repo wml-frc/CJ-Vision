@@ -12,10 +12,10 @@ sudo apt-get install -y avahi-daemon libnss-mdns v4l-utils imagemagick
 
 # These arn't technically required. But just in case you use a function not supported from windows to linux
 sudo apt-get install libqt4-dev
+sudo apt autoremove
 sudo apt-get install libgtk2.0-dev
+sudo apt autoremove
 sudo apt-get install libopencv-*
-
-# Auto Removes old libraries
 sudo apt autoremove
 
 
