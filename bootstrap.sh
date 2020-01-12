@@ -7,11 +7,6 @@ echo "%sudo ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
 sudo apt-get update
 sudo apt-get install -y avahi-daemon libnss-mdns v4l-utils imagemagick
 
-# These two arn't technically required. But just in case you use a function not supported from windows to linux
-sudo apt-get install libqt4-dev
-sudo apt-get install libgtk2.0-dev
-sudo apt-get install libopencv-*
-
 # Add vision user and password
 sudo adduser vision --disabled-password --gecos ""
 sudo adduser vision sudo
