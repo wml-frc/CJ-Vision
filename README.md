@@ -90,7 +90,7 @@ void curtin_frc_vision::run() {
 If your not wanting to track retro tape. Or your wanting some extra options. You can replace `RetroTrack()` with `CustomTrack()`. which will give you the options to change the colour detection range and the value range, cam exposure and the erosion/dilation values.
 e.g for detecting green with low exposure
 ```cpp
-vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, -100, 2, 2);
+vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, 2, 2);
 ```
 
 After the basics are complete you can use some of the provided processing types currently available to speed up your vision tracking. e.g
