@@ -44,7 +44,7 @@ The `SetupVision()` function sets up vision using the Input Image, the port numb
 
 Note that while running the vision simulation on your computer, you will most likely need an external webcam plugged in via usb. Built in webcams sometimes don't work. Which is why often the port number will need to be 1 to connect to the second webcam. And for tinkerboards and Pi's you will most likely need to change the port number from 4 onwards. as ports 0-3 are taken by other processes.
 
-Also due to a bug in Camera Servers, the exposure of the camera will not change when running locally. Most of your colour testing and contour detection can still be done locally. But it's a good idea to test on your coprocessor a few times to get the final result.
+Also due to a bug in Camera Servers, the exposure of the camera will not change when running locally. There is also a bug that i'm aware of where the exposure won't change when deployed to a tinkerboard. I'm working on a fix for this. In the meantime you may have to use `system("v4l2-ctl -d /dev/video4 --set-ctrl=exposure_absolute=1");` But i'm unaware if Pi's have the same issue. You may find the deafault exposure set in SetupVision() works for you. (The code is still in it's prototype stage) 
 
 
 once complete just do a quick test run using the command `.\gradlew runVision` in your root dir.
@@ -66,10 +66,22 @@ void curtin_frc_vision::run() {
 	vision.SetupVision(&Image, 1, 60, ResHeight, ResWidth, 30, "TestCam", true);
 	vision.RetroTrack(&TrackingImage, &Image, 2, 2);
 
+  // __DESKTOP__ is defined in vision.gradle. So don't worry, it's available to use
+  #ifdef __DESKTOP__ 
+	std::cout << "Exposure Might be dissabled on local machine" << std::endl;
+	#else
+	system("v4l2-ctl -d /dev/video4 --set-ctrl=exposure_absolute=1");
+	#endif
+
+
 	while (true) {
 		if (vision.Camera.cam.sink.GrabFrame(Image) != 0) {
+      #ifdef __DESKTOP__
 			vision.Output.Display("Origin Image", &Image);
 			vision.Output.Display("Green Filtered Image", &TrackingImage);
+			#else 
+			vision.Camera.cam.output.PutFrame(TrackingImage);
+			#endif
 		}
 	}
 }
@@ -101,13 +113,24 @@ void curtin_frc_vision::run() {
 
 	vision.SetupVision(&Image, 1, 60, ResHeight, ResWidth, 30, "TestCam", false);
 	vision.CustomTrack(&TrackingImage, &Image, 30, 70, 50, 255, 50, 2, 2);
-	cv::waitKey(1000);
 	vision.Processing.visionHullGeneration.BoundingBox(&TrackingImage, &ProcessingOutput, &cx, &cy, 10);
+
+  #ifdef __DESKTOP__ 
+	std::cout << "Exposure Might be dissabled on local machine" << std::endl;
+	#else
+	system("v4l2-ctl -d /dev/video4 --set-ctrl=exposure_absolute=1");
+	#endif
+
 	while (true) {
 		if (vision.Camera.cam.sink.GrabFrame(Image) != 0) {
+			// Vision Outputing
+			#ifdef __DESKTOP__
 			vision.Output.Display("Origin Image", &Image);
 			vision.Output.Display("Green Filtered Image", &TrackingImage);
 			vision.Output.Display("Contour Detection", &ProcessingOutput);
+			#else 
+			vision.Camera.cam.output.PutFrame(Image);
+			#endif
 		}
 	}
 }
@@ -138,7 +161,7 @@ The above tracks green pixles at a regular exposure then detects and draws bound
 ### 6. Changes made
   - Hostname is now: `CJVision`, Username: `vision`, Password: `CJfrc`
   - If you want to check the status of your vision tracking. ssh into the coprocessor and run `systemctl vision`.
-  - If you have an error in the vision tracking coprocessor side. run `sudo journalctl -u vision`
+  - If you have an error in the vision tracking coprocessor side. run `sudo journalctl -u vision` to view output.
 ### 7. Run `./gradlew :TEAMNUMBER:src:coprocessor:deploy` (`./gradlew :TEAMNUMBER:src:coprocessor:deploy -Praspberry` for the Raspberry Pi) to deploy your code!
 - `./gradlew :4788:src:coprocessor:` is our config, please read through your gradle files to use your own variation as mentioned in the project setup.
 - If you have the code deployed to the coprocessor, you can either view it in network tables (if setup), Or you can put `CJVision:1181` to see the camera output. and increment by 1 depending on how many cameras you have.
