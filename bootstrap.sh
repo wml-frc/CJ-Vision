@@ -12,6 +12,11 @@ sudo apt-get install libqt4-dev
 sudo apt-get install libgtk2.0-dev
 sudo apt-get install libopencv-*
 
+# Auto Removes old libraries
+sudo apt autoremove
+
+
+
 # Add vision user and password
 sudo adduser vision --disabled-password --gecos ""
 sudo adduser vision sudo
