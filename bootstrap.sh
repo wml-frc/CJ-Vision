@@ -3,13 +3,9 @@
 # Enable password-less sudo for everyone
 echo "%sudo ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
 
-# Auto Removes old libraries
-sudo apt autoremove
-
 # Install required packages
 sudo apt-get update
 sudo apt-get install -y avahi-daemon libnss-mdns v4l-utils imagemagick
-
 
 # Add vision user and password
 sudo adduser vision --disabled-password --gecos ""
