@@ -42,9 +42,9 @@ void curtin_frc_vision::run() {
 ```
 The `SetupVision()` function sets up vision using the Input Image, the port number of the camera, reselution both Height and Width, The Exposure of the camera, the name of the camera and a true or false if you are tracking Retroreflective tape.
 
-Note that while running the vision simulation on your computer, you will most likely need an external webcam plugged in via usb. Built in webcams sometimes don't work. Which is why often the port number will need to be 1 to connect to the second webcam. And for tinkerboards and Pi's you will most likely need to change the port number from 4 onwards. as ports 0-3 are taken by other processes.
+Note that while running the vision simulation on your computer, you will most likely need an external webcam plugged in via usb. Built in webcams sometimes don't work. Which is why often the port number will need to be 1 to connect to the second webcam. And for tinkerboards you will most likely need to change the port number from 4 onwards. as ports 0-3 are taken by other processes. Raspberry Pi 4's have been tested and work from 0 onwards. But users may vary. Use `ls -ltrh /dev/video*` to see all available usb devices connected.
 
-Also due to a bug in Camera Servers, the exposure of the camera will not change when running locally. There is also a bug that i'm aware of where the exposure won't change when deployed to a tinkerboard. I'm working on a fix for this. In the meantime you may have to use `system("v4l2-ctl -d /dev/video4 --set-ctrl=exposure_absolute=1");` But i'm unaware if Pi's have the same issue. You may find the deafault exposure set in SetupVision() works for you. (The code is still in it's prototype stage) 
+Also due to a bug in Camera Servers, the exposure of the camera will not change when running locally. There is also a bug that i'm aware of where the exposure won't change when deployed to a tinkerboard. I'm working on a fix for this. In the meantime you may have to use `system("v4l2-ctl -d /dev/video4 --set-ctrl=exposure_absolute=1");` (Change `video4` to whatever port you have) But i'm unaware if Pi's have the same issue. You may find the deafault exposure set in SetupVision() works for you. (The code is still in it's prototype stage) 
 
 
 once complete just do a quick test run using the command `.\gradlew runVision` in your root dir.
