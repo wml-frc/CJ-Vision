@@ -2,7 +2,7 @@
 
 
 cs::UsbCamera CJ::VisionCamera::Camera::CamSetup(int Port,  double FPS,  int ResHeight,  int ResWidth,  int Exposure,  std::string CamName, bool RetroTrack) {
-  cs::UsbCamera cam{CamName, 4};
+  cs::UsbCamera cam{CamName, Port};
   cam.SetResolution(ResWidth, ResHeight);
   std::cout << "Reselotion: " << ResWidth << "," << ResHeight << std::endl;
   sink.SetSource(cam);
