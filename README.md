@@ -3,6 +3,9 @@ Vision Tracking Sub-module library, To make vision tracking easier for other tea
 
 You may be wondering why it's called CJ Vision... well it was either that or Potato Vision, and i prefer self promotion. hehehehe
 
+# 2020 UPDATE NO LONGER SUPPORTS TINKERBOARDS
+- Because of the recent update to wpi, they have switched from using gradle 5.0, to 6/7. Because of this a lot of the gradle syntax has changed. Including the plugin for the tinkerboard that was built last year. It's still possible to build and deploy using a tinkerboard. However you may need to have a seperate codebase dedicated to your vision tracking running the 2019 version instead. I'm working on a new plugin with the newer gradle syntax. But for the moment if you want to have your vision programming in the same location as your robot code. You will have to use a pi instead.
+
 ## Setting up Vision in your own project
 
 - First you will need to install the submodule to your root directory. Navigate to your root dir and install via `git submodule add https://github.com/wml-frc/CJ-Vision/`. 
