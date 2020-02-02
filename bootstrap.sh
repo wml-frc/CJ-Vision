@@ -18,6 +18,10 @@ echo "vision:CJfrc" | sudo chpasswd
 echo CJvision | sudo tee /etc/hostname
 echo "127.0.0.1 CJvision" | sudo tee /etc/hosts
 
+# Turn off WiFi and HDMI for power consumption
+sudo tvservice --off
+sudo ifconfig wlan0 down
+
 # Set Team #
 echo Team Number?
 read teamnum < /dev/tty
