@@ -1,6 +1,6 @@
 #include "VisTrack.h"
 
-CJ::VisionTracking visionProcessing;
+// CJ::VisionTracking visionProcessing;
 
 cv::Mat LocalProcessImage_Contours;
 cv::Mat LocalProcessImage_Hull;
@@ -114,9 +114,12 @@ void BoundingBoxThread(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, do
   }
 }
 void CJ::VisionProcessing::VisionHullGeneration::BoundingBox(cv::Mat *Image, cv::Mat *OutputImage, double *CenterX, double *CenterY, double Contour_Size_Threshold) {
+  while (Image->empty()) {
+    std::cout << "Can't Get Input Frame (Bounding Box Thread" << std::endl;
+  }
+  std::cout << "Input Frame Found (Bounding Box Thread" << std::endl;
   std::thread BoundingThread(BoundingBoxThread, Image, OutputImage, CenterX, CenterY, Contour_Size_Threshold);
   BoundingThread.detach();
-  std::this_thread::sleep_for(std::chrono::seconds(5));
   std::cout << "Bounding Box Thread Setup Complete" << std::endl;
 }
 

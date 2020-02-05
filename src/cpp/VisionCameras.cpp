@@ -10,7 +10,7 @@ cs::UsbCamera CJ::VisionCamera::Camera::CamSetup(int Port,  double FPS,  int Res
   cam.SetExposureManual(Exposure);
 
   cam.SetFPS(FPS);
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  // std::this_thread::sleep_for(std::chrono::seconds(2));
   return cam;
 }
 
@@ -22,10 +22,7 @@ auto CJ::VisionCamera::Camera::VideoMode(cs::UsbCamera cam, std::string camName)
 }
 
 cv::Mat CJ::VisionCamera::Camera::ImageReturn(cs::UsbCamera cam, std::string camName) {
-  if (CamStartUp) {
-    video_modeStartup = CJ::VisionCamera::Camera::VideoMode(cam, camName);
-    CamStartUp = false;
-  }
+  video_modeStartup = CJ::VisionCamera::Camera::VideoMode(cam, camName);
   auto video_mode = video_modeStartup;
   cv::Mat ImageSrc{video_mode.height, video_mode.width, CV_8UC3};
   std::cout << "Image Return Complete" << std::endl;
