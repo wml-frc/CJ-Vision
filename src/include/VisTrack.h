@@ -19,7 +19,6 @@
 // Tracking Libraires
 #include "VisionCameras.h"
 #include "VisionProcessingType.h"
-#include "VisionOutput.h"
 
 #include <cameraserver/CameraServer.h>
 #include <cscore.h>
@@ -27,6 +26,7 @@
 namespace CJ {
   class VisionTracking {
     public:
+      cv::Mat DisplayImg;
       cs::UsbCamera cam;
       cv::Mat *MatPtr;
       bool DisplayOnCoProcessor = true;
@@ -50,9 +50,14 @@ namespace CJ {
        */
       void CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int ErosionSize, int DialationSize);
 
+      /**
+       * Displays Images passed to function on computer and coprocessor.
+       * You can dissable the coprocessors display by `DisplayOnCoProcessor false` (This won't dissable the images being sent to network tables)
+       */
+      void Display(std::string ImageName, cv::Mat *Image);
+
       // Instances
       VisionCamera Camera;
       VisionProcessing Processing;
-      VisionOutput Output;
   };
 }
