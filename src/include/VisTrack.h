@@ -30,7 +30,7 @@ namespace CJ {
       cs::UsbCamera cam;
       cv::Mat *MatPtr;
       bool DisplayOnCoProcessor = true;
-
+      bool ImageReturnGood = false;
 
       /** 
        * Sets up vision using OpenCV & Camera Servers

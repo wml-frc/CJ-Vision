@@ -6,7 +6,6 @@ const int RETRO_HSV_MAX = 78;
 const int RETRO_VALUE_MIN = 100;
 const int RETRO_VALUE_MAX = 255;
 
-CJ::VisionTracking visionVisTrack;
 cv::Mat LocalProcessImage;
 bool IsDisplayable = false;
 
@@ -17,9 +16,7 @@ void CJ::VisionTracking::SetupVision(cv::Mat *ImageSrc, int CamPort, int FPS, in
   std::cout << "CJ-Vision Setup Called" << std::endl;
   if (RetroTrack == true){ Exposure = -100; }
   cam = Camera.cam.CamSetup(CamPort, FPS, ResHeight, ResWidth, Exposure, Name, RetroTrack);
-
   *ImageSrc = Camera.cam.ImageReturn(cam, Name);
-  std::this_thread::sleep_for(std::chrono::seconds(2));
   std::cout << "Setup Complete" << std::endl;
 }
 
@@ -43,7 +40,12 @@ void CJ::VisionTracking::RetroTrack(cv::Mat *OutputImage, cv::Mat *InputImage, i
   while (Camera.cam.sink.GrabFrame(*InputImage) == 0) {
     std::cout << "Can't Get Input Frame (Retro Track Thread)" << std::endl;
   } 
+  std::cout << "Input Frame Found (Retro Track Thread)" << std::endl;
   std::thread RetroThread(RetroTrackThread, OutputImage, InputImage, ErosionSize, DialationSize);
+  while (Camera.cam.sink.GrabFrame(*OutputImage) == 0) {
+    std::cout << "Can't Get Output Frame (Retro Track Thread)" << std::endl;
+  }
+  std::cout << "Output Frame Found (Retro Track Thread)" << std::endl;
   RetroThread.detach();
 }
 
@@ -67,8 +69,8 @@ void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, 
   while (Camera.cam.sink.GrabFrame(*InputImage) == 0) {
     std::cout << "Can't Get Input Frame (Custom Track Thread)" << std::endl;
   }
+  std::cout << "Input Frame Found (Custom Thread)" << std::endl;
   std::thread CustomThread(CustomTrackThread, OutputImage, InputImage, HSVColourLowRange, HSVColourHighRange, ValueColourLowRange, ValueColourHighRange, ErosionSize, DialationSize, cam);
   CustomThread.detach();
-  std::this_thread::sleep_for(std::chrono::seconds(2));
   std::cout << "Custom Tracking Setup Complete" << std::endl;
 }
