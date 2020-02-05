@@ -1,7 +1,7 @@
 apply plugin: 'cpp'
 apply plugin: 'google-test-test-suite'
 apply plugin: 'edu.wpi.first.GradleRIO'
-apply plugin: TinkerboardPlugin
+// apply plugin: TinkerboardPlugin
 toolchainsPlugin.withRaspbian()
 
 deploy {
@@ -26,7 +26,7 @@ deploy {
 
   artifacts {
     nativeArtifact('vision') {
-      targetPlatform = project.hasProperty('raspberry') ? wpi.platforms.raspbian : TinkerboardPlugin.tinkerboardPlatform
+      targetPlatform = project.hasProperty('raspberry') ? wpi.platforms.raspbian : //TinkerboardPlugin.tinkerboardPlatform
 
       targets << 'coprocessor'
       component = 'cjFrcVision'
@@ -84,7 +84,7 @@ model {
     cjFrcVision(NativeExecutableSpec) {
       targetPlatform wpi.platforms.desktop
       targetPlatform wpi.platforms.raspbian
-      targetPlatform TinkerboardPlugin.tinkerboardPlatform
+      //targetPlatform TinkerboardPlugin.tinkerboardPlatform
 
       sources.cpp {
         source {
@@ -103,12 +103,14 @@ model {
           if (targetPlatform.operatingSystem.isLinux()) {
             linker.args << '-lusb-1.0'
           }
-        } else if (targetPlatform.name == TinkerboardPlugin.tinkerboardPlatform) {
-          linker.args << '-pthread'
-        }
+        } //else if (targetPlatform.name == TinkerboardPlugin.tinkerboardPlatform) {
+        //   linker.args << '-pthread'
+        // }
       }
 
-      useLibrary(it, 'opencv', 'cameraserver', 'cscore', 'ntcore', 'wpiutil')
+      //useLibrary(it, 'opencv', 'cameraserver', 'cscore', 'ntcore', 'wpiutil')
+      wpi.deps.wpilib(it)
+      wpi.deps.googleTest(it)
       wpi.deps.vendor.cpp(it)
     }
   }
