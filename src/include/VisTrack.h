@@ -19,7 +19,6 @@
 // Tracking Libraires
 #include "VisionCameras.h"
 #include "VisionProcessingType.h"
-#include "VisionOutput.h"
 
 #include <cameraserver/CameraServer.h>
 #include <cscore.h>
