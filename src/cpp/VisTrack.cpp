@@ -47,12 +47,12 @@ void CJ::VisionTracking::RetroTrack(cv::Mat *OutputImage, cv::Mat *InputImage, i
   RetroThread.detach();
 }
 
-void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
+void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HColourLowRange, int HColourHighRange, int SColourLowRange, int SColourHighRange, int VColourLowRange, int VColourHighRange, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
   while (true) {
     cv::cvtColor(*InputImage, LocalProcessImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
 
     // Keeps Only green pixles
-    cv::inRange(LocalProcessImage, cv::Scalar(HSVColourLowRange, ValueColourLowRange, ValueColourLowRange), cv::Scalar(HSVColourHighRange, ValueColourHighRange, ValueColourHighRange), LocalProcessImage);
+    cv::inRange(LocalProcessImage, cv::Scalar(HColourLowRange, SColourLowRange, VColourLowRange), cv::Scalar(HColourHighRange, SColourHighRange, VColourHighRange), LocalProcessImage);
     
     // Removes pixles at a certain size, And dilates the image to get rid of gaps
     if (ErosionSize > 0) {
