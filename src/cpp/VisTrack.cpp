@@ -1,10 +1,14 @@
 #include "VisTrack.h"
 
-const int RETRO_HSV_MIN = 35;
-const int RETRO_HSV_MAX = 78;
 
-const int RETRO_VALUE_MIN = 100;
-const int RETRO_VALUE_MAX = 255;
+const int RETRO_H_MIN = 50;
+const int RETRO_H_MAX = 70;
+
+const int RETRO_S_MIN = 250;
+const int RETRO_S_MAX = 255;
+
+const int RETRO_V_MIN = 30;
+const int RETRO_V_MAX = 255;
 
 cv::Mat LocalProcessImage;
 bool IsDisplayable = false;
@@ -25,7 +29,7 @@ void RetroTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int ErosionSize
     cv::cvtColor(*InputImage, LocalProcessImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
 
     // Keeps Only green pixles
-    cv::inRange(LocalProcessImage, cv::Scalar(RETRO_HSV_MIN, RETRO_VALUE_MIN, RETRO_VALUE_MIN), cv::Scalar(RETRO_HSV_MAX, RETRO_VALUE_MAX, RETRO_VALUE_MAX), LocalProcessImage);
+    cv::inRange(LocalProcessImage, cv::Scalar(RETRO_H_MIN, RETRO_S_MIN, RETRO_V_MIN), cv::Scalar(RETRO_H_MAX, RETRO_S_MAX, RETRO_V_MAX), LocalProcessImage);
 
     // Removes pixles at a certain size, And dilates the image to get rid of gaps
     if (ErosionSize > 0) {
@@ -49,12 +53,12 @@ void CJ::VisionTracking::RetroTrack(cv::Mat *OutputImage, cv::Mat *InputImage, i
   RetroThread.detach();
 }
 
-void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
+void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HColourLowRange, int HColourHighRange, int SColourLowRange, int SColourHighRange, int VColourLowRange, int VColourHighRange, int ErosionSize, int DialationSize, cs::UsbCamera cam) {
   while (true) {
     cv::cvtColor(*InputImage, LocalProcessImage, cv::COLOR_BGR2HSV); // Uses HSV Spectrum
 
     // Keeps Only green pixles
-    cv::inRange(LocalProcessImage, cv::Scalar(HSVColourLowRange, ValueColourLowRange, ValueColourLowRange), cv::Scalar(HSVColourHighRange, ValueColourHighRange, ValueColourHighRange), LocalProcessImage);
+    cv::inRange(LocalProcessImage, cv::Scalar(HColourLowRange, SColourLowRange, VColourLowRange), cv::Scalar(HColourHighRange, SColourHighRange, VColourHighRange), LocalProcessImage);
     
     // Removes pixles at a certain size, And dilates the image to get rid of gaps
     if (ErosionSize > 0) {
@@ -65,12 +69,12 @@ void CustomTrackThread(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourL
   }
 }
 
-void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int ErosionSize, int DialationSize) {
+void CJ::VisionTracking::CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HColourLowRange, int HColourHighRange, int SColourLowRange, int SColourHighRange, int VColourLowRange, int VColourHighRange, int ErosionSize, int DialationSize) {
   while (Camera.cam.sink.GrabFrame(*InputImage) == 0) {
     std::cout << "Can't Get Input Frame (Custom Track Thread)" << std::endl;
   }
   std::cout << "Input Frame Found (Custom Thread)" << std::endl;
-  std::thread CustomThread(CustomTrackThread, OutputImage, InputImage, HSVColourLowRange, HSVColourHighRange, ValueColourLowRange, ValueColourHighRange, ErosionSize, DialationSize, cam);
+  std::thread CustomThread(CustomTrackThread, OutputImage, InputImage, HColourLowRange, HColourHighRange, SColourLowRange, SColourHighRange, VColourLowRange, VColourHighRange,  ErosionSize, DialationSize, cam);
   CustomThread.detach();
   std::cout << "Custom Tracking Setup Complete" << std::endl;
 }
