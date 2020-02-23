@@ -48,7 +48,7 @@ namespace CJ {
       /**
        * Track using your own adjusted settings for the colour spectrum using HSV
        */
-      void CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HSVColourLowRange, int HSVColourHighRange, int ValueColourLowRange, int ValueColourHighRange, int ErosionSize, int DialationSize);
+      void CustomTrack(cv::Mat *OutputImage, cv::Mat *InputImage, int HColourLowRange, int HColourHighRange, int SColourLowRange, int SColourHighRange, int VColourLowRange, int VColourHighRange, int ErosionSize, int DialationSize);
 
       /**
        * Displays Images passed to function on computer and coprocessor.
