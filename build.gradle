@@ -1,9 +1,17 @@
 apply plugin: 'cpp'
 apply plugin: 'google-test-test-suite'
 apply plugin: 'edu.wpi.first.GradleRIO'
-apply plugin: 'com.google.osdetector'
 
-toolchainsPlugin.withRaspbian()
+// Root Control
+def root
+if (project.findProperty('cjVisionRoot') != null) {
+  root = project.findProperty('cjVisionRoot')
+} else {
+  root = rootProject.file('CJ-Vision')
+}
+
+println "root: ${root}"
+apply from: "${root}/toolchains.gradle"
 
 deploy {
   targets {
@@ -11,7 +19,7 @@ deploy {
       directory = '/home/vision'
       maxChannels = 1
       timeout = 4
-      failOnMissing = true
+      failOnMissing = false
 
       locations {
         ssh {
@@ -95,11 +103,11 @@ model {
       sources.cpp {
         source {
           srcDir 'src/main/cpp'
-          srcDir rootProject.file('CJ-Vision/src/cpp')
+          srcDir "${root}/src/cpp"
         }
         exportedHeaders {
           srcDir 'src/main/include'
-          srcDir rootProject.file('CJ-Vision/src/include')
+          srcDir "${root}/src/include"
         }
       }
 
@@ -118,18 +126,6 @@ model {
       wpi.deps.wpilib(it)
       wpi.deps.googleTest(it)
       wpi.deps.vendor.cpp(it)
-    }
-  }
-}
-
-task osInfo {
-  description 'Show information about the operating system'
-  doLast {
-    println "OS:              ${osdetector.os}"
-    println "Arch:            ${osdetector.arch}"
-    if (osdetector.os == "linux") {
-      println "Release ID:      ${osdetector.release.id}"
-      println "Release Version: ${osdetector.release.version}"
     }
   }
 }
