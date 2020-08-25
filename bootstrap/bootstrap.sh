@@ -14,6 +14,9 @@ sudo apt-get install -y libv4l-dev v4l-utils
 sudo modprobe bcm2835-v4l2
 sudo apt-get install -y libatlas-base-dev gfortran
 
+# Install OpenCV
+sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/2.0/bootstrap/openCV.sh?raw=1 | bash
+
 
 # Add vision user and password
 sudo adduser vision --disabled-password --gecos ""
