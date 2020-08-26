@@ -4,8 +4,8 @@
 #include <thread>
 
 // Camera Servers
-#include <cameraserver/CameraServer.h>
-#include <cscore.h>
+// #include <cameraserver/CameraServer.h>
+// #include <cscore.h>
 
 // CJ Vision
 #include "ImageContainer.h"
