@@ -10,8 +10,12 @@ CFLAGS =
 OPENCV = `pkg-config opencv --cflags --libs`
 LIBS = $(OPENCV)
 
+MKDIR = mkdir -p
+OUTDIR = build
+
 all: 
-	$(CC) $(CFLAGS) -o $(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS)
+	$(MKDIR) $(OUTDIR)
+	$(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS)
 
 clean:
 	rm -rf output

@@ -76,7 +76,7 @@ task runVision(type:Exec) {
   dependsOn buildVision
 
   description "Run Vision Locally with webcam to test"
-  workingDir "src/"
+  workingDir "src/build"
 
   commandLine './cjVision'
 }
