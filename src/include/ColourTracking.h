@@ -1,7 +1,7 @@
 #ifndef COLOUR_TRACKING_H
 #define COLOUR_TRACKING_H
 
-#include "cvHeaders.h"
+#include "cjHeaders.h"
 
 namespace CJ {
   class ColourTracking {

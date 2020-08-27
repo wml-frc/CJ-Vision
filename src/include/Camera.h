@@ -1,9 +1,10 @@
-// #ifndef CAMERA_H
-// #define CAMERA_H
+#ifndef CAMERA_H
+#define CAMERA_H
 
-#include "cvHeaders.h"
+#include "cjHeaders.h"
 #include "ImageContainer.h"
 #include <iostream>
+#include <thread>
 
 namespace CJ {
 
@@ -11,6 +12,7 @@ namespace CJ {
    public:
     struct cameraConfig {
       int CamPort = 0;
+      int apiID = cv::CAP_ANY;
       int FPS = 30;
       int ResHeight = 480;
       int ResWidth = 640;
@@ -27,15 +29,11 @@ namespace CJ {
     /**
      * Set up camera (Size, Exposure & Name)
      */
-    static void camSetup(Cam *cam);
+    static void camSetup(Image *image, Cam *cam);
 
-    /**
-     * Get video mode of camera
-     */
-    auto getVideoMode();
 
    private:
-    cv::Mat imageReturn();
+    static void capture(Image *image, Cam *cam);
   };
 }
-// #endif
+#endif

@@ -15,7 +15,6 @@ deploy {
       locations {
         ssh {
           address = 'CJvision.local'
-          // address = '192.168.178.246'
           user = 'vision'
           password = 'CJfrc'
           ipv6 = false

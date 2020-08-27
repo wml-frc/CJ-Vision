@@ -37,15 +37,26 @@
     //     std::cerr << "ERROR! blank image\n";
     //   }
     // }
+    CJ::Core::init();
 
     CJ::Camera::Cam cam;
+    cam.config.CamName = "Brutal Camera";
+    cam.config.Exposure = 100;
+
     CJ::Image image;
 
     CJ::Core core;
-    core.setupVision(&image, &cam);
 
-    while (true) {
-      std::cout << "Biggus Dickus" << std::endl;
+    core.setupVision(&image, &cam);
+    
+    cv::waitKey(3000);
+    while (PROG::PROG_RUNNING()) {
+      if (image.image.empty()) {
+        std::cout << "Empty image display" << std::endl;
+      } else {
+        cv::imshow(cam.config.CamName, image.image);
+      }
+      cv::waitKey(30);
     }
     return 0;
   }

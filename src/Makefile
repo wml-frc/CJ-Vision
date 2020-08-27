@@ -5,13 +5,14 @@ PROG = cjVision
 ENTRY = cpp/entry/main.cpp
 CPP = cpp/*.cpp
 HEADERS = -Iinclude
-CFLAGS = 
+CFLAGS = -pthread
 
+# Some weird ju ju happened now i have a bunch (Should be pkg-config opencv)
 OPENCV = `pkg-config opencv --cflags --libs`
 OPENCV2 = `pkg-config opencv2 --cflags --libs`
-OPENCV2 = `pkg-config opencv3 --cflags --libs`
+OPENCV3 = `pkg-config opencv3 --cflags --libs`
 OPENCV4 = `pkg-config opencv4 --cflags --libs`
-LIBS = $(OPENCV) $(OPENCV2) $(OPENCV3) $(OPENCV4)
+LIBS = $(OPENCV)
 
 MKDIR = mkdir -p
 OUTDIR = build

@@ -1,7 +1,7 @@
 #ifndef CONTOURS_H
 #define CONTOURS_H
 
-#include "cvHeaders.h"
+#include "cjHeaders.h"
 
 namespace CJ {
   class Contours {

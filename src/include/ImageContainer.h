@@ -1,7 +1,7 @@
 #ifndef IMAGE_CONTAINER_H
 #define IMAGE_CONTAINER_H
 
-#include "cvHeaders.h"
+#include "cjHeaders.h"
 
 namespace CJ {
   struct Image {

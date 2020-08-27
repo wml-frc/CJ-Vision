@@ -1,7 +1,7 @@
 #ifndef HULL_GENERATION_H
 #define HULL_GENERATION_H
 
-#include "cvHeaders.h"
+#include "cjHeaders.h"
 
 namespace CJ {
   class HullGeneration {
