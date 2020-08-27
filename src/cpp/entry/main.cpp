@@ -6,23 +6,31 @@
   #include <opencv2/videoio.hpp>
   #include <iostream>
   #include <stdio.h>
-  int main(int argc, char** argv) {
-    cv::Mat image;
-    cv::VideoCapture cam;
-    cam.open(0);
 
-    while(!cam.isOpened()) {
-      std::cout << "Failed to get image" << std::endl;
+
+
+  int main(int argc, char** argv) {
+    std::cout << "Program starting" << std::endl;
+    cv::Mat image;
+    cv::VideoCapture cap;
+
+    int deviceId = 0;
+    int apiID = cv::CAP_ANY;
+
+    cap.open(deviceId, apiID);
+
+    if (!cap.isOpened()) {
+      std::cerr << "ERROR! Unable to open camera\n";
+      return -1;
     }
 
+    std::cout << "Grabbing image" << std::endl;
+
     for (;;) {
-      cam.read(image);
+      cap.read(image);
+
       if (image.empty()) {
-        std::cout << "blank image grabbed" << std::endl;
-      } else {
-        cv::imshow("Image", image);
-        if (cvWaitKey(5) >= 0)
-          break;
+        std::cerr << "ERROR! blank image\n";
       }
     }
     return 0;

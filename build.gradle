@@ -35,7 +35,7 @@ deploy {
       }
 
       postdeploy << {
-        execute('make')
+        execute('make all')
         execute('chmod +x cjVision')
         execute('sudo systemctl restart vision ||true')
       }

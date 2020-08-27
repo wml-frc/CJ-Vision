@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/home/vision/cjVision $(cat /home/vision/team 2>/dev/null || echo 0)
+/home/vision/build/cjVision $(cat /home/vision/team 2>/dev/null || echo 0)

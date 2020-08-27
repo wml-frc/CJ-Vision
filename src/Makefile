@@ -18,4 +18,4 @@ all:
 	$(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS)
 
 clean:
-	rm -rf output
+	rm -rf $(OUTDIR)/cjVision
