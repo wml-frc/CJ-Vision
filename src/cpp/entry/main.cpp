@@ -9,13 +9,14 @@
 
     CJ::Camera::Cam cam;
     cam.config.CamName = "Debug Cam";
-    cam.config.Exposure = 50;
+    cam.config.Exposure = -100;
 
     CJ::Image image;
     image.name = "Debug Image";
 
     CJ::Core core;
 
+    std::cout << "Exposure: " << cam.config.Exposure << std::endl;
     core.setupVision(&image, &cam);
     
     while (PROG::PROG_RUNNING()) {

@@ -18,7 +18,6 @@ namespace CJ {
 
     cam->cap.set(cv::CAP_PROP_FRAME_HEIGHT, cam->config.ResHeight);
     cam->cap.set(cv::CAP_PROP_FRAME_WIDTH, cam->config.ResWidth);
-
     std::thread capture_t(capture, image, cam);
     capture_t.detach();
   }
