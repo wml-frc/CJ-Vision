@@ -25,8 +25,8 @@ namespace CJ {
 
   void Camera::capture(Image *image, Cam *cam) {
     while (PROG::THREADS_RUNNING()) {
-      cam->cap.read(image->image);
-      if (image->image.empty()) {
+      cam->cap.read(image->data);
+      if (image->data.empty()) {
         PROG::set_PROG_RUNNING(false);
       }
     }

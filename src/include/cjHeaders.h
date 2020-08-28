@@ -2,7 +2,6 @@
 #define cjHEADERS_H
 
 class PROG {
-
  private:
   // MAIN PROG
   static bool PROG_RUNNING_b;

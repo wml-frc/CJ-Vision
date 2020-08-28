@@ -5,7 +5,8 @@
 
 namespace CJ {
   struct Image {
-    cv::Mat image;
+    cv::Mat data;
+    std::string name = " ";
     std::vector<std::vector<cv::Point>> contours;
   };
 }

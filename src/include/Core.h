@@ -2,6 +2,7 @@
 #include "ImageContainer.h"
 #include "ColourTracking.h"
 #include "Camera.h"
+#include "Output.h"
 
 namespace CJ {
   class Core {

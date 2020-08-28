@@ -1,5 +1,6 @@
 # Build entrypoint
 
+# Global/General Config
 CC = g++
 PROG = cjVision
 ENTRY = cpp/entry/main.cpp
@@ -14,12 +15,23 @@ OPENCV3 = `pkg-config opencv3 --cflags --libs`
 OPENCV4 = `pkg-config opencv4 --cflags --libs`
 LIBS = $(OPENCV)
 
+# Directories
 MKDIR = mkdir -p
 OUTDIR = build
 
+# Local compile
+LOCAL_DEFS =
+
+# Coprocessor compile
+COPROC_DEFS = -DCOPROC
+
 all: 
 	$(MKDIR) $(OUTDIR)
-	$(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS)
+	$(CC) $(LOCAL_DEFS) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS)
+
+coprocessor:
+	$(MKDIR) $(OUTDIR)
+	$(CC) $(COPROC_DEFS) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS)
 
 clean:
 	rm -rf $(OUTDIR)/cjVision

@@ -8,8 +8,8 @@ deploy {
   targets {
     target('coprocessor') {
       directory = '/home/vision'
-      maxChannels = 1
-      timeout = 4
+      maxChannels = 4
+      timeout = 10
       failOnMissing = true
 
       locations {

@@ -20,7 +20,6 @@ namespace CJ {
     }
   }
 
-
   void Core::init() {
     PROG::set_PROG_RUNNING(true);
     PROG::set_THREADS_RUNNING(true);
