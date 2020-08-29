@@ -33,13 +33,24 @@
     filterOptions.VColourLowRange = CJ::ColourFilter::RETRO_V_MIN;
     filterOptions.VColourHighRange = CJ::ColourFilter::RETRO_V_MAX;
 
-    CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
-    
+    // CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
 
-    while (PROG::PROG_RUNNING()) {
-      CJ::Output::Display(&inputImage);
-      CJ::Output::Display(&outputImage);
-    }
+
+    std::thread server_t(CJ::Network::Send, &inputImage.data);
+    std::thread client_t(CJ::Network::Receive, &outputImage.data);
+
+    server_t.join();
+    client_t.join();
+
+    
+    cv::imshow("Input", inputImage.data);
+    cv::imshow("Output", outputImage.data);
+    cv::waitKey(30);
+
+    // while (PROG::PROG_RUNNING()) {
+    //   CJ::Output::Display(&inputImage);
+    //   CJ::Output::Display(&outputImage);
+    // }
     return 0;
   }
 

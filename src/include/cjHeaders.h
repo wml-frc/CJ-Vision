@@ -15,6 +15,9 @@ class PROG {
   static void set_THREADS_RUNNING(bool status) {THREADS_RUNNING_b = status;}
 };
 
+// Network
+#include "socket/Network.h"
+
 // OPENCV
 #include <opencv2/opencv.hpp>
 #include <opencv2/objdetect.hpp>

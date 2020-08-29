@@ -19,7 +19,7 @@ namespace CJ {
     capture_t.detach();
   }
 
-  void Camera::capture(Image *image, Cam *cam) {
+  void Camera::capture(Image *image, Camera::Cam *cam) {
     cam->cap.read(image->data);
     if (cam->config.AutoExposure) {
       cam->cap.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.75);
