@@ -36,11 +36,11 @@
     // CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
 
 
-    std::thread server_t(CJ::Network::Send, &inputImage.data);
-    std::thread client_t(CJ::Network::Receive, &outputImage.data);
+    std::thread send_t(CJ::Network::Send, &cam.cap);
+    // std::thread receive_t(CJ::Network::Receive, &outputImage.data);
 
-    server_t.join();
-    client_t.join();
+    send_t.join();
+    // receive_t.join();
 
     
     cv::imshow("Input", inputImage.data);
