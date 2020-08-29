@@ -10,8 +10,8 @@ namespace CJ {
         std::cout << "Displaying using socket" << std::endl;
       #else
         cv::imshow(image->name, image->data);
-      #endif // DEBUG
+      #endif
     }
-    cv::waitKey(1);
+    cv::waitKey(30);
   }
 }
