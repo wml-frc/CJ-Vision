@@ -2,19 +2,12 @@
 #define COLOUR_TRACKING_H
 
 #include "cjHeaders.h"
+#include "ImageContainer.h"
 
 namespace CJ {
   class ColourTracking {
    public:
-    /**
-     * Filters Out other pixels and leaves green for tracking retro reflective tape.
-     */
-    void retroTrack();
-
-    /**
-     * Use your own colour and specs to track a certain colour
-     */
-    void customTrack();
+    static void track(Image *outputImage, Image *inputImage);
   };
 }
 #endif

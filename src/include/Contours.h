@@ -9,17 +9,17 @@ namespace CJ {
     /**
      * Detect Edges using canny algorithm
      */
-    void cannyTrack();
+    static void cannyTrack();
 
     /**
      * Detect Contours in image
      */
-    void detectContours();
+    static void detectContours();
 
     /**
      * Detect edges by thresholding image until point of interest is left
      */
-    void thresholdImage();
+    static void thresholdImage();
   };
 }
 #endif

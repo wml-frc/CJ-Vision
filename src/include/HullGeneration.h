@@ -8,12 +8,12 @@ namespace CJ {
     /**
      * Draw Hull around contours
      */
-    void drawHull();
+    static void drawHull();
 
     /**
      * Draw Bounding Box around objects/hull
      */
-    void drawBoundingBox();
+    static void drawBoundingBox();
   };
 }
 #endif

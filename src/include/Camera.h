@@ -16,9 +16,9 @@ namespace CJ {
       int FPS = 30;
       int ResHeight = 480;
       int ResWidth = 640;
-      int Exposure = 100;
+      double Exposure = 0.1;
+      bool AutoExposure = true;
       std::string CamName = "Cam";
-      bool RetroTrack = false;
     };
 
     struct Cam {

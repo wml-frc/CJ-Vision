@@ -8,8 +8,9 @@
     CJ::Core::init();
 
     CJ::Camera::Cam cam;
+    cam.config.CamPort = 2;
     cam.config.CamName = "Debug Cam";
-    cam.config.Exposure = -100;
+    cam.config.Exposure = 0;
 
     CJ::Image image;
     image.name = "Debug Image";

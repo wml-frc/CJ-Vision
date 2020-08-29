@@ -2,9 +2,6 @@
 
 namespace CJ {
   void Camera::camSetup(Image *image, Cam *cam) {
-    if (cam->config.RetroTrack == true) {
-      cam->config.Exposure = -100;
-    }
 
     cam->cap.open(cam->config.CamPort, cam->config.apiID);
 
@@ -14,7 +11,6 @@ namespace CJ {
     }
     
     cam->cap.set(cv::CAP_PROP_FPS, cam->config.FPS);
-    cam->cap.set(cv::CAP_PROP_EXPOSURE, cam->config.Exposure);
 
     cam->cap.set(cv::CAP_PROP_FRAME_HEIGHT, cam->config.ResHeight);
     cam->cap.set(cv::CAP_PROP_FRAME_WIDTH, cam->config.ResWidth);
@@ -24,6 +20,13 @@ namespace CJ {
   }
 
   void Camera::capture(Image *image, Cam *cam) {
+    cam->cap.read(image->data);
+    if (cam->config.AutoExposure) {
+      cam->cap.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.75);
+    } else {
+      cam->cap.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.25);
+      cam->cap.set(cv::CAP_PROP_EXPOSURE, cam->config.Exposure);
+    }
     while (PROG::THREADS_RUNNING()) {
       cam->cap.read(image->data);
       if (image->data.empty()) {
