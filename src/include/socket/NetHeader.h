@@ -1,4 +1,7 @@
-#include <unistd.h> 
+#ifndef NETHEADER_H
+#define NETHEADER_H
+
+#include <unistd.h>
 #include <stdio.h> 
 #include <sys/socket.h> 
 #include <thread>
@@ -15,4 +18,17 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/core/types.hpp>
 #include <iostream>
-#define DEFAULT_PORT 3000
+
+#define DEFAULT_PORT 13200
+#define BUFFSIZE 512
+
+struct testStruct {
+  int testInt;
+  // bool testBool;
+  // std::string testString;
+  char id[BUFFSIZE];
+};
+
+#define PACKETSIZE sizeof(testStruct)
+
+#endif // !NETHEADER_H

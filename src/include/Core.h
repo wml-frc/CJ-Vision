@@ -4,6 +4,9 @@
 #include "Camera.h"
 #include "Output.h"
 
+// CJ Network
+#include "socket/NetHeader.h"
+
 namespace CJ {
   class Core {
    public:

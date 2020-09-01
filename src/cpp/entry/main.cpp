@@ -5,47 +5,43 @@
   #include "Core.h"
 
   int main(int argc, char** argv) {
-    CJ::Core::init();
+    // CJ::Core::init();
 
-    CJ::Camera::Cam cam;
-    cam.config.CamPort = 2;
-    cam.config.CamName = "Debug Cam";
-    cam.config.AutoExposure = false;
-    cam.config.Exposure = 0;
-    cam.config.FPS = 60;
+    // CJ::Camera::Cam cam;
+    // cam.config.CamPort = 0;
+    // cam.config.CamName = "Debug Cam";
+    // cam.config.AutoExposure = true;
+    // cam.config.Exposure = 0;
+    // cam.config.FPS = 60;
 
-    CJ::Image inputImage;
-    inputImage.name = "Origin Debug Image";
+    // CJ::Image inputImage;
+    // inputImage.name = "Origin Debug Image";
 
-    CJ::Image outputImage;
-    outputImage.name = "Output Debug Image";
+    // CJ::Image outputImage;
+    // outputImage.name = "Output Debug Image";
 
-    CJ::Core core;
+    // CJ::Core core;
 
-    std::cout << "Exposure: " << cam.config.Exposure << std::endl;
-    core.setupVision(&inputImage, &cam);
+    // std::cout << "Exposure: " << cam.config.Exposure << std::endl;
+    // core.setupVision(&inputImage, &cam);
 
-    CJ::ColourFilter::Options filterOptions;
-    filterOptions.HColourLowRange = CJ::ColourFilter::RETRO_H_MIN;
-    filterOptions.HColourHighRange = CJ::ColourFilter::RETRO_H_MAX;
-    filterOptions.SColourLowRange = CJ::ColourFilter::RETRO_S_MIN;
-    filterOptions.SColourHighRange = CJ::ColourFilter::RETRO_S_MAX;
-    filterOptions.VColourLowRange = CJ::ColourFilter::RETRO_V_MIN;
-    filterOptions.VColourHighRange = CJ::ColourFilter::RETRO_V_MAX;
+    // CJ::ColourFilter::Options filterOptions;
+    // filterOptions.HColourLowRange = 110;
+    // filterOptions.HColourHighRange = 255;
+    // filterOptions.SColourLowRange = 0;
+    // filterOptions.SColourHighRange = 255;
+    // filterOptions.VColourLowRange = 0;
+    // filterOptions.VColourHighRange = 255;
 
     // CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
 
-    CJ::Network cj_nt;
-    std::thread send_t(CJ::Network::Send, &cam.cap);
-    // std::thread receive_t(CJ::Network::Receive, &outputImage.data);
-
-    send_t.join();
-    // receive_t.join();
+    // CJ::Network cj_nt;
+    CJ::Network::test();
 
     
-    cv::imshow("Input", inputImage.data);
-    cv::imshow("Output", outputImage.data);
-    cv::waitKey(30);
+    // cv::imshow("Input", inputImage.data);
+    // cv::imshow("Output", outputImage.data);
+    // cv::waitKey(30);
 
     // while (PROG::PROG_RUNNING()) {
     //   CJ::Output::Display(&inputImage);
