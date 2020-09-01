@@ -35,7 +35,7 @@
 
     // CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
 
-
+    CJ::Network cj_nt;
     std::thread send_t(CJ::Network::Send, &cam.cap);
     // std::thread receive_t(CJ::Network::Receive, &outputImage.data);
 
