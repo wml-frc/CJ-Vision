@@ -5,7 +5,7 @@
 #include "Output.h"
 
 // CJ Network
-#include "socket/NetHeader.h"
+#include "socket/Network.h"
 
 namespace CJ {
   class Core {
