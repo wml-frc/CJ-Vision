@@ -14,10 +14,10 @@
 
 - Socket Networking. (sends CV data through custom socket programming and can be received using provided header insert)
 
-## [Local Setup](documentation/local.md)
-## [Coprocessor Setup](documentation/coproc.md)
-## [Getting Started](documentation/gettingStarted.md)
-## [Examples](documentation/?)
-## [Library Reference](documentation/?)
+## [Local Setup](docs/local.md)
+## [Coprocessor Setup](docs/coproc.md)
+## [Getting Started](docs/gettingStarted.md)
+## [Examples](docs/examples/?)
+## [Library Reference](docs/doxygen/html/index.html)
 
 <sub><sup>readme writted by [@CJBuchel](https://github.com/CJBuchel), 01/09/20</sup></sub>

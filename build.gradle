@@ -1,9 +1,26 @@
 plugins {
 	id "edu.wpi.first.GradleRIO" version "2020.3.2"
-	// id "google-test-test-suite"
+	id "google-test-test-suite"
+  id "org.ysb33r.doxygen" version "0.6"
 	id "cpp"
 }
 
+// Documentation Generation
+doxygen {
+  generate_latex false
+  generate_html true
+
+  source new File(projectDir, 'src/cpp')
+  source new File(projectDir, 'src/include')
+
+  include '*.cpp'
+  include '*.h'
+
+
+  outputDir new File(projectDir, 'docs/doxygen')
+}
+
+// Deploying
 deploy {
   targets {
     target('coprocessor') {
