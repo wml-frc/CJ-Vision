@@ -15,9 +15,18 @@
 - Socket Networking. (sends CV data through custom socket programming and can be received using provided header insert)
 
 ## [Local Setup](docs/local.md)
+setup on local machine
+
 ## [Coprocessor Setup](docs/coproc.md)
+setup on coprocessor
+
 ## [Getting Started](docs/gettingStarted.md)
+getting started with the library
+
 ## [Examples](docs/examples/?)
-## [Library Reference](docs/doxygen/html/index.html)
+example uses of the library
+
+## Library Reference
+located in ("docs/doxygen/html/index.html")
 
 <sub><sup>readme writted by [@CJBuchel](https://github.com/CJBuchel), 01/09/20</sup></sub>
