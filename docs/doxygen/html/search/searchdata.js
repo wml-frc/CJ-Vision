@@ -1,7 +1,7 @@
 var indexSectionsWithContent =
 {
-  0: "cdhiopst",
-  1: "chiop",
+  0: "cdhinopstv",
+  1: "cdhinopsv",
   2: "cdist"
 };
 

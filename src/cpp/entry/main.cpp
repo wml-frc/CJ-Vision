@@ -34,11 +34,9 @@
     // filterOptions.VColourHighRange = 255;
 
     // CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
+    std::cout << "main executed" << std::endl;
+    CJ::Network::Control::test();
 
-    // CJ::Network cj_nt;
-    CJ::Network::test();
-
-    
     // cv::imshow("Input", inputImage.data);
     // cv::imshow("Output", outputImage.data);
     // cv::waitKey(30);

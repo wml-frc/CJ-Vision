@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['image',['Image',['../structCJ_1_1Image.html',1,'CJ']]]
+  ['hullgeneration',['HullGeneration',['../classCJ_1_1HullGeneration.html',1,'CJ']]]
 ];

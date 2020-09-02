@@ -5,7 +5,7 @@
 ### CJ-Vision-2.0 in development
 
 
-### Features
+### Features:
 - Pre-threaded. (wrappers around commonly used OpenCV functions are threaded upon launch)
 
 - Asynchronous. (aynchronous structure for threaded functions)
@@ -26,7 +26,7 @@ getting started with the library
 ## [Examples](docs/examples/?)
 example uses of the library
 
-## Library Reference
-located in ("docs/doxygen/html/index.html")
+## Library Reference (Doxygen)
+located in ("docs/doxygen/index.html")
 
 <sub><sup>readme writted by [@CJBuchel](https://github.com/CJBuchel), 01/09/20</sup></sub>

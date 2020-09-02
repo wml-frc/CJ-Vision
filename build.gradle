@@ -13,9 +13,12 @@ doxygen {
   source new File(projectDir, 'src/cpp')
   source new File(projectDir, 'src/include')
 
-  include '*.cpp'
-  include '*.h'
+  include '**/*.cpp'
+  include '**/*.h'
 
+  file_paterns '*.cpp', '*.h'
+
+  recursive true
 
   outputDir new File(projectDir, 'docs/doxygen')
 }

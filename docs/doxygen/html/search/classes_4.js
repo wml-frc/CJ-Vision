@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['prog',['PROG',['../classPROG.html',1,'']]]
+  ['network',['Network',['../classCJ_1_1Network.html',1,'CJ']]]
 ];
