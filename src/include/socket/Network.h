@@ -1,7 +1,6 @@
 #ifndef CJ_NETWORK
 #define CJ_NETWORK
 
-
 #include <unistd.h>
 #include <stdio.h> 
 #include <sys/socket.h> 
@@ -13,7 +12,7 @@
 #include <string.h> 
 #include <iostream>
 
-#define CJ_DEFAULT_PORT 13200
+#define CJ_DEFAULT_PORT 3000
 #define CJ_BUFFSIZE 512
 
 // #define SEND_IMAGE
@@ -60,11 +59,29 @@ namespace CJ {
 
    private:
 
+    struct vals_c {
+      uint16_t port;
+      const char *ipaddress = "127.0.0.1";
+      int sock = 0;
+      int valread;
+      char buffer[1024] = {0};
+      struct sockaddr_in serv_addr;
+    };
+
+    struct vals_s {
+      int server_fd, new_socket, valread;
+      int opt = 1;
+      struct sockaddr_in address;
+      int addrlen = sizeof(address);
+      char buffer[1024] = {0};
+    };
+
+
     /**
      * Serializaiton
      */
     class Serialization {
-      protected:
+     protected:
       static void serialize(dataPacket *msgPacket, char *data) {
         int *q = (int*)data;
         *q = msgPacket->DoubleValues[0]; q++;
@@ -96,69 +113,75 @@ namespace CJ {
      */
     class Server : public Serialization {
      protected:
-      struct vals_s {
-        int server_fd, new_socket, valread;
-        struct sockaddr_in address;
-        int opt = 1;
-        int addrlen = sizeof(address);
-        char buffer[1024] = {0};
-      };
+      static void _init(vals_s *vs) {
+        std::cout << "Server Init Start" << std::endl;
 
-      static void server(vals_s *vs) {
+        int server_fd, new_socket, valread; 
+        struct sockaddr_in address; 
+        int opt = 1; 
+        int addrlen = sizeof(address); 
+        char buffer[1024] = {0}; 
+        std::cout << "opt: " << opt << std::endl;
 
         // Creating socket file descriptor
-        if ((vs->server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
           perror("Socket failed");
           return;
         }
 
-        if (setsockopt(vs->server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &vs->opt, sizeof(vs->opt))) {
+        std::cout << "Socket created" << std::endl;
+
+        if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
           std::cout << "setsockopt fail" << std::endl;
           return;
         }
 
-        vs->address.sin_family = AF_INET;
-        vs->address.sin_addr.s_addr = INADDR_ANY;
-        vs->address.sin_port = htons(CJ_DEFAULT_PORT);
+        std::cout << "set socket successful" << std::endl;
 
-        if (bind(vs->server_fd, (struct sockaddr *)&vs->address, sizeof(vs->address))<0) {
+        address.sin_family = AF_INET;
+        address.sin_addr.s_addr = INADDR_ANY;
+        address.sin_port = htons(CJ_DEFAULT_PORT);
+
+        if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0) {
           std::cout << "bind failed";
           return;
         }
 
-        if (listen(vs->server_fd, 3) < 0) {
+        std::cout << "Bind success" << std::endl;
+
+        if (listen(server_fd, 3) < 0) {
           std::cout << "listen failed";
         }
 
-        if ((vs->new_socket = accept(vs->server_fd, (struct sockaddr *)&vs->address, (socklen_t*)&vs->addrlen))<0) {
+        std::cout << "Listen success" << std::endl;
+
+        if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) {
           std::cout << "accept failed";
         }
 
-        dataPacket *data_Packet = new dataPacket;
-        int size;
-        std::string item_id;
-        int iten_value;
+        std::cout << "Server Creation Sucessful" << std::endl;
+      }
 
+      static void _send(vals_s *vs, dataPacket *dataPack) {
+        char data[PACKETSIZE];
+        serialize(dataPack, data);
+        send(vs->new_socket, &data, sizeof(data), 0);
+      }
+
+      static void _reveive(vals_s *vs, dataPacket *dataPack) {
+        int size;
         char data[PACKETSIZE];
         size = recv(vs->new_socket, &data, sizeof(data), 0);
-        deserialize(data_Packet, data);
+        deserialize(dataPack, data);
 
-        std::cout << "Received ID: " << data_Packet->id << std::endl;
-        std::cout << "Received Data: " << data_Packet->DoubleValues[0] << std::endl;
+        std::cout << "Received ID: " << dataPack->id << std::endl;
+        std::cout << "Received Data: " << dataPack->DoubleValues[0] << std::endl;
       }
     };
 
 
     class Client : public Serialization {
      protected:
-      struct vals_c {
-        uint16_t port;
-        const char *ipaddress = "127.0.0.1";
-        int sock = 0;
-        int valread;
-        char buffer[1024] = {0};
-        struct sockaddr_in serv_addr;
-      };
 
       static void _init(vals_c *vs) {
         if ((vs->sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -177,41 +200,92 @@ namespace CJ {
         while(connect(vs->sock, (struct sockaddr *) &vs->serv_addr, sizeof(vs->serv_addr)) < 0) {
           std::cout << "Connection Failing" << std::endl;
         }
+        std::cout << "Connection Successful" << std::endl;
       }
 
-      static void _send(vals_c *vs) {
-
-        dataPacket *data_Packet = new dataPacket;
-        std::string ID = "testID";
-        strcpy(data_Packet->id, ID.c_str());
-
-        data_Packet->DoubleValues[0] = 2;
-
+      static void _send(vals_c *vs, dataPacket *dataPack) {
         char data[PACKETSIZE];
-        serialize(data_Packet, data);
+        serialize(dataPack, data);
         send(vs->sock, &data, sizeof(data), 0);
+      }
 
-        std::cout << "Client data sent" << std::endl;
+      static void _receive(vals_c *vs, dataPacket *dataPack) {
+        int size;
+        char data[PACKETSIZE];
+        size = recv(vs->sock, &data, sizeof(data), 0);
+        deserialize(dataPack, data);
+
+        std::cout << "Received ID: " << dataPack->id << std::endl;
+        std::cout << "Received Data: " << dataPack->DoubleValues[0] << std::endl;
+      }
+
+      static void _registerReceive(vals_c *vs, dataPacket *dataPack) {
+        int size;
+        char data[PACKETSIZE];
+        size = recv(vs->sock, &data, sizeof(data), 0);
+        deserialize(dataPack, data);
+
+        std::cout << "Received ID: " << dataPack->id << std::endl;
+        std::cout << "Received Data: " << dataPack->DoubleValues[0] << std::endl;
       }
     };
 
    public:
     class Control : public Server, public Client {
      public:
-      struct server {
-        static void init();
-        static void receive();
-        static void send();
+      struct server : public Server {
+       protected:
+        vals_s *vs;
+       public:
+        
+        void init() {
+          std::thread sv_init_t(_init, vs);
+          sv_init_t.detach();
+          // _init(vs);
+        }
+
+        void registerReceive() {
+          
+        }
+        void registerSend();
+        void receive() {
+
+        }
+        void send(dataPacket *dataPack) {
+          // _send(&vss_, dataPack);
+        }
 
         struct Set {
           static void port();
         };
       };
 
-      struct client {
-        static void init();
-        static void receive();
-        static void send();
+      struct client : public Client {
+       protected:
+        vals_c *vs;
+       public:
+        void init() {
+          std::thread cl_init_t(_init, vs);
+          cl_init_t.detach();
+          // _init(vs);
+        }
+
+        void registerReceive(dataPacket *dataPack) {
+          // std::thread registerReceive_t(_registerReceive, &vsc, dataPack);
+          // registerReceive_t.join();
+        }
+
+        void registerSend(dataPacket *dataPack) {
+          // std::thread registerSend_t(_send, &vsc, dataPack);
+        }
+
+        void receive(dataPacket *dataPack) {
+          // _receive(&vsc, dataPack);
+        }
+
+        void send(dataPacket *dataPack) {
+          // _send(&vsc, dataPack);
+        }
 
         struct Set {
           static void port();
@@ -219,15 +293,32 @@ namespace CJ {
         };
       };
 
-      static void test() {
-        std::cout << "Testing CJ Network" << std::endl;
-        vals_s vss;
-        vals_c vsc;
-        std::thread server_t(Server::server, &vss);
-        Client::_init(&vsc);
-        Client::_send(&vsc);
+     protected:
+        client cl;
+        server sv;
+     public:
 
-        server_t.join();
+      void test() {
+        std::cout << "Testing CJ Network" << std::endl;
+      
+        // Sending package
+        dataPacket dpSend;
+        dpSend.DoubleValues[0] = 3;
+
+        // Getting package
+        dataPacket dpGet;
+
+        cl.init();
+        sv.init();
+        while(true) {}
+        
+        
+
+
+        // s.send(&dpSend);
+        // c.registerReceive(&dpGet);
+        
+        std::cout << "Values from dpGet: " << dpGet.DoubleValues[0] << std::endl; 
       }
     };
   };
