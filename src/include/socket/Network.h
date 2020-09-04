@@ -121,7 +121,6 @@ namespace CJ {
         int opt = 1; 
         int addrlen = sizeof(address); 
         char buffer[1024] = {0}; 
-        std::cout << "opt: " << opt << std::endl;
 
         // Creating socket file descriptor
         if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
@@ -184,6 +183,7 @@ namespace CJ {
      protected:
 
       static void _init(vals_c *vs) {
+        
         if ((vs->sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
           std::cout << "Socket Creation error" << std::endl;
           return;
@@ -235,11 +235,11 @@ namespace CJ {
      public:
       struct server : public Server {
        protected:
-        vals_s *vs;
+        vals_s vs;
        public:
         
         void init() {
-          std::thread sv_init_t(_init, vs);
+          std::thread sv_init_t(_init, &vs);
           sv_init_t.detach();
           // _init(vs);
         }
@@ -262,10 +262,10 @@ namespace CJ {
 
       struct client : public Client {
        protected:
-        vals_c *vs;
+        vals_c vs;
        public:
         void init() {
-          std::thread cl_init_t(_init, vs);
+          std::thread cl_init_t(_init, &vs);
           cl_init_t.detach();
           // _init(vs);
         }
@@ -310,8 +310,8 @@ namespace CJ {
 
         cl.init();
         sv.init();
-        while(true) {}
         
+
         
 
 
