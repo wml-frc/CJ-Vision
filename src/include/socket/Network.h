@@ -291,14 +291,15 @@ namespace CJ {
       }
 
       static void _registerReceive(vals_c *vs, dataPacket *dataPack) {
+        dataPacket dp;
         while (true) {
           char data[PACKETSIZE];
           int size;
           size = recv(vs->sock, &data, sizeof(data), 0);
           if (size != -1 || size != 0) {
-            deserialize(dataPack, data);
-            if (dataPack->dataTrue) {
-              std::cout << "Data: " << dataPack->DoubleValues[0] << std::endl;
+            deserialize(&dp, data);
+            if (dp.dataTrue) {
+              *dataPack = dp;
             }
           } else {
             std::cout << "No Data" << std::endl;
@@ -423,7 +424,14 @@ namespace CJ {
         // s.send(&dpSend);
         // c.registerReceive(&dpGet);
         while (true) {
-          // std::cout << "Values from dpGet: " << dpGet.DoubleValues[0] << std::endl; 
+          for (double i = 0; i < 10000; i++) {
+            dpSend.DoubleValues[0] += 0.001;
+            std::cout << "Values from dpGet: " << dpGet.DoubleValues[0] << std::endl; 
+          } 
+          for (double i = 0; i < 10000; i++) {
+            dpSend.DoubleValues[0] -= 0.001;
+            std::cout << "Values from dpGet: " << dpGet.DoubleValues[0] << std::endl; 
+          }
         }
       }
     };
