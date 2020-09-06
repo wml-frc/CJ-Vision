@@ -99,7 +99,7 @@ namespace CJ {
         bool *dtTrue = (bool*)data; 
         *dtTrue = msgPacket->dataTrue; dtTrue++;
 
-        // Boolean Values
+        // Double Values
         double *dblVals = (double*)dtTrue;
         int i = 0;
         while (i < CJ_BUFFSIZE) {
@@ -212,6 +212,7 @@ namespace CJ {
       }
 
       static void _send(vals_s *vs, dataPacket *dataPack) {
+        dataPack->dataTrue = true;
         char data[PACKETSIZE];
         serialize(dataPack, data);
         send(vs->new_socket, &data, sizeof(data), 0);
@@ -220,6 +221,7 @@ namespace CJ {
       static void _registerSend(vals_s *vs, dataPacket *dataPack) {
         char data[PACKETSIZE];
         while (true) {
+          dataPack->dataTrue = true;
           serialize(dataPack, data);
           send(vs->new_socket, &data, sizeof(data), 0);
         }
@@ -273,21 +275,21 @@ namespace CJ {
       }
 
       static void _send(vals_c *vs, dataPacket *dataPack) {
+        dataPack->dataTrue = true;
         char data[PACKETSIZE];
         serialize(dataPack, data);
         send(vs->sock, &data, sizeof(data), 0);
       }
 
+      static void _registerSend(vals_c *vs, dataPacket *dataPack) {
+        dataPack->dataTrue = true;
+      }
+
       static void _receive(vals_c *vs, dataPacket *dataPack) {
-        std::cout << "Receive start" << std::endl;
         int size;
         char data[PACKETSIZE];
         size = recv(vs->sock, &data, sizeof(data), 0);
         deserialize(dataPack, data);
-        std::cout << "Reveive stop" << std::endl;
-
-        std::cout << "Received ID: " << dataPack->id << std::endl;
-        std::cout << "Received Data: " << dataPack->DoubleValues[0] << std::endl;
       }
 
       static void _registerReceive(vals_c *vs, dataPacket *dataPack) {
@@ -363,7 +365,7 @@ namespace CJ {
         }
 
         void registerSend(dataPacket *dataPack) {
-          // std::thread registerSend_t(_send, &vsc, dataPack);
+          // std::thread registerSend_t(_send, &vs, dataPack);
         }
 
         void receive(dataPacket *dataPack) {
@@ -371,7 +373,7 @@ namespace CJ {
         }
 
         void send(dataPacket *dataPack) {
-          // _send(&vsc, dataPack);
+          _send(&vs, dataPack);
         }
 
         struct Set {
@@ -391,12 +393,9 @@ namespace CJ {
         // State Controller
         network_stc.setState(statesController::state::CONNECTING);
 
-        // std::thread stateController_t(statesController::stateController);
-        // stateController_t.detach();
       
         // Sending package
         dataPacket dpSend;
-        dpSend.dataTrue = true;
         dpSend.DoubleValues[0] = 3.56;
 
         // Getting package
@@ -415,14 +414,10 @@ namespace CJ {
             std::cout << "Main State: " << network_stc.getState() << std::endl;
           }
         }
-        std::cout << "while escape" << std::endl;
 
         sv.registerSend(&dpSend);
         cl.registerReceive(&dpGet);
 
-
-        // s.send(&dpSend);
-        // c.registerReceive(&dpGet);
         while (true) {
           for (double i = 0; i < 10000; i++) {
             dpSend.DoubleValues[0] += 0.001;
