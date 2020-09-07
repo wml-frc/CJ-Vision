@@ -1,16 +1,19 @@
 #ifndef HULL_GENERATION_H
-#define HELL_GENERATION_H
+#define HULL_GENERATION_H
+
+#include "cjHeaders.h"
+
 namespace CJ {
   class HullGeneration {
     /**
      * Draw Hull around contours
      */
-    void drawHull();
+    static void drawHull();
 
     /**
      * Draw Bounding Box around objects/hull
      */
-    void drawBoundingBox();
+    static void drawBoundingBox();
   };
 }
 #endif

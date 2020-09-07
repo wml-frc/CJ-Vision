@@ -1,10 +1,12 @@
 #ifndef IMAGE_CONTAINER_H
 #define IMAGE_CONTAINER_H
-#include <opencv2/opencv.hpp>
-#include <vector>
+
+#include "cjHeaders.h"
+
 namespace CJ {
   struct Image {
-    cv::Mat image;
+    cv::Mat data;
+    std::string name = " ";
     std::vector<std::vector<cv::Point>> contours;
   };
 }

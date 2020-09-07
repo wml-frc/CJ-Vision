@@ -1,30 +1,40 @@
-apply plugin: 'cpp'
-apply plugin: 'google-test-test-suite'
-apply plugin: 'edu.wpi.first.GradleRIO'
-
-// Root Control
-def root
-if (project.findProperty('cjVisionRoot') != null) {
-  root = project.findProperty('cjVisionRoot')
-} else {
-  root = rootProject.file('CJ-Vision')
+plugins {
+	id "edu.wpi.first.GradleRIO" version "2020.3.2"
+	id "google-test-test-suite"
+  id "org.ysb33r.doxygen" version "0.6"
+	id "cpp"
 }
 
-println "root: ${root}"
-apply from: "${root}/toolchains.gradle"
+// Documentation Generation
+doxygen {
+  generate_latex false
+  generate_html true
 
+  source new File(projectDir, 'src/cpp')
+  source new File(projectDir, 'src/include')
+
+  include '**/*.cpp'
+  include '**/*.h'
+
+  file_paterns '*.cpp', '*.h'
+
+  recursive true
+
+  outputDir new File(projectDir, 'docs/doxygen')
+}
+
+// Deploying
 deploy {
   targets {
     target('coprocessor') {
       directory = '/home/vision'
       maxChannels = 1
-      timeout = 4
-      failOnMissing = false
+      timeout = 3
+      failOnMissing = true
 
       locations {
         ssh {
-          address = 'CJvision'
-          // address = '192.168.178.144'
+          address = "CJvision.local"
           user = 'vision'
           password = 'CJfrc'
           ipv6 = false
@@ -33,101 +43,63 @@ deploy {
     }
   }
 
-  artifacts {
-    nativeArtifact('vision') {
-      if (osdetector.os == "linux") {
-        targetPlatform = 'desktop'
-        if (osdetector.release.id == "debian")
-          targetPlatform = 'debian'
-        if (osdetector.release.id == 'raspbian')
-          targetPlatform = 'raspbian'
-      } else {
-        targetPlatform = 'desktop'
-      }
-      targets << 'coprocessor'
-      component = 'cjFrcVision'
-      buildType = 'debug'
+	artifacts {
 
-      predeploy << { execute('sudo systemctl stop vision || true') }
-      // Make sure we can run our program!
-      postdeploy << { execute('chmod +x cjFrcVision'); execute('sudo systemctl restart vision || true') }
+    fileTreeArtifact('VisionProgram') {
+      targets << 'coprocessor'
+      files = fileTree(dir: 'src/')
+
+      predeploy << {
+        execute('sudo systemctl stop vision || true')
+      }
+
+      postdeploy << {
+        execute('make coprocessor')
+        execute('chmod +x cjVision')
+        execute('sudo systemctl restart vision ||true')
+      }
     }
 
-    // Some extra stuff for our vision program. Includes system configs, also!
-    fileTreeArtifact('visionResources') {
-      targets << 'coprocessor'
-      files = rootProject.fileTree(dir: 'CJ-Vision/src/resources')
+		fileTreeArtifact('VisionResources') {
+			targets << 'coprocessor'
 
-      // Install the systemd service. This makes vision run on startup
-      postdeploy << { 
-        // Install a symlink for the service so the system can run it! A symlink is like a pointer for files
+			files = fileTree(dir: 'src/resources')
+			postdeploy << {
         execute('sudo ln -sf $(pwd)/system/vision.service /etc/systemd/system')
         execute('sudo systemctl daemon-reload; sudo systemctl enable vision')
+
         if (project.hasProperty('stop')) {
           execute('sudo systemctl daemon-reload; sudo service vision stop; sudo service vision status')
         } else {
-          // Reload the system services and start the vision service. Also print out the status
           execute('sudo systemctl daemon-reload; sudo service vision restart; sudo service vision status')
         }
-      }
+			}
 
-      // Configure the SSH server. Also backs up the ssh config
       postdeploy << {
-        // Back up the stock sshd config, just in case!
         execute('sudo cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.old')
-        // Replace the stock sshd config with ours (to allow X forwarding)
         execute('sudo cp $(pwd)/system/sshd_config /etc/ssh/sshd_config')
       }
-    }
-
-    // Store all the libraries in /home/vision/libraries, that way we don't poison /usr/local.
-    withType(jaci.gradle.deploy.artifact.BinaryLibraryArtifact) {
-      directory = '/home/vision/libraries'
-      predeploy << {
-        execute("sudo mkdir -p ${directory} && sudo chmod -R 777 ${directory}/..")
-        // Make sure the system can find our libraries!
-        execute("echo ${directory} | sudo tee /etc/ld.so.conf.d/vision.conf")
-      }
-
-      // Refresh the system's cache of known libraries, so ours can be found
-      postdeploy << { execute('sudo ldconfig') }
-    }
-  }
+		}
+	}
 }
 
-model {
-  components {
-    cjFrcVision(NativeExecutableSpec) {
-      targetPlatform wpi.platforms.desktop
-      targetPlatform wpi.platforms.raspbian
-      sources.cpp {
-        source {
-          srcDir 'src/main/cpp'
-          srcDir "${root}/src/cpp"
-        }
-        exportedHeaders {
-          srcDir 'src/main/include'
-          srcDir "${root}/src/include"
-        }
-      }
+task buildVision(type:Exec) {
+  description "Builds vision locally"
+  workingDir "src/"
 
-      binaries.all {
-        // Check OS and how binaries are handled
-        if (targetPlatform.name == "desktop") {
-          cppCompiler.define '__DESKTOP__'
-          if (targetPlatform.operatingSystem.isLinux()) {
-            linker.args << '-lusb-1.0'
-          }
-        } else if (targetPlatform.name == "debian") {
-          linker.args << '-pthread'
-        }
-      }
-      
-      wpi.deps.wpilib(it)
-      wpi.deps.googleTest(it)
-      wpi.deps.vendor.cpp(it)
-    }
-  }
+  println "Building Vision Project..."
+  commandLine 'make'
 }
 
-task runVision(dependsOn: "simulateCjFrcVision${wpi.platforms.desktop.capitalize()}DebugExecutable")
+task runVision(type:Exec) {
+  dependsOn buildVision
+
+  description "Run Vision Locally with webcam to test"
+  workingDir "src/build"
+
+  commandLine './cjVision'
+}
+
+wrapper {
+	gradleVersion = '6.0'
+}
