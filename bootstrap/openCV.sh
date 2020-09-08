@@ -26,7 +26,7 @@ printf "\nInstalling OpenCV\n"
 printf '\e[0m'
 cd /opt
 sudo git clone https://github.com/opencv/opencv.git
-# sudo git clone https://github.com/opencv/opencv_contrib.git
+sudo git clone https://github.com/opencv/opencv_contrib.git
 
 # Cmake setup/build opencv
 printf '\e[1;32m'
