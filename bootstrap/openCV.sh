@@ -45,3 +45,4 @@ printf '\e[1;32m'
 printf "\nOpenCV Version\n"
 printf '\e[0m'
 pkg-config --modversion opencv
+pkg-config --modversion opencv4

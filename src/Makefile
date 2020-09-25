@@ -27,7 +27,7 @@ LOCAL_DEFS =
 # Coprocessor compile
 COPROC_DEFS = -DCOPROC
 
-all:
+all: # Maker for Desktop
 	$(MAKE) all1 || $(MAKE) all4
 
 all1:
@@ -38,7 +38,7 @@ all4:
 	$(MKDIR) $(OUTDIR)
 	$(CC) $(LOCAL_DEFS) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS4)
 
-coprocessor:
+coprocessor: # Maker for Coprocessor
 	$(MAKE) coproc1 || coproc4
 
 coproc1:

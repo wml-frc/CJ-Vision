@@ -7,34 +7,35 @@
   int main(int argc, char** argv) {
     CJ::Core::init();
 
-    // CJ::Camera::Cam cam;
-    // cam.config.CamPort = 0;
-    // cam.config.CamName = "Debug Cam";
-    // cam.config.AutoExposure = true;
-    // cam.config.Exposure = 0;
-    // cam.config.FPS = 60;
+    CJ::Camera::Cam cam;
+    cam.config.ResWidth = 640;
+    cam.config.ResHeight = 480;
+    cam.config.CamPort = 2;
+    cam.config.CamName = "Debug Cam";
+    cam.config.AutoExposure = true;
+    cam.config.Exposure = 50;
+    cam.config.FPS = 60;
 
-    // CJ::Image inputImage;
-    // inputImage.name = "Origin Debug Image";
+    CJ::Image inputImage;
+    inputImage.name = "Origin Debug Image";
 
-    // CJ::Image outputImage;
-    // outputImage.name = "Output Debug Image";
+    CJ::Image outputImage;
+    outputImage.name = "Output Debug Image";
 
-    // CJ::Core core;
+    CJ::Core core;
 
-    // std::cout << "Exposure: " << cam.config.Exposure << std::endl;
-    // core.setupVision(&inputImage, &cam);
+    std::cout << "Exposure: " << cam.config.Exposure << std::endl;
+    core.setupVision(&inputImage, &cam);
 
-    // CJ::ColourFilter::Options filterOptions;
-    // filterOptions.HColourLowRange = 110;
-    // filterOptions.HColourHighRange = 255;
-    // filterOptions.SColourLowRange = 0;
-    // filterOptions.SColourHighRange = 255;
-    // filterOptions.VColourLowRange = 0;
-    // filterOptions.VColourHighRange = 255;
+    CJ::ColourFilter::Options filterOptions;
+    filterOptions.HColourLowRange = 20;
+    filterOptions.HColourHighRange = 35;
+    filterOptions.SColourLowRange = 100;
+    filterOptions.SColourHighRange = 255;
+    filterOptions.VColourLowRange = 100;
+    filterOptions.VColourHighRange = 255;
 
-    // CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
-    std::cout << "main executed" << std::endl;
+    CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
 
 
     CJ::Network::Control nt;
@@ -58,11 +59,6 @@
 
     c_nt.registerSend(&dpSend);
     s_nt.registerReceive(&dpGet);
-    
-
-    // cv::imshow("Input", inputImage.data);
-    // cv::imshow("Output", outputImage.data);
-    // cv::waitKey(30);
 
     while (PROG::PROG_RUNNING()) {
       system("clear");
@@ -73,15 +69,25 @@
       std::cout << "dpGet Booleans: " << dpGet.BooleanValues[0] << std::endl;
       std::cout << "dpGet Doubles: " << dpGet.DoubleValues[0] << std::endl;
       std::cout << "dpGet Double 511: " << dpGet.DoubleValues[511] << std::endl; 
-      // CJ::Output::Display(&inputImage);
-      // CJ::Output::Display(&outputImage);
+      CJ::Output::Display(&inputImage);
+      CJ::Output::Display(&outputImage);
     }
+    printf("\nProgram Ended\n");
     return 0;
   }
 
 # else 
-
-  int main(int argc, char** argv) {
-    printf("Vision Program Starting")
-  }
+  #ifdef VISION
+    #include "Vision.h"
+    int main(int argc, char** argv) {
+      Vision v;
+      printf("Vision Program Starting")
+      CJ::Core::init();
+      v.init();
+      while (PROG::PROG_RUNNING()) {
+        v.periodic();
+      }
+      printf("Vision Program Exited");
+    }
+  #endif
 #endif
