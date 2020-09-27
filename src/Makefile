@@ -13,7 +13,9 @@ OPENCV = `pkg-config opencv --cflags --libs`
 OPENCV2 = `pkg-config opencv2 --cflags --libs`
 OPENCV3 = `pkg-config opencv3 --cflags --libs`
 OPENCV4 = `pkg-config opencv4 --cflags --libs`
+
 LIBS = $(OPENCV)
+LIBS4 = $(OPENCV4)
 
 # Directories
 MKDIR = mkdir -p
@@ -25,13 +27,27 @@ LOCAL_DEFS =
 # Coprocessor compile
 COPROC_DEFS = -DCOPROC
 
-all: 
+all: # Maker for Desktop
+	$(MAKE) all1 || $(MAKE) all4
+
+all1:
 	$(MKDIR) $(OUTDIR)
 	$(CC) $(LOCAL_DEFS) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS)
 
-coprocessor:
+all4:
+	$(MKDIR) $(OUTDIR)
+	$(CC) $(LOCAL_DEFS) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS4)
+
+coprocessor: # Maker for Coprocessor
+	$(MAKE) coproc1 || coproc4
+
+coproc1:
 	$(MKDIR) $(OUTDIR)
 	$(CC) $(COPROC_DEFS) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS)
+
+coproc4:
+	$(MKDIR) $(OUTDIR)
+	$(CC) $(COPROC_DEFS) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP) $(LIBS4)
 
 clean:
 	rm -rf $(OUTDIR)/cjVision

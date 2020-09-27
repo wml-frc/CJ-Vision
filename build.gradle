@@ -1,7 +1,7 @@
 plugins {
-	id "edu.wpi.first.GradleRIO" version "2020.3.2"
+	id "edu.wpi.first.GradleRIO"
 	id "google-test-test-suite"
-  id "org.ysb33r.doxygen" version "0.6"
+  id "org.ysb33r.doxygen"
 	id "cpp"
 }
 

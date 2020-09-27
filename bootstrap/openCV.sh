@@ -26,7 +26,7 @@ printf "\nInstalling OpenCV\n"
 printf '\e[0m'
 cd /opt
 sudo git clone https://github.com/opencv/opencv.git
-# sudo git clone https://github.com/opencv/opencv_contrib.git
+sudo git clone https://github.com/opencv/opencv_contrib.git
 
 # Cmake setup/build opencv
 printf '\e[1;32m'
@@ -36,7 +36,7 @@ cd opencv
 sudo mkdir release
 cd release
 sudo cmake -D BUILD_TIFF=ON -D WITH_CUDA=OFF -D ENABLE_AVX=OFF -D WITH_OPENGL=OFF -D WITH_OPENCL=OFF -D WITH_IPP=OFF -D WITH_TBB=ON -D BUILD_TBB=ON -D WITH_EIGEN=OFF -D WITH_V4L=OFF -D WITH_VTK=OFF -D BUILD_TESTS=OFF -D BUILD_PERF_TESTS=OFF -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules /opt/opencv/
-sudo make -j12
+sudo make -j4
 sudo make install
 sudo ldconfig
 
@@ -45,3 +45,4 @@ printf '\e[1;32m'
 printf "\nOpenCV Version\n"
 printf '\e[0m'
 pkg-config --modversion opencv
+pkg-config --modversion opencv4

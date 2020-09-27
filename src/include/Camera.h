@@ -14,8 +14,8 @@ namespace CJ {
       int CamPort = 0;
       int apiID = cv::CAP_ANY;
       int FPS = 30;
-      int ResHeight = 480;
       int ResWidth = 640;
+      int ResHeight = 480;
       double Exposure = 0.1;
       bool AutoExposure = true;
       std::string CamName = "Cam";

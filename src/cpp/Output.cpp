@@ -12,6 +12,6 @@ namespace CJ {
         cv::imshow(image->name, image->data);
       #endif
     }
-    cv::waitKey(1);
+    cv::waitKey(30);
   }
 }
