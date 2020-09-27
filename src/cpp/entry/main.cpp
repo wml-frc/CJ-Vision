@@ -32,7 +32,7 @@
     filterOptions.HColourHighRange = 35;
     filterOptions.SColourLowRange = 100;
     filterOptions.SColourHighRange = 255;
-    filterOptions.VColourLowRange = 100;
+    filterOptions.VColourLowRange = 60;
     filterOptions.VColourHighRange = 255;
 
     CJ::ColourFilter::filter(&inputImage, &outputImage, filterOptions);
