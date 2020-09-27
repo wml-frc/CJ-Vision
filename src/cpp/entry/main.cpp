@@ -1,5 +1,3 @@
-#define DEBUG
-
 #ifdef DEBUG
   
   #include "Core.h"
@@ -62,6 +60,7 @@
 
     while (PROG::PROG_RUNNING()) {
       system("clear");
+      std::cout << "Networking Test" << std::endl;
       dpSend.DoubleValues[511] += 0.0001;
       std::cout << "dpGet data true: " << dpGet.dataTrue << std::endl;
       std::cout << "dpGet ID: " << dpGet.id[0] << std::endl;
@@ -76,18 +75,21 @@
     return 0;
   }
 
-# else 
-  #ifdef VISION
-    #include "Vision.h"
+#else 
+  #include "Vision.h"
+  #ifdef VISION_H
+    #include "Core.h"
     int main(int argc, char** argv) {
       Vision v;
-      printf("Vision Program Starting")
+      printf("Vision Program Starting");
       CJ::Core::init();
-      v.init();
+      v.Init();
       while (PROG::PROG_RUNNING()) {
-        v.periodic();
+        v.Periodic();
       }
       printf("Vision Program Exited");
     }
+  #else
+    #error "#define VISION_H not found"
   #endif
 #endif

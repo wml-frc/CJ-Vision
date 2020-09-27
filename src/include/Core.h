@@ -1,4 +1,6 @@
 // CJ Vision
+#ifndef CORE_H
+#define CORE_H
 #include "ImageContainer.h"
 #include "ColourFilter.h"
 #include "Camera.h"
@@ -24,3 +26,4 @@ namespace CJ {
    private:
   };
 }
+#endif // CORE_H

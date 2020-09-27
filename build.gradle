@@ -45,6 +45,7 @@ deploy {
 
 	artifacts {
 
+    // Deploy Vision program
     fileTreeArtifact('VisionProgram') {
       targets << 'coprocessor'
       files = fileTree(dir: 'src/')
@@ -60,6 +61,7 @@ deploy {
       }
     }
 
+    // Deploy Resource Files (service files and config)
 		fileTreeArtifact('VisionResources') {
 			targets << 'coprocessor'
 
@@ -80,10 +82,22 @@ deploy {
         execute('sudo cp $(pwd)/system/sshd_config /etc/ssh/sshd_config')
       }
 		}
+
+    // User deploy files
+    if (file('../Coproc').isDirectory()) {
+      fileTreeArtifact('UserDeploys') {
+        targets << 'coprocessor'
+
+        files = fileTree(dir: '../Coproc/src/deploy')
+      }
+    }
 	}
 }
 
 task buildVision(type:Exec) {
+  if (!file('../Coproc').isDirectory()) {
+    ant.fail("'Coproc' folder not found one level up from build.gradle")
+  }
   description "Builds vision locally"
   workingDir "src/"
 
@@ -99,6 +113,9 @@ task runVision(type:Exec) {
 
   commandLine './cjVision'
 }
+
+// Run buldVision when user runs ./gradlew build
+build.finalizedBy(buildVision)
 
 wrapper {
 	gradleVersion = '6.0'
