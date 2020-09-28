@@ -1,6 +1,8 @@
 #ifndef CJ_NETWORK
 #define CJ_NETWORK
 
+#ifndef _WIN32
+
 #include <unistd.h>
 #include <stdio.h> 
 #include <sys/socket.h> 
@@ -496,5 +498,5 @@ namespace CJ {
   };
 }
 
-
+#endif // Windows
 #endif // !CJ_NETWORK

@@ -102,7 +102,7 @@ deploy {
 model {
   components {
     nativePlatform(NativeExecutableSpec) {
-      if (isFamily(FAMILY_UNIX)) {
+      if (!isFamily(FAMILY_WINDOWS)) {
         return
       }
       platforms {
@@ -111,12 +111,35 @@ model {
       }
       sources.cpp {   
         source {
-          srcDirs = ['src/cpp', '../Coproc/src/main/cpp']
-          includes = ['**/*.cpp', '**/*.cc']
+          srcDirs = ['src/cpp', '../Coproc/src/main/cpp', '/src/libs']
+          includes = ['**/*.cpp', '**/*.cc', '**/*.exe']
         }
 
         exportedHeaders {
-          srcDirs = ['src/include', '../Coproc/src/main/include']
+          srcDirs = ['src/include', '../Coproc/src/main/include', 'src/libs/opencv/build/include']
+        }
+      }
+
+      binaries.all {
+        def arch
+        def vc
+
+        if (file('src/libs/opencv/buils/x86').isDirectory()) {
+          arch = "x86"
+        } else if (file('src/libs/opencv/buils/x64').isDirectory()) {
+          arch = "x64"
+        }
+
+        if (file("src/libs/opencv/build/${arch}/vc15").isDirectory()) {
+          vc = "vc15"
+        } else if (file("src/libs/opencv/build/${arch}/vc14").isDirectory()) {
+          vc = "vc14"
+        }
+
+        if ((arch != null) && (vc != null)) {
+          linker.args << "-L'src/libs/opencv/build/${arch}/${vc}/lib'"
+          linker.args << "-lopencv_core243"
+          linker.args << "-lopencv_huigui243"
         }
       }
     }
@@ -125,14 +148,16 @@ model {
 
 // Download OpenCV Precompiled exec for windows
 task downloadWindowsOpencvLib {
-  def downloadDest = "${rootDir}/src/libs"
-  def f = new File("${downloadDest}/opencv.exe")
-  if (!f.exists()) {
-    download {
-      def opencvURL = "https://sourceforge.net/projects/opencvlibrary/files/4.4.0/opencv-4.4.0-vc14_vc15.exe/download"
-      src opencvURL
-      dest new File("${downloadDest}", "opencv.exe")
-      println "Downloading to ${downloadDest}"
+  if (isFamily(FAMILY_WINDOWS)) {
+    def downloadDest = "${rootDir}/src/libs"
+    def f = new File("${downloadDest}/opencv.exe")
+    if (!f.exists()) {
+      download {
+        def opencvURL = "https://sourceforge.net/projects/opencvlibrary/files/4.4.0/opencv-4.4.0-vc14_vc15.exe/download"
+        src opencvURL
+        dest new File("${downloadDest}", "opencv.exe")
+        println "Downloading to ${downloadDest}"
+      }
     }
   }
 }
@@ -151,7 +176,7 @@ task downloadWindowsOpencvLib {
   }
 
   // Add task as dependency for the os task
-  downloadWindowsOpencvLib.dependsOn osName
+  downloadWindowsOpencvLib.dependsOn(osName)
 }
 
 task buildVision(type:Exec) {
