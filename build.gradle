@@ -1,8 +1,12 @@
+import static org.apache.tools.ant.taskdefs.condition.Os.*
 plugins {
 	id "edu.wpi.first.GradleRIO" version "2020.3.2"
 	id "google-test-test-suite"
   id "org.ysb33r.doxygen" version "0.6"
 	id "cpp"
+  id "java-test-fixtures"
+  id "groovy"
+  id "de.undercouch.download" version "4.1.1"
 }
 
 // Documentation Generation
@@ -94,6 +98,62 @@ deploy {
 	}
 }
 
+// Local Building
+model {
+  components {
+    nativePlatform(NativeExecutableSpec) {
+      if (isFamily(FAMILY_UNIX)) {
+        return
+      }
+      platforms {
+        x64 { architecture "x86_64" }
+        x86 { architecture "x86" }
+      }
+      sources.cpp {   
+        source {
+          srcDirs = ['src/cpp', '../Coproc/src/main/cpp']
+          includes = ['**/*.cpp', '**/*.cc']
+        }
+
+        exportedHeaders {
+          srcDirs = ['src/include', '../Coproc/src/main/include']
+        }
+      }
+    }
+  }
+}
+
+// Download OpenCV Precompiled exec for windows
+task downloadWindowsOpencvLib {
+  def downloadDest = "${rootDir}/src/libs"
+  def f = new File("${downloadDest}/opencv.exe")
+  if (!f.exists()) {
+    download {
+      def opencvURL = "https://sourceforge.net/projects/opencvlibrary/files/4.4.0/opencv-4.4.0-vc14_vc15.exe/download"
+      src opencvURL
+      dest new File("${downloadDest}", "opencv.exe")
+      println "Downloading to ${downloadDest}"
+    }
+  }
+}
+
+[FAMILY_WINDOWS, FAMILY_UNIX, FAMILY_MAC].each { osName ->
+  // Create Task
+  tasks.create(osName) {
+    description "OS is ${osName}"
+    
+    // Add condition to check operating system.
+    onlyIf { isFamily(osName) }
+
+    doLast {
+      println "Execution Family: '${it.name}'"
+    }
+  }
+
+  // Add task as dependency for the os task
+  downloadWindowsOpencvLib.dependsOn osName
+}
+
 task buildVision(type:Exec) {
   if (!file('../Coproc').isDirectory()) {
     ant.fail("'Coproc' folder not found one level up from build.gradle")
@@ -105,17 +165,28 @@ task buildVision(type:Exec) {
   commandLine 'make'
 }
 
+// Run Vision locally
 task runVision(type:Exec) {
   dependsOn buildVision
 
   description "Run Vision Locally with webcam to test"
   workingDir "src/build"
-
-  commandLine './cjVision'
+  if (isFamily(FAMILY_WINDOWS)) {
+    commandLine 'cjVision.exe'
+  } else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) {
+    commandLine './cjVision'
+  }
 }
 
 // Run buldVision when user runs ./gradlew build
-build.finalizedBy(buildVision)
+if (isFamily(FAMILY_WINDOWS)) {
+  build.dependsOn downloadWindowsOpencvLib
+} else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) {
+  // build.dependsOn buildVision
+  build.finalizedBy(buildVision)
+} else {
+  ant.fail("Unknown Platform detected")
+}
 
 wrapper {
 	gradleVersion = '6.0'
