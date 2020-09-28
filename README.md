@@ -1,5 +1,3 @@
-# CJ-Vision
-
 ## Pre-threaded asynchronous computer vision library used for easy deployment to UNIX based coprocessors.
 
 ### CJ-Vision-2.0 in development
@@ -29,4 +27,5 @@ example uses of the library
 ## Library Reference (Doxygen)
 located in ("docs/doxygen/index.html")
 
-<sub><sup>readme writted by [@CJBuchel](https://github.com/CJBuchel), 01/09/20</sup></sub>
+
+<sub><sup>readme writted by [@CJBuchel](https://github.com/CJBuchel), 28/09/20</sup></sub>
