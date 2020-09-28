@@ -1,10 +1,10 @@
 [Unit]
-Description=CJ-Vision FRC Vision Service
+Description=CJ-Vision Service
 
 [Service]
 Type=simple
 Restart=always
-ExecStart=/home/vision/cjFrcVision
+ExecStart=/home/vision/build/cjVision
 WorkingDirectory=/home/vision
 
 [Install]
