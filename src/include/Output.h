@@ -5,11 +5,11 @@
 #include <thread>
 
 namespace CJ {
-  class Output {
-    public:
-      static void Display(Image *image);
-    private:
-  };
+	class Output {
+		public:
+			static void Display(Image *image);
+		private:
+	};
 }
 
 #endif

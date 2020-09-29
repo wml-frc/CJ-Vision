@@ -4,16 +4,16 @@
 #include "cjHeaders.h"
 
 namespace CJ {
-  class HullGeneration {
-    /**
-     * Draw Hull around contours
-     */
-    static void drawHull();
+	class HullGeneration {
+		/**
+		 * Draw Hull around contours
+		 */
+		static void drawHull();
 
-    /**
-     * Draw Bounding Box around objects/hull
-     */
-    static void drawBoundingBox();
-  };
+		/**
+		 * Draw Bounding Box around objects/hull
+		 */
+		static void drawBoundingBox();
+	};
 }
 #endif

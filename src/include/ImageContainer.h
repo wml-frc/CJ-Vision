@@ -4,10 +4,9 @@
 #include "cjHeaders.h"
 
 namespace CJ {
-  struct Image {
-    cv::Mat data;
-    std::string name = " ";
-    std::vector<std::vector<cv::Point>> contours;
-  };
+	struct Image {
+		cv::Mat data;
+		std::string name = " ";
+	};
 }
 #endif

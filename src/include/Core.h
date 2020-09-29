@@ -3,6 +3,7 @@
 #define CORE_H
 #include "ImageContainer.h"
 #include "ColourFilter.h"
+#include "Contours.h"
 #include "Camera.h"
 #include "Output.h"
 
@@ -10,20 +11,20 @@
 #include "socket/Network.h"
 
 namespace CJ {
-  class Core {
-   public:
+	class Core {
+	public:
 
-    /**
-     * Init program.
-     */
-    static void init();
+		/**
+		 * Init program.
+		 */
+		static void init();
 
-    /**
-    * Sets up the vision library with cam and image settings
-    */
-    void setupVision(Image *image, Camera::Cam *cam);
+		/**
+		* Sets up the vision library with cam and image settings
+		*/
+		void setupVision(Image *image, Camera::Cam *cam);
 
-   private:
-  };
+	private:
+	};
 }
 #endif // CORE_H
