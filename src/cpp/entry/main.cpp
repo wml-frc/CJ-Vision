@@ -1,4 +1,4 @@
-// #define DEBUG
+#define DEBUG
 #ifdef DEBUG
 	
 	#include "Core.h"
@@ -9,7 +9,7 @@
 		CJ::Camera::Cam cam;
 		cam.config.ResWidth = 640;
 		cam.config.ResHeight = 480;
-		cam.config.CamPort = 2;
+		cam.config.CamPort = 0;
 		cam.config.CamName = "Debug Cam";
 		cam.config.AutoExposure = true;
 		cam.config.Exposure = 50;
@@ -31,11 +31,11 @@
 		core.setupVision(&inputImage, &cam);
 
 		CJ::ColourFilter::Options filterOptions;
-		filterOptions.HColourLowRange = 50;
-		filterOptions.HColourHighRange = 70;
+		filterOptions.HColourLowRange = 20;
+		filterOptions.HColourHighRange = 35;
 		filterOptions.SColourLowRange = 100;
 		filterOptions.SColourHighRange = 255;
-		filterOptions.VColourLowRange = 30;
+		filterOptions.VColourLowRange = 100;
 		filterOptions.VColourHighRange = 255;
 		filterOptions.GreyScale = false;
 
@@ -79,6 +79,7 @@
 			std::cout << "dpGet Doubles: " << dpGet.DoubleValues[0] << std::endl;
 			std::cout << "dpGet Double 511: " << dpGet.DoubleValues[511] << std::endl; 
 			CJ::Output::Display(&inputImage);
+			CJ::Output::Display(&filteredImage);
 			CJ::Output::Display(&contourOutput);
 		}
 		printf("\nProgram Ended\n");
