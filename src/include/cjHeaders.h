@@ -2,17 +2,17 @@
 #define cjHEADERS_H
 
 class PROG {
- private:
-  // MAIN PROG
-  static bool PROG_RUNNING_b;
+private:
+	// MAIN PROG
+	static bool PROG_RUNNING_b;
 
-  // THREADING
-  static bool THREADS_RUNNING_b;
- public:
-  static bool PROG_RUNNING() {return PROG_RUNNING_b;}
-  static bool THREADS_RUNNING() {return THREADS_RUNNING_b;}
-  static void set_PROG_RUNNING(bool status) {PROG_RUNNING_b = status;}
-  static void set_THREADS_RUNNING(bool status) {THREADS_RUNNING_b = status;}
+	// THREADING
+	static bool THREADS_RUNNING_b;
+public:
+	static bool PROG_RUNNING() {return PROG_RUNNING_b;}
+	static bool THREADS_RUNNING() {return THREADS_RUNNING_b;}
+	static void set_PROG_RUNNING(bool status) {PROG_RUNNING_b = status;}
+	static void set_THREADS_RUNNING(bool status) {THREADS_RUNNING_b = status;}
 };
 
 // Network
