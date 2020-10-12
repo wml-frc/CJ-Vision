@@ -37,6 +37,7 @@ COPROC_DEFS = -DCOPROC
 # global compiling attributes
 LOCAL_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(USER_HEADERS) $(USER_CPP) $(ENTRY) $(CPP)
 COPROC_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(COPROC_HEADERS) $(COPROC_CPP) $(ENTRY) $(CPP)
+DEBUG_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP)
 
 all: # Maker for Desktop
 	$(MAKE) all1 || $(MAKE) all4
@@ -54,11 +55,11 @@ debug: # debuger. (mostly used for azure when Coproc dir doesn't exist)
 
 debug1:
 	$(MKDIR) $(OUTDIR)
-	$(LOCAL_COMPILE) $(LIBS) $(LOCAL_DEFS) -DDEBUG
+	$(DEBUG_COMPILE) $(LIBS) $(LOCAL_DEFS) -DDEBUG
 
 debug4:
 	$(MKDIR) $(OUTDIR)
-	$(LOCAL_COMPILE) $(LIBS4) $(LOCAL_DEFS) -DDEBUG
+	$(DEBUG_COMPILE) $(LIBS4) $(LOCAL_DEFS) -DDEBUG
 
 
 coprocessor: # Maker for Coprocessor
