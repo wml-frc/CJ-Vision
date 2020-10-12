@@ -30,20 +30,21 @@ jobs:
       tasks: 'clean build'
       options: '-Pno-roborio -PdebugMode'
 
-# - job: windows
-#   pool:
-#     vmImage: 'windows-latest'
-#   steps:
-#   - template: azure-init.yml
-#   - task: Gradle@2
-#     inputs:
-#       workingDirectory: ''
-#       gradleWrapperFile: 'gradlew'
-#       gradleOptions: '-Xmx3072m'
-#       publishJUnitResults: false
-#       testResultsFiles: '**/TEST-*.xml'
-#       tasks: 'clean build -PdebugMode'
-#       options: '-Pno-roborio'
+- job: windows
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - checkout: self
+  - template: azure-init.yml
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'clean build'
+      options: '-Pno-roborio -PdebugMode'
 
 # - job: macOS
 #   pool:
