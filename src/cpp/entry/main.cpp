@@ -70,7 +70,7 @@
 
 		while (PROG::PROG_RUNNING()) {
 			system("clear");
-			#ifdef __unix__
+			#ifdef linux
 			std::cout << "Networking Test" << std::endl;
 			std::cout << "Ip Adress: " << c_nt.getIP() << std::endl;
 			std::cout << "Port: " << c_nt.getPort() << std::endl;
