@@ -65,9 +65,9 @@ jobs:
     - checkout: self  # self represents the repo where the initial Pipelines YAML file was found
       submodules: true
     - script: |
-      mkdir build
-      export JAVA_HOME=`/usr/libexec/java_home -v 11`
-      brew install ant binutils
+        mkdir build
+        export JAVA_HOME=`/usr/libexec/java_home -v 11`
+        brew install ant binutils
       displayName: 'Setup JDK Ant and Binutils'
     - task: Gradle@2
       inputs:
