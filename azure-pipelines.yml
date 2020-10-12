@@ -50,7 +50,7 @@ jobs:
   - script: |
       @call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
       set PATH=%PATH%;%ANT_HOME%\bin
-      gradlew build -PjenkinsBuild -PskipDebug -Pno-roborio -PdebugMode
+      gradlew build -Pno-roborio -PdebugMode
     displayName: 'Gradle Build'
   
   # - task: Gradle@2
