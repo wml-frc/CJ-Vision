@@ -49,26 +49,25 @@ deploy {
 
 	artifacts {
 
-		// Deploy Vision program
-		fileTreeArtifact('VisionProgram') {
+		// Common properties
+		all {
 			targets << 'coprocessor'
-			files = fileTree(dir: 'src/')
+		}
 
-			predeploy << {
-				execute('sudo systemctl stop vision || true')
-			}
+		// Deploy CJ Vision Library CPP
+		fileTreeArtifact('cjVisionLibCPP') {
+			directory = 'cjVisionLib/src/cpp'
+			files = fileTree(dir: 'src/cpp')
+		}
 
-			postdeploy << {
-				execute('make coprocessor')
-				execute('chmod +x cjVision')
-				execute('sudo systemctl restart vision ||true')
-			}
+		// Deploy CJ Vision Headers
+		fileTreeArtifact('cjVisionLibHEADERS') {
+			directory = 'cjVisionLib/src/include'
+			files = fileTree(dir: 'src/include')
 		}
 
 		// Deploy Resource Files (service files and config)
 		fileTreeArtifact('VisionResources') {
-			targets << 'coprocessor'
-
 			files = fileTree(dir: 'src/resources')
 			postdeploy << {
 				execute('sudo ln -sf $(pwd)/system/vision.service /etc/systemd/system')
@@ -89,10 +88,28 @@ deploy {
 
 		// User deploy files
 		if (file('../Coproc').isDirectory()) {
+			fileTreeArtifact('UserProgram') {
+				directory = 'UserProgram/main'
+				files = fileTree(dir: '../Coproc/src/main')
+			}
 			fileTreeArtifact('UserDeploys') {
-				targets << 'coprocessor'
-
+				directory = 'UserProgram/deploy'
 				files = fileTree(dir: '../Coproc/src/deploy')
+			}
+		}
+
+		// Deploy Makefile and run project
+		fileArtifact('makeFileDeploy') {
+			directory = 'cjVisionLib/src/'
+			file = file('src/Makefile')
+			predeploy << {
+				execute('sudo systemctl stop vision || true')
+			}
+
+			postdeploy << {
+				execute('make coprocessor')
+				execute('chmod +x cjVision')
+				execute('sudo systemctl restart vision ||true')
 			}
 		}
 	}
