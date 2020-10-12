@@ -50,18 +50,18 @@ jobs:
   - script: |
       @call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
       set PATH=%PATH%;%ANT_HOME%\bin
-      gradlew build -PjenkinsBuild -PskipDebug
+      gradlew build -PjenkinsBuild -PskipDebug -Pno-roborio -PdebugMode
     displayName: 'Gradle Build'
   
-  - task: Gradle@2
-    inputs:
-      workingDirectory: ''
-      gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
-      publishJUnitResults: false
-      testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build'
-      options: '-Pno-roborio -PdebugMode'
+  # - task: Gradle@2
+  #   inputs:
+  #     workingDirectory: ''
+  #     gradleWrapperFile: 'gradlew'
+  #     gradleOptions: '-Xmx3072m'
+  #     publishJUnitResults: false
+  #     testResultsFiles: '**/TEST-*.xml'
+  #     tasks: 'clean build'
+  #     options: '-Pno-roborio -PdebugMode'
 
 
 # - job: macOS
