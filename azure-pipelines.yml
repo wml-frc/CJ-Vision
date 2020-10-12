@@ -32,10 +32,27 @@ jobs:
 
 - job: windows
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'windows-2019'
   steps:
   - checkout: self
   - template: azure-init.yml
+  - powershell: |
+      mkdir build
+      $ProgressPreference = 'SilentlyContinue'
+      wget "https://download.java.net/java/ga/jdk11/openjdk-11_windows-x64_bin.zip" -O "build\jdk.zip"
+    displayName: 'Download JDK'
+  - task: JavaToolInstaller@0
+    inputs:
+      jdkSourceOption: localDirectory
+      jdkFile: 'build/jdk.zip'
+      jdkDestinationDirectory: 'build/jdkinst'
+      jdkArchitectureOption: x64
+  - script: |
+      @call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
+      set PATH=%PATH%;%ANT_HOME%\bin
+      gradlew build -PjenkinsBuild -PskipDebug
+    displayName: 'Gradle Build'
+  
   - task: Gradle@2
     inputs:
       workingDirectory: ''
@@ -45,6 +62,7 @@ jobs:
       testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean build'
       options: '-Pno-roborio -PdebugMode'
+
 
 # - job: macOS
 #   pool:
