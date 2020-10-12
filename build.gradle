@@ -111,13 +111,15 @@ model {
 				}
 
 
-				if (!project.hasProperty("debugMode")) {
-					exportedHeaders {
+		
+				exportedHeaders {
+					if (project.hasProperty("debugMode")) {
+					srcDirs = ['src/include']
+					} else {
 						srcDirs = ['src/include', '../Coproc/src/main/include']
 					}
-				} else {
-					srcDirs = ['src/include']
 				}
+				
 			}
 
 			binaries.all {
