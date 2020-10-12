@@ -53,27 +53,29 @@ jobs:
       gradlew build -Pno-roborio -PdebugMode
     displayName: 'Gradle Build'
   
-  # - task: Gradle@2
-  #   inputs:
-  #     workingDirectory: ''
-  #     gradleWrapperFile: 'gradlew'
-  #     gradleOptions: '-Xmx3072m'
-  #     publishJUnitResults: false
-  #     testResultsFiles: '**/TEST-*.xml'
-  #     tasks: 'clean build'
-  #     options: '-Pno-roborio -PdebugMode'
 
 
-# - job: macOS
-#   pool:
-#     vmImage: 'macOS-latest'
-#   steps:
-#   - template: azure-init.yml
-#   - task: Gradle@2
-#     inputs:
-#       workingDirectory: ''
-#       gradleWrapperFile: 'gradlew'
-#       gradleOptions: '-Xmx3072m'
-#       publishJUnitResults: false
-#       testResultsFiles: '**/TEST-*.xml'
-#       tasks: 'clean build -PdebugMode'
+- job: Mac
+  pool:
+    vmImage: 'macOS-10.14'
+
+  timeoutInMinutes: 0
+
+  steps:
+    - checkout: self  # self represents the repo where the initial Pipelines YAML file was found
+      submodules: true
+    - script: |
+      mkdir build
+      export JAVA_HOME=`/usr/libexec/java_home -v 11`
+      brew install ant binutils
+      displayName: 'Setup JDK Ant and Binutils'
+    - task: Gradle@2
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        gradleOptions: '-Xmx3072m'
+        jdkVersionOption: '1.11'
+        publishJUnitResults: false
+        testResultsFiles: '**/TEST-*.xml'
+        tasks: 'clean build'
+        options: '-Pno-roborio -PdebugMode'
