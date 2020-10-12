@@ -6,7 +6,7 @@ jobs:
 
 - job: windows
   pool:
-    vmImage: 'VS2017-Win2016'
+    vmImage: 'windows-latest'
   steps:
   - template: azure-init.yml
   - task: Gradle@2
@@ -16,15 +16,8 @@ jobs:
       gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'installRoboRioToolchain'
-  - task: Gradle@2
-    inputs:
-      workingDirectory: ''
-      gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
-      publishJUnitResults: false
-      testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean build -PdebugMode'
+      options: '-Pno-roborio'
 
 # - job: macOS
 #   pool:
