@@ -29,7 +29,7 @@ jobs:
 
 - job: macOS
   pool:
-    vmImage: 'macOS-10.13'
+    vmImage: 'macOS-latest'
   steps:
   - template: azure-init.yml
   - task: Gradle@2
@@ -43,7 +43,7 @@ jobs:
 
 - job: linux16
   pool: 
-    vmImage: 'Ubuntu-16.04'
+    vmImage: 'Ubuntu-latest'
   container: linux_jaci
   steps:
   - script: sudo apt-get install -y libusb-1.0-0-dev
