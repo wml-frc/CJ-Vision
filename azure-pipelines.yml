@@ -25,7 +25,7 @@ jobs:
       gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build'
+      tasks: 'clean build -PdebugMode'
 
 - job: macOS
   pool:
@@ -39,7 +39,7 @@ jobs:
       gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build'
+      tasks: 'clean build -PdebugMode'
 
 - job: linux16
   pool: 
@@ -54,4 +54,4 @@ jobs:
       gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build'
+      tasks: 'clean build -PdebugMode'

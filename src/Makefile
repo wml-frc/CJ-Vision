@@ -28,7 +28,7 @@ LIBS4 = $(OPENCV4)
 MKDIR = mkdir -p
 OUTDIR = build
 
-# Local compile
+# Local compile (don't need any for now)
 LOCAL_DEFS =
 
 # Coprocessor compile
@@ -48,6 +48,18 @@ all1:
 all4:
 	$(MKDIR) $(OUTDIR)
 	$(LOCAL_COMPILE) $(LIBS4) $(LOCAL_DEFS)
+
+debug: # debuger. (mostly used for azure when Coproc dir doesn't exist)
+	$(MAKE) debug1 || $(MAKE) debug4
+
+debug1:
+	$(MKDIR) $(OUTDIR)
+	$(LOCAL_COMPILE) $(LIBS) $(LOCAL_DEFS) -DDEBUG
+
+debug4:
+	$(MKDIR) $(OUTDIR)
+	$(LOCAL_COMPILE) $(LIBS4) $(LOCAL_DEFS) -DDEBUG
+
 
 coprocessor: # Maker for Coprocessor
 	$(MAKE) coproc1 || coproc4

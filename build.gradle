@@ -130,8 +130,17 @@ model {
 					includes = ['**/*.cpp', '**/*.cc', '**/*.exe']
 				}
 
-				exportedHeaders {
-					srcDirs = ['src/include', '../Coproc/src/main/include']
+
+				if (!project.hasProperty("debugMode")) {
+					exportedHeaders {
+						srcDirs = ['src/include', '../Coproc/src/main/include']
+					}
+				}
+			}
+
+			binaries.all {
+				if (project.hasProperty("debugMode")) {
+					cppCompiler.define 'DEBUG'
 				}
 			}
 
@@ -160,14 +169,18 @@ model {
 }
 
 task buildVision(type:Exec) {
-	if (!file('../Coproc').isDirectory()) {
-		ant.fail("'Coproc' folder not found one level up from build.gradle")
-	}
 	description "Builds vision locally"
 	workingDir "src/"
 
 	println "Building Vision Project..."
-	commandLine 'make'
+	if (project.hasProperty("debugMode")) {
+		commandLine 'make', 'debug'
+	} else {
+		if (!file('../Coproc').isDirectory()) {
+			ant.fail("'Coproc' folder not found one level up from build.gradle")
+		}
+		commandLine 'make'
+	}
 }
 
 // Run Vision locally

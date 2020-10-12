@@ -1,4 +1,4 @@
-#define DEBUG
+
 #ifdef DEBUG
 	
 	#include "Core.h"
@@ -43,7 +43,8 @@
 
 		CJ::Contours::detectContours(&filteredImage, &contourOutput, 100);
 
-
+		// Networking 
+		#ifdef __unix__
 		CJ::Network::Control nt;
 		CJ::Network::Control::server s_nt;
 		CJ::Network::Control::client c_nt;
@@ -65,9 +66,11 @@
 
 		c_nt.registerSend(&dpSend);
 		s_nt.registerReceive(&dpGet);
+		#endif
 
 		while (PROG::PROG_RUNNING()) {
 			system("clear");
+			#ifdef __unix__
 			std::cout << "Networking Test" << std::endl;
 			std::cout << "Ip Adress: " << c_nt.getIP() << std::endl;
 			std::cout << "Port: " << c_nt.getPort() << std::endl;
@@ -78,6 +81,7 @@
 			std::cout << "dpGet Booleans: " << dpGet.BooleanValues[0] << std::endl;
 			std::cout << "dpGet Doubles: " << dpGet.DoubleValues[0] << std::endl;
 			std::cout << "dpGet Double 511: " << dpGet.DoubleValues[511] << std::endl; 
+			#endif
 			CJ::Output::Display(&inputImage);
 			CJ::Output::Display(&filteredImage);
 			CJ::Output::Display(&contourOutput);
