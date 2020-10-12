@@ -47,10 +47,22 @@ jobs:
   container: bionic
 
   steps:
-  # - script: sudo apt-get install -y libusb-1.0-0-dev
-  # - script: |
-  #     sudo apt-get update && sudo apt-get install ant -y && sudo rm -rf /var/lib/apt/lists/*
-  #   displayName: 'Install Ant'
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'installRoboRioToolchain'
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'downloadAll'
   - task: Gradle@2
     inputs:
       workingDirectory: ''
