@@ -1,30 +1,10 @@
 import static org.apache.tools.ant.taskdefs.condition.Os.*
 plugins {
 	id "edu.wpi.first.GradleRIO" version "2020.3.2"
-	id "de.undercouch.download" version "4.1.1"
-	id "org.ysb33r.doxygen" version "0.6"
 	id "google-test-test-suite"
 	id "java-test-fixtures"
 	id "groovy"
 	id "cpp"
-}
-
-// Documentation Generation
-doxygen {
-	generate_latex false
-	generate_html true
-
-	source new File(projectDir, 'src/cpp')
-	source new File(projectDir, 'src/include')
-
-	include '**/*.cpp'
-	include '**/*.h'
-
-	file_paterns '*.cpp', '*.h'
-
-	recursive true
-
-	outputDir new File(projectDir, 'docs/doxygen')
 }
 
 // Deploying
