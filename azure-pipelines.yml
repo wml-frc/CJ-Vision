@@ -6,7 +6,7 @@ jobs:
 
 - job: windows
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'VS2017-Win2016'
   steps:
   - template: azure-init.yml
   - task: Gradle@2
