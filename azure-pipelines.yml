@@ -2,20 +2,11 @@
 trigger: 
 - master
 
-resources:
-  containers:
-  - container: linux_jaci #Jaci's Linux, from (https://github.com/JacisNonsense/azure-native-linux)
-    image: jaci/azure-native-linux:2018.12.06
-  - container: wpilib2019
-    image: wpilib/roborio-cross-ubuntu:2019-18.04
-  - container: raspbian
-    image:  wpilib/raspbian-cross-ubuntu:18.04
-
 jobs:
 
-- job: windows_VS2017_Win2016
+- job: windows
   pool:
-    vmImage: 'VS2017-Win2016'
+    vmImage: 'windows-latest'
   steps:
   - template: azure-init.yml
   - task: Gradle@2
@@ -41,12 +32,12 @@ jobs:
       testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean build -PdebugMode'
 
-- job: linux16
+- job: linux
   pool: 
-    vmImage: 'Ubuntu-latest'
-  container: linux_jaci
+    vmImage: 'ubuntu-latest'
   steps:
   - script: sudo apt-get install -y libusb-1.0-0-dev
+  - script: sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/2.0/bootstrap/openCV.sh?raw=1 | bash
   - task: Gradle@2
     inputs:
       workingDirectory: ''
