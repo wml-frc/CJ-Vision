@@ -115,6 +115,8 @@ model {
 					exportedHeaders {
 						srcDirs = ['src/include', '../Coproc/src/main/include']
 					}
+				} else {
+					srcDirs = ['src/include']
 				}
 			}
 
