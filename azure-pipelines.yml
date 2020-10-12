@@ -8,45 +8,45 @@ jobs:
 
 # Windows Build
 - job: windows_VS2017_Win2016
-	pool:
-		vmImage: 'VS2017_Win2016'
-	steps:
-	- template: azure-init.yml
-	- task: Gradle@2
-		inputs:
-			workingDirectory: ''
-			gradleWrapperFile: 'gradlew'
-			gradleOptions: '-XmX3072'
-			publishJUnitResults: false
-			testresultFiles: '**/Test-*.xml'
-			tasks: 'clean build'
+  pool:
+    vmImage: 'VS2017_Win2016'
+  steps:
+  - template: azure-init.yml
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-XmX3072'
+      publishJUnitResults: false
+      testresultFiles: '**/Test-*.xml'
+      tasks: 'clean build'
 
 # MacOS Buils
 - job: macOS
-	pool:
-		vmImage: 'macOS-10.13'
-	steps:
-	- template: azure-init.yml
-	- task: Gradle@2
-		inputs:
-			workingDirectory: ''
-			gradleWrapperFile: 'gradlew'
-			gradleOptions: '-Xmx3072m'
-			publishJUnitResults: false
-			testResultsFiles: '**/TEST-*.xml'
-			tasks: 'clean build'
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+  - template: azure-init.yml
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'clean build'
 
 # Linux Build
 - job: linux16
-	pool: 
-		vmImage: 'Ubuntu-16.04'
-	steps:
-	- script: sudo apt-get install -y libusb-1.0-0-dev
-	- task: Gradle@2
-		inputs:
-			workingDirectory: ''
-			gradleWrapperFile: 'gradlew'
-			gradleOptions: '-Xmx3072m'
-			publishJUnitResults: false
-			testResultsFiles: '**/TEST-*.xml'
-			tasks: 'clean build'
+  pool: 
+    vmImage: 'Ubuntu-16.04'
+  steps:
+  - script: sudo apt-get install -y libusb-1.0-0-dev
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'clean build'
