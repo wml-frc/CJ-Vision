@@ -1,43 +1,56 @@
 # Azure Tester
 trigger: 
-- master
+- master # Triggers when on master. Either pr or push
+
+resources:
+  containers:
+  - container: wpilib2020
+    image: wpilib/roborio-cross-ubuntu:2020-18.04
+  - container: raspbian
+    image:  wpilib/raspbian-cross-ubuntu:10-18.04
+  - container: bionic
+    image: wpilib/aarch64-cross-ubuntu:bionic-18.04
 
 jobs:
 
-- job: windows
-  pool:
-    vmImage: 'windows-latest'
-  steps:
-  - template: azure-init.yml
-  - task: Gradle@2
-    inputs:
-      workingDirectory: ''
-      gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
-      publishJUnitResults: false
-      testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build -PdebugMode'
+# - job: windows
+#   pool:
+#     vmImage: 'windows-latest'
+#   steps:
+#   - template: azure-init.yml
+#   - task: Gradle@2
+#     inputs:
+#       workingDirectory: ''
+#       gradleWrapperFile: 'gradlew'
+#       gradleOptions: '-Xmx3072m'
+#       publishJUnitResults: false
+#       testResultsFiles: '**/TEST-*.xml'
+#       tasks: 'clean build -PdebugMode'
 
-- job: macOS
-  pool:
-    vmImage: 'macOS-latest'
-  steps:
-  - template: azure-init.yml
-  - task: Gradle@2
-    inputs:
-      workingDirectory: ''
-      gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
-      publishJUnitResults: false
-      testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build -PdebugMode'
+# - job: macOS
+#   pool:
+#     vmImage: 'macOS-latest'
+#   steps:
+#   - template: azure-init.yml
+#   - task: Gradle@2
+#     inputs:
+#       workingDirectory: ''
+#       gradleWrapperFile: 'gradlew'
+#       gradleOptions: '-Xmx3072m'
+#       publishJUnitResults: false
+#       testResultsFiles: '**/TEST-*.xml'
+#       tasks: 'clean build -PdebugMode'
 
 - job: linux
   pool: 
-    vmImage: 'ubuntu-latest'
+    vmImage: 'Ubuntu 16.04'
+  container: bionic
+
   steps:
   - script: sudo apt-get install -y libusb-1.0-0-dev
-  - script: sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/2.0/bootstrap/openCV.sh?raw=1 | bash
+  - script: |
+      sudo apt-get update && sudo apt-get install ant -y && sudo rm -rf /var/lib/apt/lists/*
+    displayName: 'Install Ant'
   - task: Gradle@2
     inputs:
       workingDirectory: ''
