@@ -2,12 +2,23 @@
 trigger: 
 - master # Triggers when on master. Either pr or push
 
+resources:
+  containers:
+  - container: wpilib2020
+    image: wpilib/roborio-cross-ubuntu:2020-18.04
+  - container: raspbian
+    image:  wpilib/raspbian-cross-ubuntu:10-18.04
+  - container: bionic
+    image: wpilib/aarch64-cross-ubuntu:bionic-18.04
+
 jobs:
 
-- job: windows
+- job: linux
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'Ubuntu 16.04'
+  container: bionic
   steps:
+  - checkout: self
   - template: azure-init.yml
   - task: Gradle@2
     inputs:
@@ -16,8 +27,23 @@ jobs:
       gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build -PdebugMode'
-      options: '-Pno-roborio'
+      tasks: 'clean build'
+      options: '-Pno-roborio -PdebugMode'
+
+# - job: windows
+#   pool:
+#     vmImage: 'windows-latest'
+#   steps:
+#   - template: azure-init.yml
+#   - task: Gradle@2
+#     inputs:
+#       workingDirectory: ''
+#       gradleWrapperFile: 'gradlew'
+#       gradleOptions: '-Xmx3072m'
+#       publishJUnitResults: false
+#       testResultsFiles: '**/TEST-*.xml'
+#       tasks: 'clean build -PdebugMode'
+#       options: '-Pno-roborio'
 
 # - job: macOS
 #   pool:
