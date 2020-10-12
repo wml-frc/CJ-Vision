@@ -45,8 +45,8 @@ jobs:
   pool: 
     vmImage: 'Ubuntu 16.04'
   container: bionic
-
   steps:
+  - template: azure-init.yml
   - task: Gradle@2
     inputs:
       workingDirectory: ''
