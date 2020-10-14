@@ -11,14 +11,14 @@ plugins {
 deploy {
 	targets {
 		target('coprocessor') {
-			directory = '/home/vision'
-			maxChannels = 1
+			directory = '/home/vision/'
+			maxChannels = 10
 			timeout = 3
 			failOnMissing = true
 
 			locations {
 				ssh {
-					address = "CJvision.local"
+					address = "CJVision.local"
 					user = 'vision'
 					password = 'CJfrc'
 					ipv6 = false
@@ -35,7 +35,7 @@ deploy {
 		}
 
 		// Deploy CJ Vision Library CPP
-		fileTreeArtifact('cjVisionLibCPP') {
+		fileTreeArtifact("libCpp") {
 			directory = 'cjVisionLib/src/cpp'
 			files = fileTree(dir: 'src/cpp')
 		}
@@ -110,8 +110,6 @@ model {
 					includes = ['**/*.cpp', '**/*.cc', '**/*.exe']
 				}
 
-
-		
 				exportedHeaders {
 					if (project.hasProperty("debugMode")) {
 					srcDirs = ['src/include']
