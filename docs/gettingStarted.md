@@ -141,3 +141,9 @@ PROG::THREADS_RUNNING(); // returns boolean (is threads running)
 PROG::set_PROG_RUNNING(boolean); // set the program running (true or false)
 PROG::set_THREADS_RUNNING(boolean); // set the threads running
 ```
+
+
+- For more in depth guides to use the library, (colour filtering/gray scale, contour detection, hull generation etc) check the [examples](examples/README.md) directory. Which provides examples on each function CJ-Vision provides.
+
+### Networking 
+- This library uses a custom networking library to send data between devices. (Due to issues implementing Network Tables on coprocessors like jetsons and tinkerboards) It is written in pure C++ (Linux only). Check the [examples](examples/README.md) directory on how to use it to send and recieve data between linux machines. It provides a custom configuration (ip, port setting) And both threaded and non threaded send and receive functions for sending data between machines. It is also written in one header file so you can easily download it and use it inside other projects, or if your apart of FRC download and place it inside your robot code so you can recieve data between the roborio and coprocessor. (If your using WML, it has this header built in)
