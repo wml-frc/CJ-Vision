@@ -22,7 +22,7 @@ namespace CJ {
 		/**
 		* Sets up the vision library with cam and image settings
 		*/
-		void setupVision(Image *image, Camera::Cam *cam);
+		static void setupVision(Image *image, Camera::Cam *cam);
 
 	private:
 	};
