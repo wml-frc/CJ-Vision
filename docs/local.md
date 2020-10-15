@@ -6,7 +6,7 @@
 1. Download Java (JDK 11 for best support "https://www.oracle.com/java/technologies/javase-jdk11-downloads.html")
 
 2. Once complete, download or clone the project either into existing code (using the lib as a submodule) or download as is.
-Then run inside the root dir of the lib run `gradlew build -PdebugMode`
+Then inside the root dir of the lib run `gradlew build -PdebugMode`
 If all is downloaded correctly, it should read `BUILD SUCCESSFUL`
 
 ### Linux
