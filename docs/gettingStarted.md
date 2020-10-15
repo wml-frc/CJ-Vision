@@ -117,7 +117,7 @@ void Vision::Init() {
 		480, // Resolution Height
 		0, // Camera Port
 		"Vision Camera", // Camera Name
-		false, // Auto Exposure (ovverides manual below)
+		false, // Auto Exposure (overides manual below)
 		50, // Manual exposure (different between cameras)
 		60 // Target FPS
 	};
