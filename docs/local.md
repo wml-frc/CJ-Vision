@@ -6,16 +6,16 @@
 1. Download Java (JDK 11 for best support "https://www.oracle.com/java/technologies/javase-jdk11-downloads.html")
 
 2. Once complete, download or clone the project either into existing code (using the lib as a submodule) or download as is.
-Then run inside the root dir of the lib run `gradlew build -PdebugMode`
+Then inside the root dir of the lib run `gradlew build -PdebugMode`
 If all is downloaded correctly, it should read `BUILD SUCCESSFUL`
 
 ### Linux
 1. Linux requires the build essentials (gcc, cmake etc. For the project to run, and it also requires OpenCV)
 
 - Linux is the same intended platform as the target Coprocessor and is the most tested platform for this lib. You can utilize a modified bootstrap script for the install.
-"sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/master/bootstrap/bootstrapLocal.sh?raw=1 | bash"
+`sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/master/bootstrap/bootstrapLocal.sh?raw=1 | bash`
 
-- Or you can install it manually using belows scripts
+- Or you can install it manually using the below scripts
 
 	In your terminal run:
 ```shell
