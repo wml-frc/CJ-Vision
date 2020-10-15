@@ -52,7 +52,7 @@ MainProject
 	|___...
 ```
 
-This is the required directory structure when building your vision program. (deploy is optional) The names need to be correct as well for the vision lib to detect and compile it. Place your c/cpp files inside the `cpp` dir, and place your headers inside `include`. The program searches for and builds Vision.cpp/.h, this will be the for the program.
+This is the required directory structure when building your vision program. (deploy is optional) The names need to be correct as well for the vision lib to detect and compile it. Place your c/cpp files inside the `cpp` dir, and place your headers inside `include`. The program searches for and builds Vision.cpp/.h, this will be your entry for the program.
 
 `Vision.cpp`
 ```cpp
