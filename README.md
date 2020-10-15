@@ -4,7 +4,7 @@
 
 #### Build Status
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/WML/_apis/build/status/wml-frc.CJ-Vision?branchName=refs%2Fpull%2F46%2Fmerge)](https://dev.azure.com/ConnorBuchel0890/WML/_build/latest?definitionId=12&branchName=refs%2Fpull%2F46%2Fmerge)
-
+```
 Coproc
 |
 |___src
@@ -21,6 +21,7 @@ Coproc
 CJ-Vision
 |
 |___...
+```
 
 
 ### Features:
