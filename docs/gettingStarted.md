@@ -5,7 +5,7 @@
 #### Structure
 - CJ-Vision uses a directory structure where the program you build is seperated from the main library.
 
-- The build will fail unless the either detects the `Coproc` directory. Or it was build using `./gradlew build -PdebugMode` which uses it's own logic for debugging and testing
+- The build will fail unless the program either detects the `Coproc` directory. Or it was built using `./gradlew build -PdebugMode` which uses it's own logic for debugging and testing
 
 - The directory structure should look like the following
 
