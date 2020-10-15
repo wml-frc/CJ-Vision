@@ -24,11 +24,8 @@
 		CJ::Image cannyOutput;
 		CJ::Image contourOutput;
 
-
-		CJ::Core core;
-
 		std::cout << "Exposure: " << cam.config.Exposure << std::endl;
-		core.setupVision(&inputImage, &cam);
+		CJ::Core::setupVision(&inputImage, &cam);
 
 		CJ::ColourFilter::Options filterOptions;
 		filterOptions.HColourLowRange = 20;
