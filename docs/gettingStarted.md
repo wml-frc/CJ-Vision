@@ -136,7 +136,7 @@ The above program should input an image and display it the `Core` which was init
 
 ```cpp
 PROG::PROG_RUNNING(); // returns boolean (is running)
-PROG::THREADS_RUNNING() // returns boolean (is threads running)
+PROG::THREADS_RUNNING(); // returns boolean (is threads running)
 PROG::set_PROG_RUNNING(boolean); // set the program running (true or false)
 PROG::set_THREADS_RUNNING(boolean); // set the threads running
 ```
