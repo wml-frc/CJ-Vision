@@ -13,7 +13,7 @@ If all is downloaded correctly, it should read `BUILD SUCCESSFUL`
 1. Linux requires the build essentials (gcc, cmake etc. For the project to run, and it also requires OpenCV)
 
 - Linux is the same intended platform as the target Coprocessor and is the most tested platform for this lib. You can utilize a modified bootstrap script for the install.
-"sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/master/bootstrap/bootstrapLocal.sh?raw=1 | bash"
+`sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/master/bootstrap/bootstrapLocal.sh?raw=1 | bash`
 
 - Or you can install it manually using belows scripts
 
