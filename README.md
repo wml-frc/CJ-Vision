@@ -4,25 +4,6 @@
 
 #### Build Status
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/WML/_apis/build/status/wml-frc.CJ-Vision?branchName=refs%2Fpull%2F46%2Fmerge)](https://dev.azure.com/ConnorBuchel0890/WML/_build/latest?definitionId=12&branchName=refs%2Fpull%2F46%2Fmerge)
-```
-Coproc
-|
-|___src
-	|
-	|___deploy
-	|
-	|___main
-		|
-		|___cpp
-		|		Vision.cpp
-		|
-		|___include
-				Vision.h
-CJ-Vision
-|
-|___...
-```
-
 
 ### Features:
 - Pre-threaded. (wrappers around commonly used OpenCV functions are threaded upon launch)
