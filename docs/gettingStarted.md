@@ -132,7 +132,8 @@ void Vision::Periodic() {
 }
 ```
 
-The above program should input an image and display it the `Core` which was initialized detects errors and starts/stops the program automatically. But you can manually check/start/stop the program using
+- The above program should input an image and display it using `CJ::Output::Display()`. 
+- The `Core` which was initialized detects errors and starts/stops the program automatically. But you can manually check/start/stop the program using
 
 ```cpp
 PROG::PROG_RUNNING(); // returns boolean (is running)
