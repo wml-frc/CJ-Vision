@@ -28,7 +28,7 @@ LIBS4 = $(OPENCV4)
 MKDIR = mkdir -p
 OUTDIR = build
 
-# Local compile
+# Local compile (don't need any for now)
 LOCAL_DEFS =
 
 # Coprocessor compile
@@ -37,6 +37,7 @@ COPROC_DEFS = -DCOPROC
 # global compiling attributes
 LOCAL_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(USER_HEADERS) $(USER_CPP) $(ENTRY) $(CPP)
 COPROC_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(COPROC_HEADERS) $(COPROC_CPP) $(ENTRY) $(CPP)
+DEBUG_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP)
 
 all: # Maker for Desktop
 	$(MAKE) all1 || $(MAKE) all4
@@ -48,6 +49,18 @@ all1:
 all4:
 	$(MKDIR) $(OUTDIR)
 	$(LOCAL_COMPILE) $(LIBS4) $(LOCAL_DEFS)
+
+debug: # debuger. (mostly used for azure when Coproc dir doesn't exist)
+	$(MAKE) debug1 || $(MAKE) debug4
+
+debug1:
+	$(MKDIR) $(OUTDIR)
+	$(DEBUG_COMPILE) $(LIBS) $(LOCAL_DEFS) -DDEBUG
+
+debug4:
+	$(MKDIR) $(OUTDIR)
+	$(DEBUG_COMPILE) $(LIBS4) $(LOCAL_DEFS) -DDEBUG
+
 
 coprocessor: # Maker for Coprocessor
 	$(MAKE) coproc1 || coproc4

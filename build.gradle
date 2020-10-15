@@ -1,44 +1,24 @@
 import static org.apache.tools.ant.taskdefs.condition.Os.*
 plugins {
 	id "edu.wpi.first.GradleRIO" version "2020.3.2"
-	id "de.undercouch.download" version "4.1.1"
-	id "org.ysb33r.doxygen" version "0.6"
 	id "google-test-test-suite"
 	id "java-test-fixtures"
 	id "groovy"
 	id "cpp"
 }
 
-// Documentation Generation
-doxygen {
-	generate_latex false
-	generate_html true
-
-	source new File(projectDir, 'src/cpp')
-	source new File(projectDir, 'src/include')
-
-	include '**/*.cpp'
-	include '**/*.h'
-
-	file_paterns '*.cpp', '*.h'
-
-	recursive true
-
-	outputDir new File(projectDir, 'docs/doxygen')
-}
-
 // Deploying
 deploy {
 	targets {
 		target('coprocessor') {
-			directory = '/home/vision'
-			maxChannels = 1
+			directory = '/home/vision/'
+			maxChannels = 10
 			timeout = 3
 			failOnMissing = true
 
 			locations {
 				ssh {
-					address = "CJvision.local"
+					address = "CJVision.local"
 					user = 'vision'
 					password = 'CJfrc'
 					ipv6 = false
@@ -55,7 +35,7 @@ deploy {
 		}
 
 		// Deploy CJ Vision Library CPP
-		fileTreeArtifact('cjVisionLibCPP') {
+		fileTreeArtifact("libCpp") {
 			directory = 'cjVisionLib/src/cpp'
 			files = fileTree(dir: 'src/cpp')
 		}
@@ -131,7 +111,18 @@ model {
 				}
 
 				exportedHeaders {
-					srcDirs = ['src/include', '../Coproc/src/main/include']
+					if (project.hasProperty("debugMode")) {
+					srcDirs = ['src/include']
+					} else {
+						srcDirs = ['src/include', '../Coproc/src/main/include']
+					}
+				}
+				
+			}
+
+			binaries.all {
+				if (project.hasProperty("debugMode")) {
+					cppCompiler.define 'DEBUG'
 				}
 			}
 
@@ -160,14 +151,18 @@ model {
 }
 
 task buildVision(type:Exec) {
-	if (!file('../Coproc').isDirectory()) {
-		ant.fail("'Coproc' folder not found one level up from build.gradle")
-	}
 	description "Builds vision locally"
 	workingDir "src/"
 
 	println "Building Vision Project..."
-	commandLine 'make'
+	if (project.hasProperty("debugMode")) {
+		commandLine 'make', 'debug'
+	} else {
+		if (!file('../Coproc').isDirectory()) {
+			ant.fail("'Coproc' folder not found one level up from build.gradle")
+		}
+		commandLine 'make'
+	}
 }
 
 // Run Vision locally

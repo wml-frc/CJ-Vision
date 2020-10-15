@@ -1,7 +1,7 @@
 #ifndef CJ_NETWORK
 #define CJ_NETWORK
 
-#ifndef _WIN32
+#ifdef linux
 
 #include <unistd.h>
 #include <stdio.h> 
@@ -514,5 +514,5 @@ namespace CJ {
 	};
 }
 
-#endif // Windows
+#endif // linux
 #endif // !CJ_NETWORK
