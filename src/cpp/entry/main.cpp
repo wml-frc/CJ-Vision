@@ -1,4 +1,3 @@
-
 #ifdef DEBUG
 	
 	#include "Core.h"
@@ -41,13 +40,16 @@
 		CJ::Contours::detectContours(&filteredImage, &contourOutput, 100);
 
 		// Networking 
-		#ifdef __unix__
+		#ifdef __linux__
 		CJ::Network::Control nt;
 		CJ::Network::Control::server s_nt;
 		CJ::Network::Control::client c_nt;
 
 		s_nt.setPort(3000);
 		c_nt.setPort(3000);
+
+		s_nt.setBuffer(10);
+		c_nt.setBuffer(10);
 
 		s_nt.init();
 		c_nt.init();
@@ -57,7 +59,7 @@
 		dpSend.IntegerValues[0] = 4;
 		dpSend.BooleanValues[0] = true;
 		dpSend.DoubleValues[0] = 5.212;
-		dpSend.DoubleValues[511] = 2.132;
+		dpSend.DoubleValues[0] = 2.132;
 
 		CJ::Network::dataPacket dpGet;
 
@@ -67,17 +69,19 @@
 
 		while (PROG::PROG_RUNNING()) {
 			system("clear");
-			#ifdef linux
+			#ifdef __linux__
 			std::cout << "Networking Test" << std::endl;
+			std::cout << "BufferSize_Server: " << s_nt.getBuffer() << std::endl;
+			std::cout << "BufferSize_Client: " << c_nt.getBuffer() << std::endl;
 			std::cout << "Ip Adress: " << c_nt.getIP() << std::endl;
 			std::cout << "Port: " << c_nt.getPort() << std::endl;
-			dpSend.DoubleValues[511] += 0.0001;
+			dpSend.DoubleValues[0] += 0.0001;
 			std::cout << "dpGet data true: " << dpGet.dataTrue << std::endl;
 			std::cout << "dpGet ID: " << dpGet.id[0] << std::endl;
 			std::cout << "dpGet Integers: " << dpGet.IntegerValues[0] << std::endl;
 			std::cout << "dpGet Booleans: " << dpGet.BooleanValues[0] << std::endl;
 			std::cout << "dpGet Doubles: " << dpGet.DoubleValues[0] << std::endl;
-			std::cout << "dpGet Double 511: " << dpGet.DoubleValues[511] << std::endl; 
+			std::cout << "dpGet Double 511: " << dpGet.DoubleValues[0] << std::endl; 
 			#endif
 			CJ::Output::Display(&inputImage);
 			CJ::Output::Display(&filteredImage);
