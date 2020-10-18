@@ -15,9 +15,11 @@
 #include <iostream>
 
 #define CJ_DEFAULT_PORT 5800 // FRC allows ports 5800:5810
+#ifndef CJ_BUFFSIZE
 #define CJ_BUFFSIZE 512 // 512 of each datatype
+#endif
 #define CJ_HANDSHAKE_BUFFSIZE 1024 // Byte Size (DOES NOT CHANGE)
-#define CJ_NETWORK_VERSION "1.0" // Program Version
+#define CJ_NETWORK_VERSION "1.1" // Program Version
 
 // #define SEND_IMAGE
 #ifdef CJ_SEND_IMAGE
@@ -48,6 +50,7 @@ namespace CJ {
 		/**
 		 * Data Packet used to send over data
 		 */
+
 		struct dataPacket {
 			// Data Check
 			bool dataTrue = false;
@@ -66,7 +69,6 @@ namespace CJ {
 
 	private:
 		struct statesController {
-
 			enum state {
 				IDLE = 0,
 				CONNECTING,
@@ -80,8 +82,6 @@ namespace CJ {
 		};
 
 		struct vals_c {
-			int BUFFSIZE = CJ_BUFFSIZE;
-
 			uint16_t port = CJ_DEFAULT_PORT;
 			char ipaddress[20] = "127.0.0.1";
 			int sock = 0;
@@ -90,8 +90,6 @@ namespace CJ {
 		};
 
 		struct vals_s {
-			int BUFFSIZE = CJ_BUFFSIZE;
-
 			uint16_t port = CJ_DEFAULT_PORT;
 			int server_fd, new_socket, valread;
 			int opt = 1;
@@ -105,7 +103,7 @@ namespace CJ {
 		 */
 		class Serialization {
 		protected:
-			static void serialize(dataPacket *msgPacket, char *data, int BUFFSIZE) {
+			static void serialize(dataPacket *msgPacket, char *data) {
 				// Data True
 				bool *dtTrue = (bool*)data; 
 				*dtTrue = msgPacket->dataTrue; dtTrue++;
@@ -115,7 +113,7 @@ namespace CJ {
 				// ID's
 				char *id = (char*)dtTrue;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*id = msgPacket->id[i];
 					id++;
 					i++;
@@ -124,7 +122,7 @@ namespace CJ {
 				// Integer Values
 				int *intVals = (int*)id;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*intVals = msgPacket->IntegerValues[i];
 					intVals++;
 					i++;
@@ -133,7 +131,7 @@ namespace CJ {
 				// Boolean Values
 				bool *boolVals = (bool*)intVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*boolVals = msgPacket->BooleanValues[i];
 					boolVals++;
 					i++;
@@ -142,7 +140,7 @@ namespace CJ {
 				// Double Values
 				double *dblVals = (double*)boolVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*dblVals = msgPacket->DoubleValues[i];
 					dblVals++;
 					i++;
@@ -152,7 +150,7 @@ namespace CJ {
 				#ifdef SEND_IMAGE
 				Image *imgs = (Image*)dblVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*imgs = msgPacket->ImageValues[i];
 					imgs++;
 					i++;
@@ -160,7 +158,7 @@ namespace CJ {
 				#endif
 			}
 
-			static void deserialize(dataPacket *msgPacket, char *data, int BUFFSIZE) {
+			static void deserialize(dataPacket *msgPacket, char *data) {
 				// Data True
 				bool *dtTrue = (bool*)data;
 				msgPacket->dataTrue = *dtTrue; dtTrue++;
@@ -170,7 +168,7 @@ namespace CJ {
 				// ID's
 				char *id = (char*)dtTrue;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->id[i] = *id;
 					id++;
 					i++;
@@ -179,7 +177,7 @@ namespace CJ {
 				// Integer Values
 				int *intVals = (int*)id;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->IntegerValues[i] = *intVals;
 					intVals++;
 					i++;
@@ -188,7 +186,7 @@ namespace CJ {
 				// Boolean Values
 				bool *boolVals = (bool*)intVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->BooleanValues[i] = *boolVals;
 					boolVals++;
 					i++;
@@ -197,7 +195,7 @@ namespace CJ {
 				// Double Values
 				double *dblVals = (double*)boolVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->DoubleValues[i] = *dblVals;
 					dblVals++;
 					i++;
@@ -207,7 +205,7 @@ namespace CJ {
 				#ifdef SEND_IMAGE
 				Image *imgs = (Image*)dblVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->ImageValues[i] = *imgs;
 					imgs++;
 					i++;
@@ -231,15 +229,15 @@ namespace CJ {
 				
 				// Receive Send buffersize
 				read(vs->new_socket, buffSize_buffer, CJ_HANDSHAKE_BUFFSIZE);
-				std::string strNum = std::to_string(vs->BUFFSIZE);
+				std::string strNum = std::to_string(CJ_BUFFSIZE);
 				const char *buffData = strNum.c_str();
 				send(vs->new_socket, buffData, strlen(buffData), 0);
 
 				std::cout << "Client Buffer size: " << buffSize_buffer << std::endl;
-				std::cout << "Server Buffer size: " << vs->BUFFSIZE << std::endl;
+				std::cout << "Server Buffer size: " << CJ_BUFFSIZE << std::endl;
 
 				// Check buffersize matches
-				if (atoi(buffSize_buffer) == vs->BUFFSIZE) {
+				if (atoi(buffSize_buffer) == CJ_BUFFSIZE) {
 					std::cout << "Buffer size matches" << std::endl;
 				} else {
 					std::cout << "Buffer sizes do not match" << std::endl;
@@ -318,8 +316,9 @@ namespace CJ {
 			static void _send(vals_s *vs, statesController *stc, dataPacket *dataPack) {
 				dataPack->dataTrue = true;
 				char data[PACKETSIZE];
+
 				if (stc->getState() == statesController::state::CONNECTED) {
-					serialize(dataPack, data, vs->BUFFSIZE);
+					serialize(dataPack, data);
 					send(vs->new_socket, &data, sizeof(data), 0);
 				}
 				if (stc->getState() == statesController::state::ERROR) {
@@ -332,7 +331,7 @@ namespace CJ {
 				while (stc->getState() != statesController::state::STOP) {
 					if (stc->getState() == statesController::state::CONNECTED) {
 						dataPack->dataTrue = true;
-						serialize(dataPack, data, vs->BUFFSIZE);
+						serialize(dataPack, data);
 						send(vs->new_socket, &data, sizeof(data), 0);
 					}
 					if (stc->getState() == statesController::state::ERROR) {
@@ -347,7 +346,7 @@ namespace CJ {
 				if (stc->getState() == statesController::state::CONNECTED) {
 					int size = recv(vs->new_socket, &data, sizeof(data), 0);
 					if (size != -1 || size != 0) {
-						deserialize(&dp, data, vs->BUFFSIZE);
+						deserialize(&dp, data);
 						if (dp.dataTrue) {
 							*dataPack = dp;
 						}
@@ -366,7 +365,7 @@ namespace CJ {
 						int size;
 						size = recv(vs->new_socket, &data, sizeof(data), 0);
 						if (size != -1 || size != 0) {
-							deserialize(&dp, data, vs->BUFFSIZE);
+							deserialize(&dp, data);
 							if (dp.dataTrue) {
 								*dataPack = dp;
 							}
@@ -393,16 +392,16 @@ namespace CJ {
 				char version_buffer[CJ_HANDSHAKE_BUFFSIZE] = {0};
 				
 				// Send Receive buffersize
-				std::string strNum = std::to_string(vs->BUFFSIZE);
+				std::string strNum = std::to_string(CJ_BUFFSIZE);
 				const char *buffData = strNum.c_str();
 				send(vs->sock, buffData, strlen(buffData), 0);
 				read(vs->sock, buffSize_buffer, CJ_HANDSHAKE_BUFFSIZE);
 
-				std::cout << "Server Buffer size: " << vs->BUFFSIZE << std::endl;
-				std::cout << "Client Buffer size: " << buffSize_buffer << std::endl;
+				std::cout << "Client Buffer size: " << CJ_BUFFSIZE << std::endl;
+				std::cout << "Server Buffer size: " << buffSize_buffer << std::endl;
 
 				// Check buffersize matches
-				if (atoi(buffSize_buffer) == vs->BUFFSIZE) {
+				if (atoi(buffSize_buffer) == CJ_BUFFSIZE) {
 					std::cout << "Buffer size matches" << std::endl;
 				} else {
 					std::cout << "Buffer sizes do not match" << std::endl;
@@ -466,7 +465,7 @@ namespace CJ {
 				dataPack->dataTrue = true;
 				char data[PACKETSIZE];
 				if (stc->getState() == statesController::state::CONNECTED) {
-					serialize(dataPack, data, vs->BUFFSIZE);
+					serialize(dataPack, data);
 					send(vs->sock, &data, sizeof(data), 0);
 				} 
 				if (stc->getState() == statesController::state::ERROR) {
@@ -479,7 +478,7 @@ namespace CJ {
 				char data[PACKETSIZE];
 				while(stc->getState() != statesController::state::STOP) {
 					if (stc->getState() == statesController::state::CONNECTED) {
-						serialize(dataPack, data, vs->BUFFSIZE);
+						serialize(dataPack, data);
 						send(vs->sock, &data, sizeof(data), 0);
 					}
 					if (stc->getState() == statesController::state::ERROR) {
@@ -495,7 +494,7 @@ namespace CJ {
 				if (stc->getState() == statesController::state::CONNECTED) {
 					size = recv(vs->sock, &data, sizeof(data), 0);
 					if (size != -1 || size != 0) {
-						deserialize(&dp, data, vs->BUFFSIZE);
+						deserialize(&dp, data);
 						if (dp.dataTrue) {
 							*dataPack = dp;
 						}
@@ -514,7 +513,7 @@ namespace CJ {
 						int size;
 						size = recv(vs->sock, &data, sizeof(data), 0);
 						if (size != -1 || size != 0) {
-							deserialize(&dp, data, vs->BUFFSIZE);
+							deserialize(&dp, data);
 							if (dp.dataTrue) {
 								*dataPack = dp;
 							}
@@ -572,12 +571,8 @@ namespace CJ {
 					return vs.port;
 				}
 
-				void setBuffer(int size) {
-					vs.BUFFSIZE = size;
-				}
-
 				int getBuffer() {
-					return vs.BUFFSIZE;
+					return CJ_BUFFSIZE;
 				}
 			};
 
@@ -625,12 +620,8 @@ namespace CJ {
 					return vs.ipaddress;
 				}
 
-				void setBuffer(int size) {
-					vs.BUFFSIZE = size;
-				}
-
 				int getBuffer() {
-					return vs.BUFFSIZE;
+					return CJ_BUFFSIZE;
 				}
 			};
 		};
