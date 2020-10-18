@@ -19,7 +19,8 @@
 #define CJ_BUFFSIZE 512 // 512 of each datatype
 #endif
 #define CJ_HANDSHAKE_BUFFSIZE 1024 // Byte Size (DOES NOT CHANGE)
-#define CJ_NETWORK_VERSION "1.1" // Program Version
+#define CJ_NETWORK_VERSION "1.2" // Program Version
+#define CJ_NETWORK_VERSION_SIZE 5
 
 // #define SEND_IMAGE
 #ifdef CJ_SEND_IMAGE
@@ -54,6 +55,8 @@ namespace CJ {
 		struct dataPacket {
 			// Data Check
 			bool dataTrue = false;
+			int buffersize = CJ_BUFFSIZE;
+			char version[CJ_NETWORK_VERSION_SIZE] = CJ_NETWORK_VERSION;
 
 			// Main Send Data
 			char id[CJ_BUFFSIZE]{0};
@@ -68,6 +71,7 @@ namespace CJ {
 		#define PACKETSIZE sizeof(dataPacket)
 
 	private:
+
 		struct statesController {
 			enum state {
 				IDLE = 0,
@@ -97,6 +101,18 @@ namespace CJ {
 			int addrlen = sizeof(address);
 		};
 
+		// datapacket checker when received
+		static bool dpRecCheck(statesController *stc, dataPacket *dp, char *data, int *size) {
+			if (
+				(stc->getState() == statesController::state::CONNECTED) &&
+				(dp->dataTrue == 1) &&
+				(dp->buffersize == CJ_BUFFSIZE && strcmp(dp->version, CJ_NETWORK_VERSION) == 0)) {
+					return true;
+				} else {
+					if (*size != -1 || size != 0) {stc->setState(statesController::ERROR);}
+					return false;
+				}
+		}
 
 		/**
 		 * Serializaiton
@@ -108,10 +124,23 @@ namespace CJ {
 				bool *dtTrue = (bool*)data; 
 				*dtTrue = msgPacket->dataTrue; dtTrue++;
 
-				int i = 0;
+				// Buffer Size
+				int *buffSize = (int*)dtTrue;
+				*buffSize = msgPacket->buffersize; buffSize++;
+
+				int i = 0; // the magic int lol
+
+				// Version Check
+				char *version = (char*)buffSize;
+				i = 0;
+				while (i < CJ_NETWORK_VERSION_SIZE) {
+					*version = msgPacket->version[i]; 
+					version++;
+					i++;
+				}
 
 				// ID's
-				char *id = (char*)dtTrue;
+				char *id = (char*)version;
 				i = 0;
 				while (i < CJ_BUFFSIZE) {
 					*id = msgPacket->id[i];
@@ -163,10 +192,23 @@ namespace CJ {
 				bool *dtTrue = (bool*)data;
 				msgPacket->dataTrue = *dtTrue; dtTrue++;
 
-				int i = 0;
+				// Buffer Size
+				int *bufferSize = (int*)dtTrue;
+				msgPacket->buffersize = *bufferSize; bufferSize++;
+
+				int i = 0; // The second magic int
+
+				// Version
+				char *version = (char*)bufferSize;
+				i = 0;
+				while (i < CJ_NETWORK_VERSION_SIZE) {
+					msgPacket->version[i] = *version;
+					version++;
+					i++;
+				}
 
 				// ID's
-				char *id = (char*)dtTrue;
+				char *id = (char*)version;
 				i = 0;
 				while (i < CJ_BUFFSIZE) {
 					msgPacket->id[i] = *id;
@@ -220,49 +262,6 @@ namespace CJ {
 		 */
 		class Server : public Serialization {
 		protected:
-
-			// Server hand shake reads before sends
-			static void _handshake(vals_s *vs, statesController *stc) {
-				std::cout << "Starting Handshake with Client" << std::endl;
-				char buffSize_buffer[CJ_HANDSHAKE_BUFFSIZE] = {0};
-				char version_buffer[CJ_HANDSHAKE_BUFFSIZE] = {0};
-				
-				// Receive Send buffersize
-				read(vs->new_socket, buffSize_buffer, CJ_HANDSHAKE_BUFFSIZE);
-				std::string strNum = std::to_string(CJ_BUFFSIZE);
-				const char *buffData = strNum.c_str();
-				send(vs->new_socket, buffData, strlen(buffData), 0);
-
-				std::cout << "Client Buffer size: " << buffSize_buffer << std::endl;
-				std::cout << "Server Buffer size: " << CJ_BUFFSIZE << std::endl;
-
-				// Check buffersize matches
-				if (atoi(buffSize_buffer) == CJ_BUFFSIZE) {
-					std::cout << "Buffer size matches" << std::endl;
-				} else {
-					std::cout << "Buffer sizes do not match" << std::endl;
-					stc->setState(statesController::state::ERROR);
-					return;
-				}
-
-				// Receive send version info
-				read(vs->new_socket, version_buffer, CJ_HANDSHAKE_BUFFSIZE);
-				send(vs->new_socket, CJ_NETWORK_VERSION, strlen(CJ_NETWORK_VERSION), 0);
-
-				std::cout << "Client Version: " << version_buffer << std::endl;
-				std::cout << "Server Version: " << CJ_NETWORK_VERSION << std::endl;
-
-				if (strcmp(version_buffer, CJ_NETWORK_VERSION) == 0) {
-					std::cout << "Network Version Matches" << std::endl;
-				} else {
-					std::cout << "Versions do not match" << std::endl;
-					stc->setState(statesController::state::ERROR);
-					return;
-				}
-
-				stc->setState(statesController::state::CONNECTED);
-			}
-
 			static void _init(vals_s *vs, statesController *stc) {
 				std::cout << "Port: " << vs->port << std::endl;
 				stc->setState(statesController::state::CONNECTING);
@@ -310,7 +309,8 @@ namespace CJ {
 
 				std::cout << "Server Creation Sucessful" << std::endl;
 				std::cout << "Server set on port: " << vs->port << std::endl;
-				_handshake(vs, stc);
+				stc->setState(statesController::state::CONNECTED);
+				// _handshake(vs, stc);
 			}
 
 			static void _send(vals_s *vs, statesController *stc, dataPacket *dataPack) {
@@ -320,9 +320,6 @@ namespace CJ {
 				if (stc->getState() == statesController::state::CONNECTED) {
 					serialize(dataPack, data);
 					send(vs->new_socket, &data, sizeof(data), 0);
-				}
-				if (stc->getState() == statesController::state::ERROR) {
-					std::cout << "NETWORK ERROR. PROGRAM WILL NOT SEND OR RECEIVE" << std::endl;
 				}
 			}
 
@@ -334,48 +331,29 @@ namespace CJ {
 						serialize(dataPack, data);
 						send(vs->new_socket, &data, sizeof(data), 0);
 					}
-					if (stc->getState() == statesController::state::ERROR) {
-						std::cout << "NETWORK ERROR. PROGRAM WILL NOT SEND OR RECEIVE" << std::endl;
-					}
 				}
 			}
 
 			static void _receive(vals_s *vs, statesController *stc, dataPacket *dataPack) {
 				dataPacket dp;
 				char data[PACKETSIZE];
-				if (stc->getState() == statesController::state::CONNECTED) {
-					int size = recv(vs->new_socket, &data, sizeof(data), 0);
-					if (size != -1 || size != 0) {
-						deserialize(&dp, data);
-						if (dp.dataTrue == 1) {
-							*dataPack = dp;
-						}
-					}
-				}
-				if (stc->getState() == statesController::state::ERROR) {
-					std::cout << "NETWORK ERROR. PROGRAM WILL NOT SEND OR RECEIVE" << std::endl;
+				int size;
+				size = size = recv(vs->new_socket, &data, sizeof(data), 0);
+				deserialize(&dp, data);
+				if (dpRecCheck(stc, &dp, data, &size)) {
+					*dataPack = dp;
 				}
 			}
 
 			static void _registerReceive(vals_s *vs, statesController *stc, dataPacket *dataPack) {
 				dataPacket dp;
 				while (stc->getState() != statesController::state::STOP) {
-					if (stc->getState() == statesController::state::CONNECTED) {
-						char data[PACKETSIZE];
-						int size;
-						size = recv(vs->new_socket, &data, sizeof(data), 0);
-						if (size != -1 || size != 0) {
-							deserialize(&dp, data);
-							if (dp.dataTrue == 1) {
-								*dataPack = dp;
-							}
-						} else {
-							std::cout << "No Data" << std::endl;
-							stc->setState(statesController::state::ERROR);
-						}
-					}
-					if (stc->getState() == statesController::state::ERROR) {
-						std::cout << "NETWORK ERROR. PROGRAM WILL NOT SEND OR RECEIVE" << std::endl;
+					char data[PACKETSIZE];
+					int size;
+					size = size = recv(vs->new_socket, &data, sizeof(data), 0);
+					deserialize(&dp, data);
+					if (dpRecCheck(stc, &dp, data, &size)) {
+						*dataPack = dp;
 					}
 				}
 			}
@@ -384,49 +362,6 @@ namespace CJ {
 
 		class Client : public Serialization {
 		protected:
-
-			// Client hand shake sends before reading
-			static void _handshake(vals_c *vs, statesController *stc) {
-				std::cout << "Starting Handshake with Server" << std::endl;
-				char buffSize_buffer[CJ_HANDSHAKE_BUFFSIZE] = {0};
-				char version_buffer[CJ_HANDSHAKE_BUFFSIZE] = {0};
-				
-				// Send Receive buffersize
-				std::string strNum = std::to_string(CJ_BUFFSIZE);
-				const char *buffData = strNum.c_str();
-				send(vs->sock, buffData, strlen(buffData), 0);
-				read(vs->sock, buffSize_buffer, CJ_HANDSHAKE_BUFFSIZE);
-
-				std::cout << "Client Buffer size: " << CJ_BUFFSIZE << std::endl;
-				std::cout << "Server Buffer size: " << buffSize_buffer << std::endl;
-
-				// Check buffersize matches
-				if (atoi(buffSize_buffer) == CJ_BUFFSIZE) {
-					std::cout << "Buffer size matches" << std::endl;
-				} else {
-					std::cout << "Buffer sizes do not match" << std::endl;
-					stc->setState(statesController::state::ERROR);
-					return;
-				}
-
-				// Send receive version info
-				send(vs->sock, CJ_NETWORK_VERSION, strlen(CJ_NETWORK_VERSION), 0);
-				read(vs->sock, version_buffer, CJ_HANDSHAKE_BUFFSIZE);
-
-				std::cout << "Server Version: " << CJ_NETWORK_VERSION << std::endl;
-				std::cout << "Client Version: " << version_buffer << std::endl;
-
-				if (strcmp(version_buffer, CJ_NETWORK_VERSION) == 0) {
-					std::cout << "Network Version Matches" << std::endl;
-				} else {
-					std::cout << "Versions do not match" << std::endl;
-					stc->setState(statesController::state::ERROR);
-					return;
-				}
-
-				stc->setState(statesController::state::CONNECTED);
-			}
-
 			static void _init(vals_c *vs, statesController *stc) {
 				stc->setState(statesController::state::CONNECTING);
 
@@ -457,8 +392,8 @@ namespace CJ {
 				std::cout << "Connection Successful" << std::endl;
 				std::cout << "Connected to port: " << vs->port << std::endl;
 				std::cout << "Connected to IP: " << vs->ipaddress << std::endl;
-
-				_handshake(vs, stc);
+				stc->setState(statesController::state::CONNECTED);
+				// _handshake(vs, stc);
 			}
 
 			static void _send(vals_c *vs, statesController *stc, dataPacket *dataPack) {
@@ -468,9 +403,6 @@ namespace CJ {
 					serialize(dataPack, data);
 					send(vs->sock, &data, sizeof(data), 0);
 				} 
-				if (stc->getState() == statesController::state::ERROR) {
-					std::cout << "NETWORK ERROR. PROGRAM WILL NOT SEND OR RECEIVE" << std::endl;
-				}
 			}
 
 			static void _registerSend(vals_c *vs, statesController *stc, dataPacket *dataPack) {
@@ -481,49 +413,29 @@ namespace CJ {
 						serialize(dataPack, data);
 						send(vs->sock, &data, sizeof(data), 0);
 					}
-					if (stc->getState() == statesController::state::ERROR) {
-						std::cout << "NETWORK ERROR. PROGRAM WILL NOT SEND OR RECEIVE" << std::endl;
-					}
 				}
 			}
 
 			static void _receive(vals_c *vs, statesController *stc, dataPacket *dataPack) {
 				dataPacket dp;
-				int size;
 				char data[PACKETSIZE];
-				if (stc->getState() == statesController::state::CONNECTED) {
-					size = recv(vs->sock, &data, sizeof(data), 0);
-					if (size != -1 || size != 0) {
-						deserialize(&dp, data);
-						if (dp.dataTrue == 1) {
-							*dataPack = dp;
-						}
-					}
-				}
-				if (stc->getState() == statesController::state::ERROR) {
-					std::cout << "NETWORK ERROR. PROGRAM WILL NOT SEND OR RECEIVE" << std::endl;
+				int size;
+				size = size = recv(vs->sock, &data, sizeof(data), 0);
+				deserialize(&dp, data);
+				if (dpRecCheck(stc, &dp, data, &size)) {
+					*dataPack = dp;
 				}
 			}
 
 			static void _registerReceive(vals_c *vs, statesController *stc, dataPacket *dataPack) {
 				dataPacket dp;
 				while (stc->getState() != statesController::state::STOP) {
-					if (stc->getState() == statesController::state::CONNECTED) {
-						char data[PACKETSIZE];
-						int size;
-						size = recv(vs->sock, &data, sizeof(data), 0);
-						if (size != -1 || size != 0) {
-							deserialize(&dp, data);
-							if (dp.dataTrue == 1) {
-								*dataPack = dp;
-							}
-						} else {
-							std::cout << "No Data" << std::endl;
-							stc->setState(statesController::state::ERROR);
-						}
-					}
-					if (stc->getState() == statesController::state::ERROR) {
-						std::cout << "NETWORK ERROR. PROGRAM WILL NOT SEND OR RECEIVE" << std::endl;
+					char data[PACKETSIZE];
+					int size;
+					size = size = recv(vs->sock, &data, sizeof(data), 0);
+					deserialize(&dp, data);
+					if (dpRecCheck(stc, &dp, data, &size)) {
+						*dataPack = dp;
 					}
 				}
 			}
@@ -538,11 +450,29 @@ namespace CJ {
 			private:
 				vals_s vs;
 				statesController server_stc{statesController::state::IDLE};
+				static void stateChecker(vals_s *vs, statesController *server_stc) {
+					while(server_stc->getState() != statesController::state::STOP) {
+						switch (server_stc->_st) {
+							case statesController::state::IDLE:
+								_init(vs, server_stc);
+								break;
+							case statesController::state::CONNECTING:
+								std::cout << "Connecting..." << std::endl;
+								break;
+							case statesController::state::CONNECTED:
+								break;
+							case statesController::state::ERROR:
+								std::cout << "Network Error. Reconnecting..." << std::endl;
+								_init(vs, server_stc);
+								break;
+						}
+					}
+				}
 			public:
 				statesController::state getState() {return server_stc.getState();}
 				void init() {
-					std::thread sv_init_t(_init, &vs, &server_stc);
-					sv_init_t.detach();
+					std::thread sv_stateChecker_t(stateChecker, &vs, &server_stc);
+					sv_stateChecker_t.detach();
 				}
 
 				void receive(dataPacket *dataPack) {
@@ -572,19 +502,38 @@ namespace CJ {
 				}
 
 				int getBuffer() {
-					return CJ_BUFFSIZE;
+					return (int)CJ_BUFFSIZE;
 				}
 			};
 
 			class client : public Client {
-			protected:
+			private:
 				vals_c vs;
 				statesController client_stc{statesController::state::IDLE};
+			private:
+				static void stateChecker(vals_c *vs, statesController *client_stc) {
+					while(client_stc->getState() != statesController::state::STOP) {
+						switch (client_stc->_st) {
+							case statesController::state::IDLE:
+								_init(vs, client_stc);
+								break;
+							case statesController::state::CONNECTING:
+								std::cout << "Connecting..." << std::endl;
+								break;
+							case statesController::state::CONNECTED:
+								break;
+							case statesController::state::ERROR:
+								std::cout << "Network Error. Reconnecting..." << std::endl;
+								_init(vs, client_stc);
+								break;
+						}
+					}
+				}
 			public:
 				statesController::state getState() {return client_stc.getState();}
 				void init() {
-					std::thread cl_init_t(_init, &vs, &client_stc);
-					cl_init_t.detach();
+					std::thread cl_stateChecker_t(stateChecker, &vs, &client_stc);
+					cl_stateChecker_t.detach();
 				}
 
 				void receive(dataPacket *dataPack) {
@@ -621,7 +570,7 @@ namespace CJ {
 				}
 
 				int getBuffer() {
-					return CJ_BUFFSIZE;
+					return (int)CJ_BUFFSIZE;
 				}
 			};
 		};

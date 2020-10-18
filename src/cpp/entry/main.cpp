@@ -1,5 +1,5 @@
 #ifdef DEBUG
-	#define CJ_BUFFSIZE 10
+	#define CJ_BUFFSIZE 1
 	#include "Core.h"
 
 	int main(int argc, char** argv) {
@@ -42,15 +42,15 @@
 		// Networking 
 		#ifdef __linux__
 		CJ::Network::Control nt;
-		// CJ::Network::Control::server s_nt;
+		CJ::Network::Control::server s_nt;
 		CJ::Network::Control::client c_nt;
 
-		// s_nt.setPort(3000);
-		char ip[] = "192.168.178.196";
-		c_nt.setIP(ip);
+		s_nt.setPort(3000);
+		// char ip[] = "192.168.178.196";
+		// c_nt.setIP(ip);
 		c_nt.setPort(3000);
 
-		// s_nt.init();
+		s_nt.init();
 		c_nt.init();
 
 		CJ::Network::dataPacket dpSend;
@@ -58,29 +58,30 @@
 		dpSend.IntegerValues[0] = 4;
 		dpSend.BooleanValues[0] = true;
 		dpSend.DoubleValues[0] = 5.212;
-		// dpSend.DoubleValues[0] = 2.132;
+		dpSend.DoubleValues[0] = 2.132;
 
-		// CJ::Network::dataPacket dpGet;
+		CJ::Network::dataPacket dpGet;
 
 		c_nt.registerSend(&dpSend);
-		// s_nt.registerReceive(&dpGet);
+		s_nt.registerReceive(&dpGet);
 		#endif
 
 		while (PROG::PROG_RUNNING()) {
 			system("clear");
 			#ifdef __linux__
 			std::cout << "Networking Test" << std::endl;
-			// std::cout << "BufferSize_Server: " << s_nt.getBuffer() << std::endl;
+			std::cout << "Network State Server: " << s_nt.getState() << std::endl;
+			std::cout << "Network State Client: " << c_nt.getState() << std::endl;
+			std::cout << "BufferSize_Server: " << s_nt.getBuffer() << std::endl;
 			std::cout << "BufferSize_Client: " << c_nt.getBuffer() << std::endl;
 			std::cout << "Ip Adress: " << c_nt.getIP() << std::endl;
 			std::cout << "Port: " << c_nt.getPort() << std::endl;
-			dpSend.DoubleValues[0] += 0.0001;
-			// std::cout << "dpGet data true: " << dpGet.dataTrue << std::endl;
-			// std::cout << "dpGet ID: " << dpGet.id[0] << std::endl;
-			// std::cout << "dpGet Integers: " << dpGet.IntegerValues[0] << std::endl;
-			// std::cout << "dpGet Booleans: " << dpGet.BooleanValues[0] << std::endl;
-			// std::cout << "dpGet Doubles: " << dpGet.DoubleValues[0] << std::endl;
-			// std::cout << "dpGet Double 511: " << dpGet.DoubleValues[0] << std::endl; 
+			dpSend.DoubleValues[0] += 0.1;
+			std::cout << "dpGet data true: " << dpGet.dataTrue << std::endl;
+			std::cout << "dpGet ID: " << dpGet.id[0] << std::endl;
+			std::cout << "dpGet Integers: " << dpGet.IntegerValues[0] << std::endl;
+			std::cout << "dpGet Booleans: " << dpGet.BooleanValues[0] << std::endl;
+			std::cout << "dpGet Doubles: " << dpGet.DoubleValues[0] << std::endl;
 			#endif
 			// CJ::Output::Display(&inputImage);
 			// CJ::Output::Display(&filteredImage);
