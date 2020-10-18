@@ -19,7 +19,7 @@
 #define CJ_BUFFSIZE 512 // 512 of each datatype
 #endif
 #define CJ_HANDSHAKE_BUFFSIZE 1024 // Byte Size (DOES NOT CHANGE)
-#define CJ_NETWORK_VERSION "1.2" // Program Version
+#define CJ_NETWORK_VERSION "1.3" // Program Version
 #define CJ_NETWORK_VERSION_SIZE 5
 
 // #define SEND_IMAGE
@@ -55,7 +55,7 @@ namespace CJ {
 		struct dataPacket {
 			// Data Check
 			bool dataTrue = false;
-			int buffersize = CJ_BUFFSIZE;
+			int buffersize = 0;
 			char version[CJ_NETWORK_VERSION_SIZE] = CJ_NETWORK_VERSION;
 
 			// Main Send Data
@@ -103,15 +103,22 @@ namespace CJ {
 
 		// datapacket checker when received
 		static bool dpRecCheck(statesController *stc, dataPacket *dp, char *data, int *size) {
+			// if (dp->buffersize != (int)CJ_BUFFSIZE) {
+			// 	std::cout << "Buffsize does not match" << std::endl;
+			// 	std::cout << "Buffer: " << dp->buffersize << std::endl;
+			// }
+			
+			if (strcmp(dp->version, CJ_NETWORK_VERSION) == 0) {
+				std::cout << "Network Version Does not match" << std::endl;
+			}
 			if (
-				(stc->getState() == statesController::state::CONNECTED) &&
 				(dp->dataTrue == 1) &&
-				(dp->buffersize == CJ_BUFFSIZE && strcmp(dp->version, CJ_NETWORK_VERSION) == 0)) {
+				(dp->buffersize == CJ_BUFFSIZE && 
+				(strcmp(dp->version, CJ_NETWORK_VERSION) == 0))) {
 					return true;
-				} else {
-					if (*size != -1 || size != 0) {stc->setState(statesController::ERROR);}
-					return false;
-				}
+			} else {
+				return false;
+			}
 		}
 
 		/**
@@ -131,7 +138,7 @@ namespace CJ {
 				int i = 0; // the magic int lol
 
 				// Version Check
-				char *version = (char*)buffSize;
+				char *version = (char*)buffSize; 
 				i = 0;
 				while (i < CJ_NETWORK_VERSION_SIZE) {
 					*version = msgPacket->version[i]; 
@@ -338,10 +345,14 @@ namespace CJ {
 				dataPacket dp;
 				char data[PACKETSIZE];
 				int size;
-				size = size = recv(vs->new_socket, &data, sizeof(data), 0);
-				deserialize(&dp, data);
-				if (dpRecCheck(stc, &dp, data, &size)) {
-					*dataPack = dp;
+				if (stc->getState() == statesController::state::CONNECTED) {
+					size = size = recv(vs->new_socket, &data, sizeof(data), 0);
+					if (size != -1 || size != 0) {
+						deserialize(&dp, data);
+						if (dpRecCheck(stc, &dp, data, &size)) {
+							*dataPack = dp;
+						}
+					}
 				}
 			}
 
@@ -350,10 +361,14 @@ namespace CJ {
 				while (stc->getState() != statesController::state::STOP) {
 					char data[PACKETSIZE];
 					int size;
-					size = size = recv(vs->new_socket, &data, sizeof(data), 0);
-					deserialize(&dp, data);
-					if (dpRecCheck(stc, &dp, data, &size)) {
-						*dataPack = dp;
+					if (stc->getState() == statesController::state::CONNECTED) {
+						size = size = recv(vs->new_socket, &data, sizeof(data), 0);
+						if (size != -1 || size != 0) {
+							deserialize(&dp, data);
+							if (dpRecCheck(stc, &dp, data, &size)) {
+								*dataPack = dp;
+							}
+						}
 					}
 				}
 			}
@@ -406,6 +421,7 @@ namespace CJ {
 			}
 
 			static void _registerSend(vals_c *vs, statesController *stc, dataPacket *dataPack) {
+				dataPack->buffersize = 512;
 				dataPack->dataTrue = true;
 				char data[PACKETSIZE];
 				while(stc->getState() != statesController::state::STOP) {
@@ -420,10 +436,14 @@ namespace CJ {
 				dataPacket dp;
 				char data[PACKETSIZE];
 				int size;
-				size = size = recv(vs->sock, &data, sizeof(data), 0);
-				deserialize(&dp, data);
-				if (dpRecCheck(stc, &dp, data, &size)) {
-					*dataPack = dp;
+				if (stc->getState() == statesController::state::CONNECTED) {
+					size = size = recv(vs->sock, &data, sizeof(data), 0);
+					if (size != -1 || size != 0) {
+						deserialize(&dp, data);
+						if (dpRecCheck(stc, &dp, data, &size)) {
+							*dataPack = dp;
+						}
+					}
 				}
 			}
 
@@ -432,10 +452,14 @@ namespace CJ {
 				while (stc->getState() != statesController::state::STOP) {
 					char data[PACKETSIZE];
 					int size;
-					size = size = recv(vs->sock, &data, sizeof(data), 0);
-					deserialize(&dp, data);
-					if (dpRecCheck(stc, &dp, data, &size)) {
-						*dataPack = dp;
+					if (stc->getState() == statesController::state::CONNECTED) {
+						size = size = recv(vs->sock, &data, sizeof(data), 0);
+						if (size != -1 || size != 0) {
+							deserialize(&dp, data);
+							if (dpRecCheck(stc, &dp, data, &size)) {
+								*dataPack = dp;
+							}
+						}
 					}
 				}
 			}
@@ -443,8 +467,6 @@ namespace CJ {
 
 	public:
 		class Control {
-		protected:
-			statesController network_stc{statesController::state::IDLE};
 		public:
 			class server : public Server {
 			private:
@@ -452,14 +474,17 @@ namespace CJ {
 				statesController server_stc{statesController::state::IDLE};
 				static void stateChecker(vals_s *vs, statesController *server_stc) {
 					while(server_stc->getState() != statesController::state::STOP) {
+						// std::cout << "BIG REEEE" << std::endl;
 						switch (server_stc->_st) {
 							case statesController::state::IDLE:
+								std::cout << "Server IDLE" << std::endl;
 								_init(vs, server_stc);
 								break;
 							case statesController::state::CONNECTING:
 								std::cout << "Connecting..." << std::endl;
 								break;
 							case statesController::state::CONNECTED:
+								// std::cout << "Connected" << std::endl;
 								break;
 							case statesController::state::ERROR:
 								std::cout << "Network Error. Reconnecting..." << std::endl;
@@ -513,14 +538,17 @@ namespace CJ {
 			private:
 				static void stateChecker(vals_c *vs, statesController *client_stc) {
 					while(client_stc->getState() != statesController::state::STOP) {
+						// std::cout << "BIG REEEE" << std::endl;
 						switch (client_stc->_st) {
 							case statesController::state::IDLE:
+								std::cout << "Client IDLE" << std::endl;
 								_init(vs, client_stc);
 								break;
 							case statesController::state::CONNECTING:
 								std::cout << "Connecting..." << std::endl;
 								break;
 							case statesController::state::CONNECTED:
+								// std::cout << "Connected" << std::endl;
 								break;
 							case statesController::state::ERROR:
 								std::cout << "Network Error. Reconnecting..." << std::endl;
