@@ -115,7 +115,7 @@ namespace CJ {
 				// ID's
 				char *id = (char*)dtTrue;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*id = msgPacket->id[i];
 					id++;
 					i++;
@@ -124,7 +124,7 @@ namespace CJ {
 				// Integer Values
 				int *intVals = (int*)id;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*intVals = msgPacket->IntegerValues[i];
 					intVals++;
 					i++;
@@ -133,7 +133,7 @@ namespace CJ {
 				// Boolean Values
 				bool *boolVals = (bool*)intVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*boolVals = msgPacket->BooleanValues[i];
 					boolVals++;
 					i++;
@@ -142,7 +142,7 @@ namespace CJ {
 				// Double Values
 				double *dblVals = (double*)boolVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*dblVals = msgPacket->DoubleValues[i];
 					dblVals++;
 					i++;
@@ -152,7 +152,7 @@ namespace CJ {
 				#ifdef SEND_IMAGE
 				Image *imgs = (Image*)dblVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					*imgs = msgPacket->ImageValues[i];
 					imgs++;
 					i++;
@@ -170,7 +170,7 @@ namespace CJ {
 				// ID's
 				char *id = (char*)dtTrue;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->id[i] = *id;
 					id++;
 					i++;
@@ -179,7 +179,7 @@ namespace CJ {
 				// Integer Values
 				int *intVals = (int*)id;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->IntegerValues[i] = *intVals;
 					intVals++;
 					i++;
@@ -188,7 +188,7 @@ namespace CJ {
 				// Boolean Values
 				bool *boolVals = (bool*)intVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->BooleanValues[i] = *boolVals;
 					boolVals++;
 					i++;
@@ -197,7 +197,7 @@ namespace CJ {
 				// Double Values
 				double *dblVals = (double*)boolVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->DoubleValues[i] = *dblVals;
 					dblVals++;
 					i++;
@@ -207,7 +207,7 @@ namespace CJ {
 				#ifdef SEND_IMAGE
 				Image *imgs = (Image*)dblVals;
 				i = 0;
-				while (i < BUFFSIZE) {
+				while (i < CJ_BUFFSIZE) {
 					msgPacket->ImageValues[i] = *imgs;
 					imgs++;
 					i++;
@@ -231,15 +231,15 @@ namespace CJ {
 				
 				// Receive Send buffersize
 				read(vs->new_socket, buffSize_buffer, CJ_HANDSHAKE_BUFFSIZE);
-				std::string strNum = std::to_string(vs->BUFFSIZE);
+				std::string strNum = std::to_string(CJ_BUFFSIZE);
 				const char *buffData = strNum.c_str();
 				send(vs->new_socket, buffData, strlen(buffData), 0);
 
 				std::cout << "Client Buffer size: " << buffSize_buffer << std::endl;
-				std::cout << "Server Buffer size: " << vs->BUFFSIZE << std::endl;
+				std::cout << "Server Buffer size: " << CJ_BUFFSIZE << std::endl;
 
 				// Check buffersize matches
-				if (atoi(buffSize_buffer) == vs->BUFFSIZE) {
+				if (atoi(buffSize_buffer) == CJ_BUFFSIZE) {
 					std::cout << "Buffer size matches" << std::endl;
 				} else {
 					std::cout << "Buffer sizes do not match" << std::endl;
@@ -319,7 +319,7 @@ namespace CJ {
 				dataPack->dataTrue = true;
 				char data[PACKETSIZE];
 				if (stc->getState() == statesController::state::CONNECTED) {
-					serialize(dataPack, data, vs->BUFFSIZE);
+					serialize(dataPack, data, CJ_BUFFSIZE);
 					send(vs->new_socket, &data, sizeof(data), 0);
 				}
 				if (stc->getState() == statesController::state::ERROR) {
@@ -332,7 +332,7 @@ namespace CJ {
 				while (stc->getState() != statesController::state::STOP) {
 					if (stc->getState() == statesController::state::CONNECTED) {
 						dataPack->dataTrue = true;
-						serialize(dataPack, data, vs->BUFFSIZE);
+						serialize(dataPack, data, CJ_BUFFSIZE);
 						send(vs->new_socket, &data, sizeof(data), 0);
 					}
 					if (stc->getState() == statesController::state::ERROR) {
@@ -347,7 +347,7 @@ namespace CJ {
 				if (stc->getState() == statesController::state::CONNECTED) {
 					int size = recv(vs->new_socket, &data, sizeof(data), 0);
 					if (size != -1 || size != 0) {
-						deserialize(&dp, data, vs->BUFFSIZE);
+						deserialize(&dp, data, CJ_BUFFSIZE);
 						if (dp.dataTrue) {
 							*dataPack = dp;
 						}
@@ -366,7 +366,7 @@ namespace CJ {
 						int size;
 						size = recv(vs->new_socket, &data, sizeof(data), 0);
 						if (size != -1 || size != 0) {
-							deserialize(&dp, data, vs->BUFFSIZE);
+							deserialize(&dp, data, CJ_BUFFSIZE);
 							if (dp.dataTrue) {
 								*dataPack = dp;
 							}
@@ -393,16 +393,16 @@ namespace CJ {
 				char version_buffer[CJ_HANDSHAKE_BUFFSIZE] = {0};
 				
 				// Send Receive buffersize
-				std::string strNum = std::to_string(vs->BUFFSIZE);
+				std::string strNum = std::to_string(CJ_BUFFSIZE);
 				const char *buffData = strNum.c_str();
 				send(vs->sock, buffData, strlen(buffData), 0);
 				read(vs->sock, buffSize_buffer, CJ_HANDSHAKE_BUFFSIZE);
 
-				std::cout << "Server Buffer size: " << vs->BUFFSIZE << std::endl;
+				std::cout << "Server Buffer size: " << CJ_BUFFSIZE << std::endl;
 				std::cout << "Client Buffer size: " << buffSize_buffer << std::endl;
 
 				// Check buffersize matches
-				if (atoi(buffSize_buffer) == vs->BUFFSIZE) {
+				if (atoi(buffSize_buffer) == CJ_BUFFSIZE) {
 					std::cout << "Buffer size matches" << std::endl;
 				} else {
 					std::cout << "Buffer sizes do not match" << std::endl;
@@ -466,7 +466,7 @@ namespace CJ {
 				dataPack->dataTrue = true;
 				char data[PACKETSIZE];
 				if (stc->getState() == statesController::state::CONNECTED) {
-					serialize(dataPack, data, vs->BUFFSIZE);
+					serialize(dataPack, data, CJ_BUFFSIZE);
 					send(vs->sock, &data, sizeof(data), 0);
 				} 
 				if (stc->getState() == statesController::state::ERROR) {
@@ -479,7 +479,7 @@ namespace CJ {
 				char data[PACKETSIZE];
 				while(stc->getState() != statesController::state::STOP) {
 					if (stc->getState() == statesController::state::CONNECTED) {
-						serialize(dataPack, data, vs->BUFFSIZE);
+						serialize(dataPack, data, CJ_BUFFSIZE);
 						send(vs->sock, &data, sizeof(data), 0);
 					}
 					if (stc->getState() == statesController::state::ERROR) {
@@ -495,7 +495,7 @@ namespace CJ {
 				if (stc->getState() == statesController::state::CONNECTED) {
 					size = recv(vs->sock, &data, sizeof(data), 0);
 					if (size != -1 || size != 0) {
-						deserialize(&dp, data, vs->BUFFSIZE);
+						deserialize(&dp, data, CJ_BUFFSIZE);
 						if (dp.dataTrue) {
 							*dataPack = dp;
 						}
@@ -514,7 +514,7 @@ namespace CJ {
 						int size;
 						size = recv(vs->sock, &data, sizeof(data), 0);
 						if (size != -1 || size != 0) {
-							deserialize(&dp, data, vs->BUFFSIZE);
+							deserialize(&dp, data, CJ_BUFFSIZE);
 							if (dp.dataTrue) {
 								*dataPack = dp;
 							}
