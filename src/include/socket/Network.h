@@ -347,7 +347,7 @@ namespace CJ {
 					int size = recv(vs->new_socket, &data, sizeof(data), 0);
 					if (size != -1 || size != 0) {
 						deserialize(&dp, data);
-						if (dp.dataTrue) {
+						if (dp.dataTrue == 1) {
 							*dataPack = dp;
 						}
 					}
@@ -366,7 +366,7 @@ namespace CJ {
 						size = recv(vs->new_socket, &data, sizeof(data), 0);
 						if (size != -1 || size != 0) {
 							deserialize(&dp, data);
-							if (dp.dataTrue) {
+							if (dp.dataTrue == 1) {
 								*dataPack = dp;
 							}
 						} else {
@@ -495,7 +495,7 @@ namespace CJ {
 					size = recv(vs->sock, &data, sizeof(data), 0);
 					if (size != -1 || size != 0) {
 						deserialize(&dp, data);
-						if (dp.dataTrue) {
+						if (dp.dataTrue == 1) {
 							*dataPack = dp;
 						}
 					}
@@ -514,7 +514,7 @@ namespace CJ {
 						size = recv(vs->sock, &data, sizeof(data), 0);
 						if (size != -1 || size != 0) {
 							deserialize(&dp, data);
-							if (dp.dataTrue) {
+							if (dp.dataTrue == 1) {
 								*dataPack = dp;
 							}
 						} else {
