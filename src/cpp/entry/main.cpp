@@ -1,4 +1,3 @@
-#define DEBUG
 #ifdef DEBUG
 	// #define CJ_BUFFSIZE 1
 	#include "Core.h"
