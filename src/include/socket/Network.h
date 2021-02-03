@@ -41,6 +41,13 @@
 #endif
 
 
+/**
+ * Define timeout while connecting (how many times the program should try to connect)
+ * set -1 for infinite
+ */
+#ifndef CJ_CONNECTION_TIMEOUT
+#define CJ_CONNECTION_TIMEOUT 10 // Tries 100 times before giving up
+#endif
 
 #define CJ_NETWORK_VERSION "1.4" // Used during handshake to confirm, connection fails if either client or server version is not synced
 #define CJ_NETWORK_VERSION_SIZE 5
@@ -138,6 +145,24 @@ namespace CJ {
 			StateController stc_l;
 
 			static void _init(Vals_S *vs, StateController *stc);
+			static void _init_thread(Vals_S *vs, StateController *stc) {
+				int timeout = 1;
+				while (stc->getState() != StateController::State::CONNECTED) {
+					std::cout << "Try count: " << timeout << std::endl;
+					if (CJ_CONNECTION_TIMEOUT != -1) {
+						if (timeout > CJ_CONNECTION_TIMEOUT) {
+							break;
+						}
+					}
+
+					try {
+						_init(vs, stc);
+					} catch(const std::exception& e) {
+						std::cerr << e.what() << '\n';
+					}
+					timeout++;
+				}
+			}
 		 public:
 
 			/**
@@ -145,15 +170,21 @@ namespace CJ {
 			 */
 			void init(Vals_S vs) {
 				this->vs_l = vs;
-				_init(&this->vs_l, &this->stc_l);
+				std::thread init_t(_init_thread, &this->vs_l, &this->stc_l);
+				init_t.detach();
 			}
 
 			/**
 			 * Sets up server
 			 */
 			void init() {
-				_init(&this->vs_l, &this->stc_l);
+				init(this->vs_l);
 			}
+
+			/**
+			 * Get state controller
+			 */
+			StateController *getStateController() { return &this->stc_l; }
 		};
 
 		/**
@@ -165,6 +196,24 @@ namespace CJ {
 			StateController stc_l;
 
 			static void _init(Vals_C *vs, StateController *stc);
+			static void _init_thread(Vals_C *vs, StateController *stc) {
+				int timeout = 1;
+				while (stc->getState() != StateController::State::CONNECTED) {
+					std::cout << "Try count: " << timeout << std::endl;
+					if (CJ_CONNECTION_TIMEOUT != -1) {
+						if (timeout > CJ_CONNECTION_TIMEOUT) {
+							break;
+						}
+					}
+
+					try {
+						_init(vs, stc);
+					} catch(const std::exception& e) {
+						std::cerr << e.what() << '\n';
+					}
+					timeout++;
+				}
+			}
 		 public:
 
 			/**
@@ -172,15 +221,21 @@ namespace CJ {
 			 */
 			void init(Vals_C vs) {
 				this->vs_l = vs;
-				_init(&this->vs_l, &this->stc_l);
+				std::thread init_t(_init_thread, &this->vs_l, &this->stc_l);
+				init_t.detach();
 			}
 
 			/**
 			 * Sets up Client
 			 */
 			void init() {
-				_init(&this->vs_l, &this->stc_l);
+				init(this->vs_l);
 			}
+
+			/**
+			 * Get state controller
+			 */
+			StateController *getStateController() { return &this->stc_l; }
 		};
 	};
 };

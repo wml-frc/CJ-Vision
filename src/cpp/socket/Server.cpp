@@ -45,10 +45,7 @@ namespace CJ {
 			stc->setState(StateController::State::ERROR);
 		}
 
-		std::cout << "Server Creation Sucessful" << std::endl;
-		std::cout << "Server set on port: " << vs->port << std::endl;
-
-		std::cout << "Performing handshake with " << vs->n_clients << " clients" << std::endl;
+		// std::cout << "Performing handshake with " << vs->n_clients << " clients" << std::endl;
 		// Send out data
 		send(vs->new_socket, &CJ_NETWORK_VERSION, sizeof(CJ_NETWORK_VERSION), 0);
 		// Receive network version
@@ -58,6 +55,8 @@ namespace CJ {
 			if (strcmp(CJ_NETWORK_VERSION, version) == 0) {
 				stc->setState(StateController::State::CONNECTED);
 				std::cout << "Handshake successful" << std::endl;
+				std::cout << "Server Creation Sucessful" << std::endl;
+				std::cout << "Server set on port: " << vs->port << std::endl;
 			} else {
 				stc->setState(StateController::State::ERROR);
 				std::cout << "Error during handshake: versions do not match" << std::endl;

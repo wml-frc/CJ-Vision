@@ -15,17 +15,26 @@ namespace CJ {
 		vs->serv_addr.sin_family = AF_INET;
 		vs->serv_addr.sin_port = htons(vs->port);
 
-		if (inet_pton(AF_INET, vs->ipAddress, &vs->serv_addr.sin_addr) <= 0) {
-			std::cout << "Invalid IP adress" << std::endl;
+		struct sockaddr_in serv_addr = vs->serv_addr;
+
+		if (inet_pton(AF_INET, "191.168.178.196", &serv_addr) <= 0) {
+			std::cout << "Invalid IP address" << std::endl;
 			stc->setState(StateController::State::ERROR);
 			return;
 		}
 
 		std::cout << "Address set" << std::endl;
 
+		int timeout = 0;
 		while(connect(vs->sock, (struct sockaddr *) &vs->serv_addr, sizeof(vs->serv_addr)) < 0) {
+			if (CJ_CONNECTION_TIMEOUT != -1) {
+				if (timeout > CJ_CONNECTION_TIMEOUT) {
+					return;
+				}
+			}
 			std::cout << "Connection Failing" << std::endl;
 			stc->setState(StateController::State::ERROR);
+			timeout++;
 		}
 
 		std::cout << "Connected to server" << std::endl;
@@ -37,6 +46,9 @@ namespace CJ {
 			if (strcmp(CJ_NETWORK_VERSION, version) == 0) {
 				stc->setState(StateController::State::CONNECTED);
 				std::cout << "Handshake successful" << std::endl;
+				std::cout << "Connection Successful" << std::endl;
+				std::cout << "Connected to port: " << vs->port << std::endl;
+				std::cout << "Connected to IP: " << vs->ipAddress << std::endl;
 			} else {
 				stc->setState(StateController::State::ERROR);
 				std::cout << "Error during handshake: versions do not match" << std::endl;
@@ -47,9 +59,5 @@ namespace CJ {
 			stc->setState(StateController::State::ERROR);
 			std::cout << "Connection error during handshake" << std::endl;
 		}
-
-		std::cout << "Connection Successful" << std::endl;
-		std::cout << "Connected to port: " << vs->port << std::endl;
-		std::cout << "Connected to IP: " << vs->ipAddress << std::endl;
 	}
 }

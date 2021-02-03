@@ -1,9 +1,25 @@
+#define DEBUG
+#define CJ_CONNECTION_TIMEOUT 10
+
 #ifdef DEBUG
 	// #define CJ_BUFFSIZE 1
 	#include "Core.h"
 
+
+	using ST = CJ::Network::Utilities::StateController::State;
+
 	int main(int argc, char** argv) {
+		CJ::Network::Client client;
+		CJ::Network::Server server;
 		
+		// server.init();
+		client.init();
+
+		while (true) {
+			std::cout << "Connection state: ";
+			std::cout << (int)client.getStateController()->getState() << std::endl;
+		}
+
 		printf("\nProgram Ended\n");
 		return 0;
 	}

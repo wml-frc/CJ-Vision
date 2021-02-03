@@ -13,7 +13,7 @@ COPROC_HEADERS = -I../../UserProgram/main/include
 
 CPP = cpp/*.cpp cpp/socket/*.cpp
 HEADERS = -Iinclude
-CFLAGS = -pthread -Wall
+CFLAGS = -pthread -Wall -g
 
 # Some weird ju ju happened now i have a bunch (Should be pkg-config opencv)
 OPENCV = `pkg-config opencv --cflags --libs`
