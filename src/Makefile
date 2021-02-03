@@ -11,9 +11,9 @@ USER_HEADERS = -I../../Coproc/src/main/include
 COPROC_CPP = ../../UserProgram/main/cpp/*.cpp
 COPROC_HEADERS = -I../../UserProgram/main/include
 
-CPP = cpp/*.cpp
+CPP = cpp/*.cpp cpp/socket/*.cpp
 HEADERS = -Iinclude
-CFLAGS = -pthread
+CFLAGS = -pthread -Wall
 
 # Some weird ju ju happened now i have a bunch (Should be pkg-config opencv)
 OPENCV = `pkg-config opencv --cflags --libs`
@@ -40,7 +40,7 @@ COPROC_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(COPROC_HEADER
 DEBUG_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP)
 
 all: # Maker for Desktop
-	$(MAKE) all1 || $(MAKE) all4
+	$(MAKE) all4 || $(MAKE) all1
 
 all1:
 	$(MKDIR) $(OUTDIR)

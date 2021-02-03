@@ -32,7 +32,7 @@ namespace CJ {
 			cv::findContours(processing, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE, cv::Point(0,0));
 
 			outputImage->data = cv::Mat::zeros(processing.size(), CV_8UC3);
-			for (int i = 0; i < contours.size(); i++) {
+			for (size_t i = 0; i < contours.size(); i++) {
 				cv::Scalar color = cv::Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
 				cv::drawContours(outputImage->data, contours, i, color);
 			}

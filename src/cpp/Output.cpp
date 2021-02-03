@@ -5,9 +5,9 @@ namespace CJ {
 		if (image->data.empty()) {
 			std::cerr << "Display Error: Image empty" << std::endl;
 		} else {
-				// Temp (imshow doesn't work without GUI. << Pi error)
+				// Temp (imshow doesn't work without GUI. << Coproc error)
 			#ifdef COPROC
-				// Use other means of displaying image. (Web Stream)
+				// Use other means of displaying image. (Web Stream maybe?)
 			#else
 				cv::imshow(image->name, image->data);
 			#endif
