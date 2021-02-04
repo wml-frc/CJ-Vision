@@ -11,11 +11,14 @@
 #include <sys/socket.h> 
 #include <netinet/in.h> 
 #include <arpa/inet.h>
+#include <sys/time.h>
+#include <sys/types.h>
 
 /**
  * Std libs
  */
 #include <stdlib.h> 
+#include <errno.h>
 #include <vector>
 #include <string.h> 
 #include <thread>
@@ -24,7 +27,7 @@
 /**
  * Precompiled control values
  */
-#define CJ_DEFAULT_PORT 5800
+#define CJ_DEFAULT_PORT 5800 // 5800:5810 allowed ports in FRC
 
 /**
  * Data size, controls how many values each datapacket array can send. (Lower the faster)
@@ -34,10 +37,31 @@
 #endif
 
 /**
+ * Buffersize
+ */
+#ifndef CJ_BUFFER_SIZE
+#define CJ_BUFFER_SIZE 1025 // 1k
+#endif
+
+/**
  * Ip length, changes how long the ip adress is, default is 20 characters
  */
 #ifndef CJ_IP_LENGTH
 #define CJ_IP_LENGTH 20
+#endif
+
+/**
+ * Define max number of clients that can connect to server
+ */
+#ifndef CJ_N_CLIENTS
+#define CJ_N_CLIENTS 10
+#endif
+
+/**
+ * Define max number of pending clients
+ */
+#ifndef CJ_N_PENDING
+#define CJ_N_PENDING 3 // Allows 3 clients to be pending
 #endif
 
 
@@ -46,10 +70,10 @@
  * set -1 for infinite
  */
 #ifndef CJ_CONNECTION_TIMEOUT
-#define CJ_CONNECTION_TIMEOUT 10 // Tries 100 times before giving up
+#define CJ_CONNECTION_TIMEOUT 10 // Tries 10 times before giving up
 #endif
 
-#define CJ_NETWORK_VERSION "1.4" // Used during handshake to confirm, connection fails if either client or server version is not synced
+#define CJ_NETWORK_VERSION "1.5" // Used during handshake to confirm, connection fails if either client or server version is not synced
 #define CJ_NETWORK_VERSION_SIZE 5
 
 namespace CJ {
@@ -77,11 +101,21 @@ namespace CJ {
 			 * Server connection values
 			 */
 			struct Vals_S {
-				uint16_t port = CJ_DEFAULT_PORT;
-				int server_fd = 0, new_socket = 0, valread = 0, n_clients = 1;
-				int opt = 0;
+
+				// Old values
+				// uint16_t port = CJ_DEFAULT_PORT;
+				// int server_fd = 0, new_socket = 0, valread = 0, n_clients = 1;
+				// int opt = 0;
+				// struct sockaddr_in address;
+				// int addrlen = sizeof(address);
+
+				// Multi client
+				int opt = true;
+				int master_socket, addrlen, new_socket, client_socket[CJ_N_CLIENTS],
+				activity, i, valread, sd;
+				int max_sd;
 				struct sockaddr_in address;
-				int addrlen = sizeof(address);
+				char buffer[CJ_BUFFER_SIZE];
 			};
 
 			/**
@@ -170,8 +204,9 @@ namespace CJ {
 			 */
 			void init(Vals_S vs) {
 				this->vs_l = vs;
-				std::thread init_t(_init_thread, &this->vs_l, &this->stc_l);
-				init_t.detach();
+				_init_thread(&this->vs_l, &this->stc_l);
+				// std::thread init_t(_init_thread, &this->vs_l, &this->stc_l);
+				// init_t.detach();
 			}
 
 			/**
