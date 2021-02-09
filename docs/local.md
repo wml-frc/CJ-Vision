@@ -15,6 +15,8 @@ If all is downloaded correctly, it should read `BUILD SUCCESSFUL`
 - Linux is the same intended platform as the target Coprocessor and is the most tested platform for this lib. You can utilize a modified bootstrap script for the install.
 `sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/master/bootstrap/bootstrapLocal.sh?raw=1 | bash`
 
+- Alternatively you can use the provided scripts located in `/bootstrap`, you will need to run `bootstrapLocal.sh` before `openCV.sh` This will install the necessary libraries and openCV for compiling.
+
 - Or you can install it manually using the below scripts
 
 	In your terminal run:
@@ -36,7 +38,7 @@ sudo apt-get install -y libatlas-base-dev gfortran
 sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/master/bootstrap/openCV.sh?raw=1 | bash
 ```
 
-- If this doesn't work and or is not supported. You can check OpenCV's documentation for your needed download "https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html"
+- Or if this doesn't work and/or is not supported. You can check OpenCV's documentation for your needed distribution download "https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html"
 
 2. After installing the necessary packages and installs. Clone or download the project either as a submodule into existing code. Or as is.
 
@@ -45,4 +47,4 @@ If all is setup correctly it should read `BUILD SUCCESSFUL`
 
 ### Mac
 
-- Not yet tested
+- Not yet tested (If you have installed the necessary packages for openCV on MacOS, there should be no differences to linux building and deploying. However this is based on speculation and no proper testing has been tried)
