@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Update & Install required packages
 sudo apt-get update
 sudo apt-get install -y avahi-daemon libnss-mdns v4l-utils imagemagick
