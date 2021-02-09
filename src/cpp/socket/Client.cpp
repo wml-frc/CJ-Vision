@@ -17,7 +17,7 @@ namespace CJ {
 
 		struct sockaddr_in serv_addr = vs->serv_addr;
 
-		if (inet_pton(AF_INET, "191.168.178.196", &serv_addr) <= 0) {
+		if (inet_pton(AF_INET, "127.0.0.1", &serv_addr) <= 0) {
 			std::cout << "Invalid IP address" << std::endl;
 			stc->setState(StateController::State::ERROR);
 			return;

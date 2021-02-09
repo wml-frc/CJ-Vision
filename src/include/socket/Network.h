@@ -204,9 +204,9 @@ namespace CJ {
 			 */
 			void init(Vals_S vs) {
 				this->vs_l = vs;
-				_init_thread(&this->vs_l, &this->stc_l);
-				// std::thread init_t(_init_thread, &this->vs_l, &this->stc_l);
-				// init_t.detach();
+				// _init_thread(&this->vs_l, &this->stc_l);
+				std::thread init_t(_init_thread, &this->vs_l, &this->stc_l);
+				init_t.detach();
 			}
 
 			/**
@@ -255,6 +255,7 @@ namespace CJ {
 			 * Setup Client
 			 */
 			void init(Vals_C vs) {
+				std::cout << "Client start" << std::endl;
 				this->vs_l = vs;
 				std::thread init_t(_init_thread, &this->vs_l, &this->stc_l);
 				init_t.detach();
