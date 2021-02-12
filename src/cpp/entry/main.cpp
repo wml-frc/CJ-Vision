@@ -11,9 +11,13 @@
 	int main(int argc, char** argv) {
 		CJ::Network::Client client;
 		CJ::Network::Server server;
+
+		// std::cout << "Client IP Before: " << client.getIP() << std::endl;
+		// client.setIP("buchel.family");
+		// std::cout << "CLient IP After: " << client.getIP() << std::endl;
 		
 		server.init();
-		client.init();
+		// client.init();
 
 		while (true) {
 			// std::cout << "Connection state: ";

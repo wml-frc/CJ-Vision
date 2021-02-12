@@ -271,6 +271,16 @@ namespace CJ {
 			 * Get state controller
 			 */
 			StateController *getStateController() { return &this->stc_l; }
+
+			/**
+			 * Set IP Address
+			 */
+			void setIP(const char *ip) { strncpy(this->vs_l.ipAddress, ip, CJ_IP_LENGTH); }
+
+			/**
+			 * Get IP Address
+			 */
+			const char *getIP() { return this->vs_l.ipAddress; }
 		};
 	};
 };
