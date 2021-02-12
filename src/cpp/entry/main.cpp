@@ -13,8 +13,8 @@
 		CJ::Network::Server server;
 
 		// std::cout << "Client IP Before: " << client.getIP() << std::endl;
-		// client.setIP("buchel.family");
-		// std::cout << "CLient IP After: " << client.getIP() << std::endl;
+		// client.setIP("106.69.35.111");
+		// std::cout << "Client IP After: " << client.getIP() << std::endl;
 		
 		server.init();
 		// client.init();
