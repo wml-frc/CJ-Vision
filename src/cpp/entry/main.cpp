@@ -1,4 +1,4 @@
-// #define DEBUG
+#define DEBUG
 #define CJ_CONNECTION_TIMEOUT 10
 
 #ifdef DEBUG
