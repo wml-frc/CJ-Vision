@@ -26,7 +26,10 @@
 
 		CJ::Image inputImage;
 		inputImage.name = "Input image";
-		cv::Mat image = cv::imread("../../../Coproc/src/deploy/pen.jpeg", cv::IMREAD_GRAYSCALE);
+
+		std::string penImg = CJ_DEPLOY_FOLDER + (std::string)"/pen.jpeg";
+
+		cv::Mat image = cv::imread(penImg, cv::IMREAD_GRAYSCALE);
 
 		CJ::Core::setupVision(&inputImage, &cam);
 

@@ -29,4 +29,35 @@ public:
 #include <opencv2/core/types.hpp>
 #include <opencv2/features2d.hpp>
 
+	/**
+	 * Deploy folder location
+	 */
+	#ifdef COPROC
+
+	#else
+
+		/**
+		 * Deploy folder location on local comp WINDOWS
+		 */
+		#ifdef _WIN32
+			#ifndef CJ_DEPLOY_FOLDER
+			#define CJ_DEPLOY_FOLDER "../../"
+			#endif
+		#endif
+
+		#ifdef __linux__
+			#ifndef CJ_DEPLOY_FOLDER
+			#define CJ_DEPLOY_FOLDER "../../../Coproc/src/deploy"
+			#endif
+		#endif
+
+		#ifdef __APPLE__
+			#ifndef CJ_DEPLOY_FOLDER
+			#define CJ_DEPLOY_FOLDER "../../../Coproc/src/deploy"
+			#endif
+		#endif
+
+
+	#endif
+
 #endif
