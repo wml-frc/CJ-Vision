@@ -9,19 +9,34 @@
 	using ST = CJ::Network::Utilities::StateController::State;
 
 	int main(int argc, char** argv) {
-		CJ::Network::Client client;
-		CJ::Network::Server server;
+		// CJ::Network::Client client;
+		// CJ::Network::Server server;
 
 		// std::cout << "Client IP Before: " << client.getIP() << std::endl;
 		// client.setIP("106.69.35.111");
 		// std::cout << "Client IP After: " << client.getIP() << std::endl;
 		
-		server.init();
+		// server.init();
 		// client.init();
+
+		CJ::Core::init();
+
+		CJ::Camera::Cam cam;
+		cam.config.CamPort = 0;
+
+		CJ::Image inputImage;
+		inputImage.name = "Input image";
+		cv::Mat image = cv::imread("../../../Coproc/src/deploy/pen.jpeg", cv::IMREAD_GRAYSCALE);
+
+		CJ::Core::setupVision(&inputImage, &cam);
+
+
 
 		while (true) {
 			// std::cout << "Connection state: ";
 			// std::cout << (int)server.getStateController()->getState() << std::endl;
+			CJ::Output::Display(&inputImage);
+			cv::imshow("Training image", image);
 		}
 
 		printf("\nProgram Ended\n");
