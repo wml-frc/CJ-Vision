@@ -1,4 +1,4 @@
-## Pre-threaded asynchronous computer vision library used for easy deployment to UNIX based coprocessors.
+## Asynchronous computer vision library used for easy deployment to UNIX based coprocessors.
 
 ### CJ-Vision-2.0 in development
 
