@@ -6,13 +6,19 @@
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/WML/_apis/build/status/wml-frc.CJ-Vision?branchName=master)](https://dev.azure.com/ConnorBuchel0890/WML/_build/latest?definitionId=12&branchName=master)
 
 ### Features:
-- Pre-threaded. (wrappers around commonly used OpenCV functions are threaded upon launch)
+- Complete framework, allows you to build programs on top of the framework without the need for prior programming or other frameworks. E.g, FRC timed robot skeleton.
 
-- Asynchronous. (aynchronous structure for threaded functions)
+- OpenCV embedded functions
 
-- UNIX based Deployment. (uses GradleRIO & GradleRIO syntax for building/deploying to UNIX based systems)
+- Allows local debugging with webcam
 
-- Socket Networking. (sends CV data through custom socket programming and can be received using provided header insert)
+- Your choice in co-processor, rpi, jetson, tinkerboard etc...
+
+- Asynchronous structure using multithreading for fast CV
+
+- UNIX based Deployment. (uses GradleRIO/Embedded tools & GradleRIO syntax for building/deploying to UNIX based systems)
+
+- Socket Networking. (sends CV data through custom socket programming)
 
 ## [Local Setup](docs/local.md)
 setup on local machine
