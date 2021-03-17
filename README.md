@@ -1,4 +1,4 @@
-## Asynchronous computer vision framework with C UDP networking used for easy deployment to UNIX based coprocessors.
+## Asynchronous computer vision framework with C UDP networking for data transfer and embedded tools for easy deployment to UNIX based coprocessors.
 
 ### CJ-Vision-2.0 in development
 
