@@ -43,7 +43,7 @@ jobs:
     inputs:
       workingDirectory: ''
       gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072'
+      gradleOptions: '-Xmx2048'
       publishJUnitResults: false
       tasks: 'downloadAll'
       options: '-Pno-roborio -PdebugMode'
