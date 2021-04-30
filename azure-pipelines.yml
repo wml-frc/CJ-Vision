@@ -31,32 +31,32 @@ jobs:
       tasks: 'clean build'
       options: '-Pno-roborio -PdebugMode'
 
-- job: windows
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - template: azure-init.yml
-  - script: git submodule update --init
-  - script: git submodule update --remote -f
-    displayName: 'Download JDK'
-  # - task: Gradle@2
-  #   inputs:
-  #     workingDirectory: ''
-  #     gradleWrapperFile: 'gradlew'
-  #     gradleOptions: '-Xmx2048'
-  #     publishJUnitResults: false
-  #     tasks: 'downloadAll'
-  #     options: '-Pno-roborio -PdebugMode'
-  - task: Gradle@2
-    inputs:
-      gradleWrapperFile: 'gradlew'
-      options: '-Pno-roborio -PdebugMode'
-      tasks: 'clean build'
-      publishJUnitResults: false
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.11'
-      gradleOptions: '-Xmx3072'
-      sonarQubeRunAnalysis: false
+# - job: windows
+#   pool:
+#     vmImage: 'windows-2019'
+#   steps:
+#   - template: azure-init.yml
+#   - script: git submodule update --init
+#   - script: git submodule update --remote -f
+#     displayName: 'Download JDK'
+#   # - task: Gradle@2
+#   #   inputs:
+#   #     workingDirectory: ''
+#   #     gradleWrapperFile: 'gradlew'
+#   #     gradleOptions: '-Xmx2048'
+#   #     publishJUnitResults: false
+#   #     tasks: 'downloadAll'
+#   #     options: '-Pno-roborio -PdebugMode'
+#   - task: Gradle@2
+#     inputs:
+#       gradleWrapperFile: 'gradlew'
+#       options: '-Pno-roborio -PdebugMode'
+#       tasks: 'clean build'
+#       publishJUnitResults: false
+#       javaHomeOption: 'JDKVersion'
+#       jdkVersionOption: '1.11'
+#       gradleOptions: '-Xmx3072'
+#       sonarQubeRunAnalysis: false
 
   
 
