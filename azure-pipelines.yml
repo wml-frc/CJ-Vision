@@ -48,13 +48,16 @@ jobs:
       gradleOptions: '-Xmx3072'
       publishJUnitResults: false
       tasks: 'downloadAll'
+      options: '-Pno-roborio -PdebugMode'
   - task: Gradle@2
     inputs:
       workingDirectory: ''
       gradleWrapperFile: 'gradlew'
       gradleOptions: '-Xmx3072'
       publishJUnitResults: false
-      tasks: 'clean build -PdebugMode'
+      tasks: 'clean build'
+      options: '-Pno-roborio -PdebugMode'
+
   
 
 
