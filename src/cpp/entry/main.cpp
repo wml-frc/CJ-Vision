@@ -1,3 +1,4 @@
+#define DEBUG
 #ifdef DEBUG
 	// #define CJ_BUFFSIZE 1
 	#include "Core.h"
@@ -5,90 +6,63 @@
 	int main(int argc, char** argv) {
 		CJ::Core::init();
 
-		// CJ::Camera::Cam cam;
-		// cam.config.ResWidth = 640;
-		// cam.config.ResHeight = 480;
-		// cam.config.CamPort = 0;
-		// cam.config.CamName = "Debug Cam";
-		// cam.config.AutoExposure = true;
-		// cam.config.Exposure = 50;
-		// cam.config.FPS = 60;
+		CJ::Camera::Cam cam;
+		cam.config.ResWidth = 640;
+		cam.config.ResHeight = 480;
+		cam.config.CamPort = 0;
+		cam.config.CamName = "Debug Cam";
+		cam.config.AutoExposure = true;
+		cam.config.Exposure = 50;
+		cam.config.FPS = 60;
 
-		// CJ::Image inputImage;
-		// inputImage.name = "Origin Debug Image";
+		CJ::Image inputImage;
+		inputImage.name = "Origin Debug Image";
 
-		// CJ::Image filteredImage;
-		// filteredImage.name = "Output Debug Image";
+		CJ::Image filteredImage;
+		filteredImage.name = "Output Debug Image";
 
-		// CJ::Image cannyOutput;
-		// CJ::Image contourOutput;
+		CJ::Image cannyOutput;
+		CJ::Image contourOutput;
 
-		// std::cout << "Exposure: " << cam.config.Exposure << std::endl;
-		// CJ::Core::setupVision(&inputImage, &cam);
+		std::cout << "Exposure: " << cam.config.Exposure << std::endl;
+		CJ::Core::setupVision(&inputImage, &cam);
 
-		// CJ::ColourFilter::Options filterOptions;
-		// filterOptions.HColourLowRange = 20;
-		// filterOptions.HColourHighRange = 35;
-		// filterOptions.SColourLowRange = 100;
-		// filterOptions.SColourHighRange = 255;
-		// filterOptions.VColourLowRange = 100;
-		// filterOptions.VColourHighRange = 255;
-		// filterOptions.GreyScale = false;
+		CJ::ColourFilter::Options filterOptions;
+		filterOptions.HColourLowRange = 20;
+		filterOptions.HColourHighRange = 35;
+		filterOptions.SColourLowRange = 100;
+		filterOptions.SColourHighRange = 255;
+		filterOptions.VColourLowRange = 100;
+		filterOptions.VColourHighRange = 255;
+		filterOptions.GreyScale = false;
 
-		// CJ::ColourFilter::filter(&inputImage, &filteredImage, filterOptions);
+		CJ::ColourFilter::filter(&inputImage, &filteredImage, filterOptions);
 
-		// CJ::Contours::detectContours(&filteredImage, &contourOutput, 100);
+		CJ::Contours::detectContours(&filteredImage, &contourOutput, 100);
 
-		// Networking 
-		#ifdef __linux__
-		CJ::Network::Control nt;
-		// CJ::Network::Control::server s_nt;
-		CJ::Network::Control::client c_nt;
+		UDP_TransferNT::Server server;
+		UDP_TransferNT::Client client;
 
-		// s_nt.setPort(3000);
-		char ip[] = "192.168.178.196";
-		c_nt.setIP(ip);
-		c_nt.setPort(3000);
+		// client.getSocket().setIP("127.0.0.1");
+		server.init();
+		client.init();
 
-		// s_nt.init();
-		c_nt.init();
+		UDP_TransferNT::DataPacket dpSend, dpRecv;
+		float value = 1;
 
-		CJ::Network::dataPacket dpSend;
-		dpSend.id[0] = 'c';
-		dpSend.IntegerValues[0] = 4;
-		dpSend.BooleanValues[0] = true;
-		dpSend.DoubleValues[0] = 5.212;
-
-		// CJ::Network::dataPacket dpGet;
-
-		c_nt.registerSend(&dpSend);
-		// s_nt.registerReceive(&dpGet);
-		#endif
+		dpSend.setDecimals(0, value);
+		// server.registerSend(dpSend);
+		// client.registerRecv(dpRecv);
 
 		while (PROG::PROG_RUNNING()) {
-			#ifdef __linux__
-			if (c_nt.getState() == 2) {
-				system("clear");
-				std::cout << "Networking Test" << std::endl;
-				// std::cout << "Network State Server: " << s_nt.getState() << std::endl;
-				std::cout << "Network State Client: " << c_nt.getState() << std::endl;
-				// std::cout << "BufferSize_Server: " << s_nt.getBuffer() << std::endl;
-				std::cout << "BufferSize_Client: " << c_nt.getBuffer() << std::endl;
-				std::cout << "Ip Adress: " << c_nt.getIP() << std::endl;
-				std::cout << "Port: " << c_nt.getPort() << std::endl;
-				dpSend.IntegerValues[0] += 0.1;
-				// std::cout << "dpGet data true: " << dpGet.dataTrue << std::endl;
-				// std::cout << "dpGet ID: " << dpGet.id[0] << std::endl;
-				// std::cout << "dpGet Integers: " << dpGet.IntegerValues[0] << std::endl;
-				// std::cout << "dpGet Booleans: " << dpGet.BooleanValues[0] << std::endl;
-				// std::cout << "dpGet Doubles: " << dpGet.DoubleValues[0] << std::endl;
-			}
-			#endif
-			// CJ::Output::Display(&inputImage);
-			// CJ::Output::Display(&filteredImage);
-			// CJ::Output::Display(&contourOutput);
-		}
-		printf("\nProgram Ended\n");
+			server.send(dpSend);
+			client.recv(dpRecv);
+			// system("clear");
+			// std::cout << "Client receive: " << dpRecv.getDecimals(0) << std::endl;
+			// value += 0.001;
+			// std::cout << "value real: " << value << std::endl;
+			// dpSend.setDecimals(0, value);
+		}	
 		return 0;
 	}
 

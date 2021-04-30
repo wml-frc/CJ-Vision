@@ -11,8 +11,9 @@ USER_HEADERS = -I../../Coproc/src/main/include
 COPROC_CPP = ../../UserProgram/main/cpp/*.cpp
 COPROC_HEADERS = -I../../UserProgram/main/include
 
-CPP = cpp/*.cpp
-HEADERS = -Iinclude
+# Lib Dirs
+CPP = cpp/*.cpp include/UDP_TransferNT/lib/src/main/cpp/*.cpp
+HEADERS = -Iinclude -Iinclude/UDP_TransferNT/lib/src/main/public
 CFLAGS = -pthread
 
 # Some weird ju ju happened now i have a bunch (Should be pkg-config opencv)

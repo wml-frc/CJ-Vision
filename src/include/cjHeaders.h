@@ -16,7 +16,7 @@ public:
 };
 
 // Network
-#include "socket/Network.h"
+#include "UDP_TransferNT.h"
 
 // OPENCV
 #include <opencv2/opencv.hpp>

@@ -7,8 +7,8 @@
 #include "Camera.h"
 #include "Output.h"
 
-// CJ Network
-#include "socket/Network.h"
+// Netowrking
+#include "UDP_TransferNT.h"
 
 namespace CJ {
 	class Core {
