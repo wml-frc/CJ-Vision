@@ -39,14 +39,14 @@ jobs:
   - script: git submodule update --init
   - script: git submodule update --remote -f
     displayName: 'Download JDK'
-  - task: Gradle@2
-    inputs:
-      workingDirectory: ''
-      gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx2048'
-      publishJUnitResults: false
-      tasks: 'downloadAll'
-      options: '-Pno-roborio -PdebugMode'
+  # - task: Gradle@2
+  #   inputs:
+  #     workingDirectory: ''
+  #     gradleWrapperFile: 'gradlew'
+  #     gradleOptions: '-Xmx2048'
+  #     publishJUnitResults: false
+  #     tasks: 'downloadAll'
+  #     options: '-Pno-roborio -PdebugMode'
   - task: Gradle@2
     inputs:
       workingDirectory: ''
