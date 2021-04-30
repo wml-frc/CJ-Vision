@@ -1,0 +1,3 @@
+[submodule "src/libs/UDP_TransferNT"]
+	path = src/libs/UDP_TransferNT
+	url = https://github.com/wml-frc/UDP_TransferNT.git
