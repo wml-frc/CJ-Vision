@@ -20,6 +20,8 @@ jobs:
   steps:
   - checkout: self
   - template: azure-init.yml
+  - script: git submodule update --init
+  - script: git submodule update --remote -f
   - task: Gradle@2
     inputs:
       workingDirectory: ''
@@ -30,28 +32,29 @@ jobs:
       tasks: 'clean build'
       options: '-Pno-roborio -PdebugMode'
 
-# - job: windows
-#   pool:
-#     vmImage: 'windows-2019'
-#   steps:
-#   - checkout: self
-#   - template: azure-init.yml
-#   - powershell: |
-#       mkdir build
-#       $ProgressPreference = 'SilentlyContinue'
-#       wget "https://download.java.net/java/ga/jdk11/openjdk-11_windows-x64_bin.zip" -O "build\jdk.zip"
-#     displayName: 'Download JDK'
-#   - task: JavaToolInstaller@0
-#     inputs:
-#       jdkSourceOption: localDirectory
-#       jdkFile: 'build/jdk.zip'
-#       jdkDestinationDirectory: 'build/jdkinst'
-#       jdkArchitectureOption: x64
-#   - script: |
-#       @call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
-#       set PATH=%PATH%;%ANT_HOME%\bin
-#       gradlew build -Pno-roborio -PdebugMode
-#     displayName: 'Gradle Build'
+- job: windows
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+  - checkout: self
+  - template: azure-init.yml
+  - script: git submodule update --init
+  - script: git submodule update --remote -f
+    displayName: 'Download JDK'
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072'
+      publishJUnitResults: false
+      tasks: 'downloadAll'
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072'
+      publishJUnitResults: false
+      tasks: 'clean build -PdebugMode'
   
 
 
