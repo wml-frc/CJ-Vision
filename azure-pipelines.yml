@@ -18,8 +18,9 @@ jobs:
     vmImage: 'Ubuntu 16.04'
   container: bionic
   steps:
-  - checkout: self
   - template: azure-init.yml
+  - script: git submodule update --init
+  - script: git submodule update --remote -f
   - task: Gradle@2
     inputs:
       workingDirectory: ''
@@ -34,24 +35,29 @@ jobs:
 #   pool:
 #     vmImage: 'windows-2019'
 #   steps:
-#   - checkout: self
 #   - template: azure-init.yml
-#   - powershell: |
-#       mkdir build
-#       $ProgressPreference = 'SilentlyContinue'
-#       wget "https://download.java.net/java/ga/jdk11/openjdk-11_windows-x64_bin.zip" -O "build\jdk.zip"
+#   - script: git submodule update --init
+#   - script: git submodule update --remote -f
 #     displayName: 'Download JDK'
-#   - task: JavaToolInstaller@0
+#   # - task: Gradle@2
+#   #   inputs:
+#   #     workingDirectory: ''
+#   #     gradleWrapperFile: 'gradlew'
+#   #     gradleOptions: '-Xmx2048'
+#   #     publishJUnitResults: false
+#   #     tasks: 'downloadAll'
+#   #     options: '-Pno-roborio -PdebugMode'
+#   - task: Gradle@2
 #     inputs:
-#       jdkSourceOption: localDirectory
-#       jdkFile: 'build/jdk.zip'
-#       jdkDestinationDirectory: 'build/jdkinst'
-#       jdkArchitectureOption: x64
-#   - script: |
-#       @call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
-#       set PATH=%PATH%;%ANT_HOME%\bin
-#       gradlew build -Pno-roborio -PdebugMode
-#     displayName: 'Gradle Build'
+#       gradleWrapperFile: 'gradlew'
+#       options: '-Pno-roborio -PdebugMode'
+#       tasks: 'clean build'
+#       publishJUnitResults: false
+#       javaHomeOption: 'JDKVersion'
+#       jdkVersionOption: '1.11'
+#       gradleOptions: '-Xmx3072'
+#       sonarQubeRunAnalysis: false
+
   
 
 

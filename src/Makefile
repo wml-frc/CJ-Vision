@@ -11,8 +11,9 @@ USER_HEADERS = -I../../Coproc/src/main/include
 COPROC_CPP = ../../UserProgram/main/cpp/*.cpp
 COPROC_HEADERS = -I../../UserProgram/main/include
 
-CPP = cpp/*.cpp
-HEADERS = -Iinclude
+# Lib Dirs
+CPP = cpp/*.cpp libs/UDP_TransferNT/lib/src/main/cpp/*.cpp
+HEADERS = -Iinclude -Ilibs/UDP_TransferNT/lib/src/main/public
 CFLAGS = -pthread
 
 # Some weird ju ju happened now i have a bunch (Should be pkg-config opencv)
@@ -55,11 +56,11 @@ debug: # debuger. (mostly used for azure when Coproc dir doesn't exist)
 
 debug1:
 	$(MKDIR) $(OUTDIR)
-	$(DEBUG_COMPILE) $(LIBS) $(LOCAL_DEFS) -DDEBUG
+	$(DEBUG_COMPILE) $(LIBS) $(LOCAL_DEFS) -DDEBUG_CJ
 
 debug4:
 	$(MKDIR) $(OUTDIR)
-	$(DEBUG_COMPILE) $(LIBS4) $(LOCAL_DEFS) -DDEBUG
+	$(DEBUG_COMPILE) $(LIBS4) $(LOCAL_DEFS) -DDEBUG_CJ
 
 
 coprocessor: # Maker for Coprocessor
