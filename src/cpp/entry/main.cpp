@@ -1,5 +1,4 @@
-#define DEBUG
-#ifdef DEBUG
+#ifdef DEBUG_CJ
 	// #define CJ_BUFFSIZE 1
 	#include "Core.h"
 
@@ -21,7 +20,6 @@
 		CJ::Image filteredImage;
 		filteredImage.name = "Output Debug Image";
 
-		CJ::Image cannyOutput;
 		CJ::Image contourOutput;
 
 		std::cout << "Exposure: " << cam.config.Exposure << std::endl;
@@ -40,10 +38,11 @@
 
 		CJ::Contours::detectContours(&filteredImage, &contourOutput, 100);
 
+		#ifdef __linux__
 		UDP_TransferNT::Server server;
 		UDP_TransferNT::Client client;
 
-		// client.getSocket().setIP("127.0.0.1");
+		client.getSocket().setIP("127.0.0.1");
 		server.init();
 		client.init();
 
@@ -63,6 +62,7 @@
 			// std::cout << "value real: " << value << std::endl;
 			// dpSend.setDecimals(0, value);
 		}	
+		#endif
 		return 0;
 	}
 

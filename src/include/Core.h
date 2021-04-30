@@ -7,9 +7,6 @@
 #include "Camera.h"
 #include "Output.h"
 
-// Netowrking
-#include "UDP_TransferNT.h"
-
 namespace CJ {
 	class Core {
 	public:

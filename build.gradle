@@ -106,13 +106,17 @@ model {
 			targetPlatform wpi.platforms.desktop
 			sources.cpp {   
 				source {
-					srcDirs = ['src/cpp', '../Coproc/src/main/cpp']
+					if (project.hasProperty("debugMode")) {
+						srcDirs = ['src/cpp']
+					} else {
+						srcDirs = ['src/cpp', '../Coproc/src/main/cpp']
+					}
 					includes = ['**/*.cpp', '**/*.cc', '**/*.exe']
 				}
 
 				exportedHeaders {
 					if (project.hasProperty("debugMode")) {
-					srcDirs = ['src/include']
+						srcDirs = ['src/include']
 					} else {
 						srcDirs = ['src/include', '../Coproc/src/main/include']
 					}
@@ -122,7 +126,7 @@ model {
 
 			binaries.all {
 				if (project.hasProperty("debugMode")) {
-					cppCompiler.define 'DEBUG'
+					cppCompiler.define 'DEBUG_CJ'
 				}
 			}
 

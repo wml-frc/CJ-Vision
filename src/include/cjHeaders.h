@@ -16,7 +16,9 @@ public:
 };
 
 // Network
+#ifdef __linux__
 #include "UDP_TransferNT.h"
+#endif
 
 // OPENCV
 #include <opencv2/opencv.hpp>
