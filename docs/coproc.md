@@ -23,7 +23,7 @@ The above assumes you are on the same Local Network as the Coprocessor with inte
 
 4. Run the following command to install the packages and install OpenCV
 - `sudo wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap/bootstrap.sh?raw=1 | bash`
-- This can take up to an hour depending on network & Coprocessor speed. When prompted enter your team number (if your not apart of a team just put 0)
+- This can take up to an hour depending on network & Coprocessor speed. When prompted enter your team number (if you're not apart of a team just put 0)
 
 5. Your Coprocessor will now restart
 6. Changes Made
