@@ -13,7 +13,7 @@ If all is downloaded correctly, it should read `BUILD SUCCESSFUL`
 1. Linux requires the build essentials (gcc, cmake etc. For the project to run, and it also requires OpenCV)
 
 - Linux is the same intended platform as the target Coprocessor and is the most tested platform for this lib. You can utilize a modified bootstrap script for the install.
-`sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/master/bootstrap/bootstrapLocal.sh?raw=1 | bash`
+`sudo wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap/bootstrapLocal.sh?raw=1 | bash`
 
 - Alternatively you can use the provided scripts located in `/bootstrap`, you will need to run `bootstrapLocal.sh` before `openCV.sh` This will install the necessary libraries and openCV for compiling.
 
@@ -35,7 +35,7 @@ sudo apt-get install -y libatlas-base-dev gfortran
 - Finally you will also need to install opencv. You may be able to download using the following script used for coprocessors,
 ```shell
 # Install OpenCV
-sudo wget -qO - https://github.com/CJBuchel/CJ-Vision/blob/master/bootstrap/openCV.sh?raw=1 | bash
+sudo wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap/openCV.sh?raw=1 | bash
 ```
 
 - Or if this doesn't work and/or is not supported. You can check OpenCV's documentation for your needed distribution download "https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html"
