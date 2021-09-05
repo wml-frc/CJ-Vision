@@ -7,6 +7,11 @@ plugins {
 	id "cpp"
 }
 
+def framework_version = "2020.3.2" // main program version (minimum is 2020.3.2)
+def stupid_lock = true // stupid people might try to regenerate the framework with their code still inside
+rootProject.ext.set("stupid_lock", stupid_lock)
+rootProject.ext.set("generateFrame", false)
+
 // Deploying
 deploy {
 	targets {
@@ -154,18 +159,62 @@ model {
 	build.dependsOn(osName)
 }
 
-task buildVision(type:Exec) {
-	description "Builds vision locally"
-	workingDir "src/"
+task generateFramework_pre {
+	doLast {
+		rootProject.generateFrame = true
+		println "Generate frame: " + rootProject.generateFrame
+	}
+}
 
-	println "Building Vision Project..."
-	if (project.hasProperty("debugMode")) {
-		commandLine 'make', 'debug'
-	} else {
-		if (!file('../Coproc').isDirectory()) {
-			ant.fail("'Coproc' folder not found one level up from build.gradle")
+// Generate coprocessor file using framework version
+task generateFramework {
+	dependsOn generateFramework_pre
+	doLast {
+		description "Generates framework for user. Can't be run by user. Only via build or regen tasks"
+		def force = project.hasProperty("force")
+		if (rootProject.generateFrame) {
+			if (force) {
+				project.ext.set("stupid_lock", false)
+			}
+
+			if (!file("../Coproc").isDirectory()) {
+				project.ext.set("stupid_lock", false)
+			}
+
+			if (project.stupid_lock) {
+				ant.fail("[WARNING STUPID_LOCK ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
+			} else {
+				description "Generate `Coproc` folder with version framework and files"
+				println "Generating framework version <$framework_version>"
+				delete "../Coproc"
+				copy {
+					from "framework/$framework_version/"
+					into "../"
+				}
+			}
 		}
-		commandLine 'make'
+	}
+}
+
+generateFramework_pre.finalizedBy(generateFramework)
+
+task buildVision {
+	description "Builds vision locally"
+	doLast {
+		exec {
+			workingDir "src/"
+
+			println "Building Vision Project..."
+			if (project.hasProperty("debugMode")) {
+				commandLine 'make', 'debug'
+			} else {
+				if (!file('../Coproc').isDirectory()) {
+					println("'Coproc' folder not found one level up from build.gradle. Generate using './gradlew generateFramework'")
+					ant.fail("`Coproc` folder not found")
+				}
+				commandLine 'make'
+			}
+		}
 	}
 }
 
@@ -176,6 +225,11 @@ task runVisionUNIX(type:Exec) {
 	commandLine './cjVision'
 }
 
+/** 
+ *
+ * Configuration for tasks
+ *
+ */
 // Run buldVision when user runs ./gradlew build
 if (isFamily(FAMILY_WINDOWS)) {
 	task runVision(dependsOn: "simulateCjVisionDebugExecutable")
