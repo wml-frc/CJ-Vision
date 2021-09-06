@@ -6,7 +6,6 @@ plugins {
 	id "groovy"
 	id "cpp"
 }
-apply from: rootProject.file("CJ-Vision/common/libs/libs.gradle")
 
 def framework_version = "2020.3.2" // main program version (minimum is 2020.3.2)
 def stupid_lock = true // stupid people might try to regenerate the framework with their code still inside
@@ -18,6 +17,9 @@ def cj_vision_headers = ["CJ-Vision/common/include", "CJ-Vision/version/$framewo
 
 def coproc_vision_src = ["../Coproc/src/main/cpp"]
 def coproc_vision_headers = ["../Coproc/src/main/include"]
+
+def libs_src = ["CJ-Vision/common/libs/UDP_TransferNT/lib/src/main/cpp"]
+def libs_headers = ["CJ-Vision/common/libs/UDP_TransferNT/lib/src/main/public"]
 
 // Deploying
 deploy {
