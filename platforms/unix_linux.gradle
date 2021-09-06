@@ -1,0 +1,29 @@
+import static org.apache.tools.ant.taskdefs.condition.Os.*
+apply from: rootProject.file("platforms/platform.gradle")
+
+task buildVision {
+	description "Builds vision locally"
+	doLast {
+		exec {
+			workingDir "CJ-Vision/version/$project.framework_version"
+
+			println "Building Vision Project..."
+			if (project.hasProperty("debugMode")) {
+				commandLine 'make', 'debug'
+			} else {
+				if (!file('../Coproc').isDirectory()) {
+					println("'Coproc' folder not found one level up from build.gradle. Generate using './gradlew generateFramework'")
+					ant.fail("`Coproc` folder not found")
+				}
+				commandLine 'make'
+			}
+		}
+	}
+}
+
+// Run Vision locally
+task runVisionUNIX(type:Exec) {
+	description "Run Vision Locally with webcam to test"
+	workingDir "CJ-Vision/version/$project.framework_version/build"
+	commandLine './cjVision'
+}

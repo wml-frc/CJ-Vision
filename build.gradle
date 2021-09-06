@@ -7,165 +7,18 @@ plugins {
 	id "cpp"
 }
 
-def framework_version = "2020.3.2" // main program version (minimum is 2020.3.2)
+project.ext.set("framework_version", "2020.3.2") // main program version (minimum is 2020.3.2)
+
 def stupid_lock = true // stupid people might try to regenerate the framework with their code still inside
+apply from: rootProject.file("locations.gradle")
 project.ext.set("stupid_lock", stupid_lock)
 
+// Deploy code to device
+apply from: rootProject.file("deploy.gradle")
 
-def cj_vision_src = ["CJ-Vision/common/cpp" ,"CJ-Vision/version/$framework_version/cpp"]
-def cj_vision_headers = ["CJ-Vision/common/include", "CJ-Vision/version/$framework_version/include"]
-
-def coproc_vision_src = ["../Coproc/src/main/cpp"]
-def coproc_vision_headers = ["../Coproc/src/main/include"]
-
-def libs_src = ["CJ-Vision/common/libs/UDP_TransferNT/lib/src/main/cpp"]
-def libs_headers = ["CJ-Vision/common/libs/UDP_TransferNT/lib/src/main/public"]
-
-// Deploying
-deploy {
-	targets {
-		target('coprocessor') {
-			directory = '/home/vision/'
-			maxChannels = 10
-			timeout = 3
-			failOnMissing = true
-
-			locations {
-				ssh {
-					address = "CJVision.local"
-					user = 'vision'
-					password = 'CJfrc'
-					ipv6 = false
-				}
-			}
-		}
-	}
-
-	artifacts {
-
-		// Common properties
-		all {
-			targets << 'coprocessor'
-		}
-
-		// Deploy CJ Vision Library CPP
-		fileTreeArtifact("libCpp") {
-			directory = 'cjVisionLib/src/cpp'
-			files = fileTree(dir: 'src/cpp')
-		}
-
-		// Deploy CJ Vision Headers
-		fileTreeArtifact('cjVisionLibHEADERS') {
-			directory = 'cjVisionLib/src/include'
-			files = fileTree(dir: 'src/include')
-		}
-
-		// Deploy Resource Files (service files and config)
-		fileTreeArtifact('VisionResources') {
-			files = fileTree(dir: 'src/resources')
-			postdeploy << {
-				execute('sudo ln -sf $(pwd)/system/vision.service /etc/systemd/system')
-				execute('sudo systemctl daemon-reload; sudo systemctl enable vision')
-
-				if (project.hasProperty('stop')) {
-					execute('sudo systemctl daemon-reload; sudo service vision stop; sudo service vision status')
-				} else {
-					execute('sudo systemctl daemon-reload; sudo service vision restart; sudo service vision status')
-				}
-			}
-
-			postdeploy << {
-				execute('sudo cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.old')
-				execute('sudo cp $(pwd)/system/sshd_config /etc/ssh/sshd_config')
-			}
-		}
-
-		// User deploy files
-		if (file('../Coproc').isDirectory()) {
-			fileTreeArtifact('UserProgram') {
-				directory = 'UserProgram/main'
-				files = fileTree(dir: '../Coproc/src/main')
-			}
-			fileTreeArtifact('UserDeploys') {
-				directory = 'UserProgram/deploy'
-				files = fileTree(dir: '../Coproc/src/deploy')
-			}
-		}
-
-		// Deploy Makefile and run project
-		fileArtifact('makeFileDeploy') {
-			directory = 'cjVisionLib/src/'
-			file = file('src/Makefile')
-			predeploy << {
-				execute('sudo systemctl stop vision || true')
-			}
-
-			postdeploy << {
-				execute('make coprocessor')
-				execute('chmod +x cjVision')
-				execute('sudo systemctl restart vision ||true')
-			}
-		}
-	}
-}
-
-// Local Building
-model {
-	components {
-		cjVision(NativeExecutableSpec) {
-			if (!isFamily(FAMILY_WINDOWS)) {
-				return
-			}
-			
-			targetPlatform wpi.platforms.desktop
-			sources.cpp {
-				source {
-					if (project.hasProperty("debugMode")) {
-						srcDirs = cj_vision_src + lib_src
-					} else {
-						srcDirs = cj_vision_src + lib_src + coproc_vision_src
-					}
-					includes = ['**/*.cpp', '**/*.cc', '**/*.c']
-				}
-
-				exportedHeaders {
-					if (project.hasProperty("debugMode")) {
-						srcDirs = cj_vision_headers + lib_headers
-					} else {
-						srcDirs = cj_vision_headers + lib_headers + coproc_vision_headers
-					}
-				}
-			}
-
-			binaries.all {
-				if (project.hasProperty("debugMode")) {
-					cppCompiler.define 'DEBUG_CJ'
-				}
-			}
-
-			wpi.deps.wpilib(it)
-			wpi.deps.googleTest(it)
-			wpi.deps.vendor.cpp(it)
-		}
-	}
-}
-
-[FAMILY_WINDOWS, FAMILY_UNIX, FAMILY_MAC].each { osName ->
-	// Create Task
-	tasks.create(osName) {
-		description "OS is ${osName}"
-		
-		// Add condition to check operating system.
-		onlyIf { isFamily(osName) }
-
-		doLast {
-			println "Execution Family: '${it.name}'"
-		}
-	}
-
-	// Add task as dependency for the os task
-	build.dependsOn(osName)
-}
+// local building (Platform dependent)
+apply from: rootProject.file("platforms/windows.gradle")
+apply from: rootProject.file("platforms/unix_linux.gradle")
 
 // Generate coprocessor file using framework version
 task generateFramework {
@@ -175,8 +28,8 @@ task generateFramework {
 		// Configure for args
 		def force = project.hasProperty("force") // force property
 
-		if (!file("framework/$framework_version").isDirectory()) {
-			ant.fail("[WARNING] <$framework_version> is not supported. Only supported frameworks are allowed")
+		if (!file("framework/$project.framework_version").isDirectory()) {
+			ant.fail("[WARNING] <$project.framework_version> is not supported. Only supported frameworks are allowed")
 		}
 
 		// Generate framework
@@ -192,41 +45,14 @@ task generateFramework {
 			ant.fail("[WARNING STUPID_LOCK ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
 		} else {
 			description "Generate `Coproc` folder with version framework and files"
-			println "Generating framework version <$framework_version>"
+			println "Generating framework version <$project.framework_version>"
 			delete "../Coproc"
 			copy {
-				from "framework/$framework_version/"
+				from "framework/$project.framework_version/"
 				into "../"
 			}
 		}
 	}
-}
-
-task buildVision {
-	description "Builds vision locally"
-	doLast {
-		exec {
-			workingDir "CJ-Vision/version/$framework_version"
-
-			println "Building Vision Project..."
-			if (project.hasProperty("debugMode")) {
-				commandLine 'make', 'debug'
-			} else {
-				if (!file('../Coproc').isDirectory()) {
-					println("'Coproc' folder not found one level up from build.gradle. Generate using './gradlew generateFramework'")
-					ant.fail("`Coproc` folder not found")
-				}
-				commandLine 'make'
-			}
-		}
-	}
-}
-
-// Run Vision locally
-task runVisionUNIX(type:Exec) {
-	description "Run Vision Locally with webcam to test"
-	workingDir "CJ-Vision/version/$framework_version/build"
-	commandLine './cjVision'
 }
 
 /** 
