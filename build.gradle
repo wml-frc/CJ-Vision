@@ -61,11 +61,11 @@ task generateFramework {
  *
  */
 // Run buldVision when user runs ./gradlew build
-if (isFamily(FAMILY_WINDOWS)) {
+if (isFamily(FAMILY_WINDOWS)) { // windows config
 	task runVision(dependsOn: "simulateCjVisionDebugExecutable")
-} else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) {
-	build.finalizedBy(buildVision)
-	runVisionUNIX.dependsOn(buildVision)
+} else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) { // linux config
+	build.finalizedBy(buildVisionUNIX) // finalize if linux/unix
+	runVisionUNIX.dependsOn(buildVisionUNIX) // run depends on build
 	task runVision(dependsOn: "runVisionUNIX")
 } else {
 	ant.fail("Unknown Platform detected")

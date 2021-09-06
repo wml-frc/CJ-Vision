@@ -1,10 +1,10 @@
 import static org.apache.tools.ant.taskdefs.condition.Os.*
 apply from: rootProject.file("platforms/platform.gradle")
 
-model {
+model { // gradle compiler (used with windows and gradlerio only)
 	components {
 		cjVision(NativeExecutableSpec) {
-			if (!isFamily(FAMILY_WINDOWS)) {
+			if (!isFamily(FAMILY_WINDOWS)) { // if not windows leave don't continue
 				return
 			}
 			

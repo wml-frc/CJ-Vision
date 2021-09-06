@@ -1,7 +1,8 @@
 import static org.apache.tools.ant.taskdefs.condition.Os.*
 apply from: rootProject.file("platforms/platform.gradle")
 
-task buildVision {
+// Build using makefile
+task buildVisionUNIX {
 	description "Builds vision locally"
 	doLast {
 		exec {
