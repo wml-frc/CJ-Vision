@@ -9,8 +9,9 @@ plugins {
 
 def framework_version = "2020.3.2" // main program version (minimum is 2020.3.2)
 def stupid_lock = true // stupid people might try to regenerate the framework with their code still inside
-rootProject.ext.set("stupid_lock", stupid_lock)
-rootProject.ext.set("generateFrame", false)
+
+project.ext.set("stupid_lock", stupid_lock)
+project.ext.set("f_version", framework_version)
 
 // Deploying
 deploy {
@@ -159,44 +160,41 @@ model {
 	build.dependsOn(osName)
 }
 
-task generateFramework_pre {
-	doLast {
-		rootProject.generateFrame = true
-		println "Generate frame: " + rootProject.generateFrame
-	}
-}
-
 // Generate coprocessor file using framework version
 task generateFramework {
-	dependsOn generateFramework_pre
 	doLast {
-		description "Generates framework for user. Can't be run by user. Only via build or regen tasks"
-		def force = project.hasProperty("force")
-		if (rootProject.generateFrame) {
-			if (force) {
-				project.ext.set("stupid_lock", false)
-			}
+		description "Generates framework for user. If the framework exists, it will override if forced to do so"
 
-			if (!file("../Coproc").isDirectory()) {
-				project.ext.set("stupid_lock", false)
-			}
+		// Configure for args
+		def force = project.hasProperty("force") // force property
 
-			if (project.stupid_lock) {
-				ant.fail("[WARNING STUPID_LOCK ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
-			} else {
-				description "Generate `Coproc` folder with version framework and files"
-				println "Generating framework version <$framework_version>"
-				delete "../Coproc"
-				copy {
-					from "framework/$framework_version/"
-					into "../"
-				}
+		if (!file("framework/$project.f_version").isDirectory()) {
+			ant.fail("[WARNING] <$project.f_version> is not supported. Only supported frameworks are allowed")
+		}
+
+		// Generate framework
+		if (force) {
+			project.stupid_lock = false
+		}
+
+		if (!file("../Coproc").isDirectory()) {
+			project.stupid_lock = false
+		}
+
+		if (project.stupid_lock) {
+			ant.fail("[WARNING STUPID_LOCK ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
+		} else {
+			description "Generate `Coproc` folder with version framework and files"
+			println "Generating framework version <$f_version>"
+			delete "../Coproc"
+			copy {
+				from "framework/$f_version/"
+				into "../"
 			}
 		}
 	}
 }
 
-generateFramework_pre.finalizedBy(generateFramework)
 
 task buildVision {
 	description "Builds vision locally"
@@ -206,6 +204,7 @@ task buildVision {
 
 			println "Building Vision Project..."
 			if (project.hasProperty("debugMode")) {
+				println "debug..."
 				commandLine 'make', 'debug'
 			} else {
 				if (!file('../Coproc').isDirectory()) {
@@ -227,7 +226,7 @@ task runVisionUNIX(type:Exec) {
 
 /** 
  *
- * Configuration for tasks
+ * task configuration
  *
  */
 // Run buldVision when user runs ./gradlew build

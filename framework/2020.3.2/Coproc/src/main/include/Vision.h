@@ -7,10 +7,10 @@ class Vision {
  public:
 
 	// Initialization/setup
-	void init();
+	void Init();
 
 	// looping code/runtime
-	void periodic();
-}
+	void Periodic();
+};
 
-#endif
+#endif // VISION_H

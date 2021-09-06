@@ -3,7 +3,7 @@
 CJ::Camera::Cam cam;
 CJ::Image inputImage;
 
-void Vision::init() {
+void Vision::Init() {
 	/**
 	 * Logic/Code that is placed in this function runs only once, used to perform
 	 * initial setup of the program before the looping code
@@ -24,7 +24,7 @@ void Vision::init() {
 	CJ::Core::setupVision(&inputImage, &cam); // bind the image to the camera, and run cam in loop
 }
 
-void Vision::periodic() {
+void Vision::Periodic() {
  /**
 	* Logic here will run periodically (looping). Place code in here that needs constant processing
 	* (Contour detection, networking, colour filtering....)

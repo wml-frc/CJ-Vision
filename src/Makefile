@@ -41,7 +41,7 @@ COPROC_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(COPROC_HEADER
 DEBUG_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP)
 
 all: # Maker for Desktop
-	$(MAKE) all1 || $(MAKE) all4
+	$(MAKE) all4 || $(MAKE) all1
 
 all1:
 	$(MKDIR) $(OUTDIR)
