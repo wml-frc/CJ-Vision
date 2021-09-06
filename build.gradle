@@ -6,12 +6,18 @@ plugins {
 	id "groovy"
 	id "cpp"
 }
+apply from: rootProject.file("CJ-Vision/common/libs/libs.gradle")
 
 def framework_version = "2020.3.2" // main program version (minimum is 2020.3.2)
 def stupid_lock = true // stupid people might try to regenerate the framework with their code still inside
-
 project.ext.set("stupid_lock", stupid_lock)
-project.ext.set("f_version", framework_version)
+
+
+def cj_vision_src = ["CJ-Vision/common/cpp" ,"CJ-Vision/version/$framework_version/cpp"]
+def cj_vision_headers = ["CJ-Vision/common/include", "CJ-Vision/version/$framework_version/include"]
+
+def coproc_vision_src = ["../Coproc/src/main/cpp"]
+def coproc_vision_headers = ["../Coproc/src/main/include"]
 
 // Deploying
 deploy {
@@ -113,21 +119,20 @@ model {
 			sources.cpp {   
 				source {
 					if (project.hasProperty("debugMode")) {
-						srcDirs = ['src/cpp']
+						srcDirs = assert cj_vision_src + lib_src
 					} else {
-						srcDirs = ['src/cpp', '../Coproc/src/main/cpp']
+						srcDirs = assert cj_vision_src + lib_src + coproc_vision_src
 					}
-					includes = ['**/*.cpp', '**/*.cc', '**/*.exe']
+					includes = ['**/*.cpp', '**/*.cc', '**/*.c']
 				}
 
 				exportedHeaders {
 					if (project.hasProperty("debugMode")) {
-						srcDirs = ['src/include']
+						srcDirs = assert cj_vision_headers + lib_headers
 					} else {
-						srcDirs = ['src/include', '../Coproc/src/main/include']
+						srcDirs = assert cj_vision_headers + lib_headers + coproc_vision_headers
 					}
 				}
-				
 			}
 
 			binaries.all {
@@ -168,8 +173,8 @@ task generateFramework {
 		// Configure for args
 		def force = project.hasProperty("force") // force property
 
-		if (!file("framework/$project.f_version").isDirectory()) {
-			ant.fail("[WARNING] <$project.f_version> is not supported. Only supported frameworks are allowed")
+		if (!file("framework/$framework_version").isDirectory()) {
+			ant.fail("[WARNING] <$framework_version> is not supported. Only supported frameworks are allowed")
 		}
 
 		// Generate framework
@@ -195,7 +200,6 @@ task generateFramework {
 	}
 }
 
-
 task buildVision {
 	description "Builds vision locally"
 	doLast {
@@ -204,7 +208,6 @@ task buildVision {
 
 			println "Building Vision Project..."
 			if (project.hasProperty("debugMode")) {
-				println "debug..."
 				commandLine 'make', 'debug'
 			} else {
 				if (!file('../Coproc').isDirectory()) {

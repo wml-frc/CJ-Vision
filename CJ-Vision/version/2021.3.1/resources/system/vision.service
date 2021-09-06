@@ -1,0 +1,11 @@
+[Unit]
+Description=CJ-Vision Service
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/home/vision/cjVisionLib/src/build/cjVision
+WorkingDirectory=/home/vision
+
+[Install]
+WantedBy=multi-user.target
