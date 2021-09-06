@@ -59,7 +59,7 @@ all4:
 	$(LOCAL_COMPILE) $(LIBS4) $(LOCAL_DEFS)
 
 debug: # debuger. (mostly used for azure when Coproc dir doesn't exist)
-	$(MAKE) debug1 || $(MAKE) debug4
+	$(MAKE) debug4 || $(MAKE) debug1
 
 debug1:
 	$(MKDIR) $(OUTDIR)
@@ -71,7 +71,7 @@ debug4:
 
 
 coprocessor: # Maker for Coprocessor
-	$(MAKE) coproc1 || coproc4
+	$(MAKE) coproc4 || coproc1
 
 coproc1:
 	$(MKDIR) $(OUTDIR)

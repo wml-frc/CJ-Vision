@@ -118,21 +118,21 @@ model {
 			}
 			
 			targetPlatform wpi.platforms.desktop
-			sources.cpp {   
+			sources.cpp {
 				source {
 					if (project.hasProperty("debugMode")) {
-						srcDirs = assert cj_vision_src + lib_src
+						srcDirs = cj_vision_src + lib_src
 					} else {
-						srcDirs = assert cj_vision_src + lib_src + coproc_vision_src
+						srcDirs = cj_vision_src + lib_src + coproc_vision_src
 					}
 					includes = ['**/*.cpp', '**/*.cc', '**/*.c']
 				}
 
 				exportedHeaders {
 					if (project.hasProperty("debugMode")) {
-						srcDirs = assert cj_vision_headers + lib_headers
+						srcDirs = cj_vision_headers + lib_headers
 					} else {
-						srcDirs = assert cj_vision_headers + lib_headers + coproc_vision_headers
+						srcDirs = cj_vision_headers + lib_headers + coproc_vision_headers
 					}
 				}
 			}
@@ -192,10 +192,10 @@ task generateFramework {
 			ant.fail("[WARNING STUPID_LOCK ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
 		} else {
 			description "Generate `Coproc` folder with version framework and files"
-			println "Generating framework version <$f_version>"
+			println "Generating framework version <$framework_version>"
 			delete "../Coproc"
 			copy {
-				from "framework/$f_version/"
+				from "framework/$framework_version/"
 				into "../"
 			}
 		}
@@ -206,7 +206,7 @@ task buildVision {
 	description "Builds vision locally"
 	doLast {
 		exec {
-			workingDir "src/"
+			workingDir "CJ-Vision/version/$framework_version"
 
 			println "Building Vision Project..."
 			if (project.hasProperty("debugMode")) {
@@ -225,7 +225,7 @@ task buildVision {
 // Run Vision locally
 task runVisionUNIX(type:Exec) {
 	description "Run Vision Locally with webcam to test"
-	workingDir "src/build"
+	workingDir "CJ-Vision/version/$framework_version/build"
 	commandLine './cjVision'
 }
 

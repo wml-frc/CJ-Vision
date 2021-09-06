@@ -5,18 +5,25 @@ CC = g++
 PROG = cjVision
 ENTRY = cpp/entry/main.cpp
 
-# Dirs
-USER_CPP = ../../Coproc/src/main/cpp/*.cpp
-USER_HEADERS = -I../../Coproc/src/main/include
-COPROC_CPP = ../../UserProgram/main/cpp/*.cpp
-COPROC_HEADERS = -I../../UserProgram/main/include
+COPROC_FOLDER = ../../../../Coproc
+UserProgram_Folder = ../../UserProgram
 
-# Lib Dirs
-CPP = cpp/*.cpp libs/UDP_TransferNT/lib/src/main/cpp/*.cpp
-HEADERS = -Iinclude -Ilibs/UDP_TransferNT/lib/src/main/public
+# Dirs
+USER_CPP = $(COPROC_FOLDER)/src/main/cpp/*.cpp
+USER_HEADERS = -I$(COPROC_FOLDER)/src/main/include
+COPROC_DEVICE_CPP = $(UserProgram_Folder)/main/cpp/*.cpp
+COPROC_DEVICE_HEADERS = -I$(UserProgram_Folder)/main/include
+
+# Lib dirs
+LIB_CPP = ../../common/libs/UDP_TransferNT/lib/src/main/cpp/*.cpp
+LIB_HEADERS = -I../../common/libs/UDP_TransferNT/lib/src/main/public
+
+# Main dirs
+CPP = cpp/*.cpp $(LIB_CPP)
+HEADERS = -Iinclude $(LIB_HEADERS)
 CFLAGS = -pthread
 
-# Some weird ju ju happened now i have a bunch (Should be pkg-config opencv)
+# Some weird ju ju happened now i have a bunch (Should be pkg-config opencv or opencv4)
 OPENCV = `pkg-config opencv --cflags --libs`
 OPENCV2 = `pkg-config opencv2 --cflags --libs`
 OPENCV3 = `pkg-config opencv3 --cflags --libs`
@@ -37,7 +44,7 @@ COPROC_DEFS = -DCOPROC
 
 # global compiling attributes
 LOCAL_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(USER_HEADERS) $(USER_CPP) $(ENTRY) $(CPP)
-COPROC_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(COPROC_HEADERS) $(COPROC_CPP) $(ENTRY) $(CPP)
+COPROC_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(COPROC_DEVICE_HEADERS) $(COPROC_DEVICE_CPP) $(ENTRY) $(CPP)
 DEBUG_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP)
 
 all: # Maker for Desktop
@@ -52,7 +59,7 @@ all4:
 	$(LOCAL_COMPILE) $(LIBS4) $(LOCAL_DEFS)
 
 debug: # debuger. (mostly used for azure when Coproc dir doesn't exist)
-	$(MAKE) debug1 || $(MAKE) debug4
+	$(MAKE) debug4 || $(MAKE) debug1
 
 debug1:
 	$(MKDIR) $(OUTDIR)
@@ -64,7 +71,7 @@ debug4:
 
 
 coprocessor: # Maker for Coprocessor
-	$(MAKE) coproc1 || coproc4
+	$(MAKE) coproc4 || coproc1
 
 coproc1:
 	$(MKDIR) $(OUTDIR)
