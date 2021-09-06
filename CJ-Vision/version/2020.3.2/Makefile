@@ -19,8 +19,8 @@ LIB_CPP = ../../common/libs/UDP_TransferNT/lib/src/main/cpp/*.cpp
 LIB_HEADERS = -I../../common/libs/UDP_TransferNT/lib/src/main/public
 
 # Main dirs
-CPP = cpp/*.cpp
-HEADERS = -Iinclude
+CPP = cpp/*.cpp $(LIB_CPP)
+HEADERS = -Iinclude $(LIB_HEADERS)
 CFLAGS = -pthread
 
 # Some weird ju ju happened now i have a bunch (Should be pkg-config opencv or opencv4)
