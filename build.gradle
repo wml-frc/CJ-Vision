@@ -8,6 +8,7 @@ plugins {
 }
 
 project.ext.set("framework_version", "2020.3.2") // main program version (minimum is 2020.3.2)
+project.ext.set("core_version", "latest") // core version. [legacy/latest]. Default leave at latest
 
 def stupid_lock = true // stupid people might try to regenerate the framework with their code still inside
 apply from: rootProject.file("locations.gradle")

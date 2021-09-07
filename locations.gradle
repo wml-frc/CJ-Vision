@@ -1,15 +1,16 @@
 // 
 // Local Locations and directories
 //
-rootProject.ext.set("cj_vision_dir", "CJ-Vision/version/$rootProject.framework_version")
-rootProject.ext.set("cj_vision_common_dir", "CJ-Vision/common")
+rootProject.ext.set("cj_vision_dir", "Core/main/$rootProject.core_version")
+rootProject.ext.set("cj_vision_common_dir", "Core/common")
 rootProject.ext.set("cj_vision_src", ["$cj_vision_common_dir/cpp" ,"$cj_vision_dir/cpp"])
 rootProject.ext.set("cj_vision_headers", ["$cj_vision_common_dir/include", "$cj_vision_dir/include"])
 
 //
 // Coprocessor folder
 //
-rootProject.ext.set("coproc_vision_main", "../Coproc/src/main")
+rootProject.ext.set("coproc_folder", "../Coproc")
+rootProject.ext.set("coproc_vision_main", "$coproc_folder/src/main")
 rootProject.ext.set("coproc_vision_deploy", "../Coproc/src/deploy")
 rootProject.ext.set("coproc_vision_src", ["$coproc_vision_main/cpp"])
 rootProject.ext.set("coproc_vision_headers", ["$coproc_vision_main/include"])
