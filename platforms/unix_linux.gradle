@@ -13,12 +13,18 @@ task buildVisionUNIX {
 			if (project.hasProperty("debugMode")) {
 				commandLine 'make', 'debug'
 			} else {
-				if (!file("$coproc_folder").isDirectory()) {
-					println("'Coproc' folder not found one level up from build.gradle. Generate using './gradlew generateFramework'")
-					ant.fail("`Coproc` folder not found")
-				}
 				commandLine 'make'
 			}
+		}
+	}
+}
+
+task cleanUNIX {
+	description "Clean binary output directory"
+	doLast {
+		exec {
+			workingDir "$cj_vision_dir"
+			commandLine 'make', 'clean'
 		}
 	}
 }
