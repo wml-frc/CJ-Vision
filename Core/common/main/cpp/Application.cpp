@@ -3,7 +3,7 @@
 namespace CJ {
 	Application *Application::_instance = nullptr;
 
-	Application::Application(const std::string &name) {
+	Application::Application(bool &bindClose, const std::string &name) : _close(bindClose) {
 		CJ_CORE_ASSERT(!_instance, "An application already exists. Cannot create another");
 		_instance = this;
 		_name = name;
@@ -38,6 +38,7 @@ namespace CJ {
 
 	void Application::run() {
 		while (_running) {
+			if (_close) { _running = false; }
 			// Update Layers
 			for (Layer *layer : _layerStack) {
 				layer->onUpdate();

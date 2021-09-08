@@ -18,6 +18,15 @@ ENTRY_HEADERS = -Ientry
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 #
+# Coproc files
+#
+COPROC_LOC = ../../../../Coproc/src
+COPROC_SRCS = $(call rwildcard,$(COPROC_LOC)/main/,*.cpp)
+COPROC_SRC_DIR = $(COPROC_LOC)/main/cpp
+
+COPROC_HEADERS = -I$(COPROC_LOC)/main/include
+
+#
 # CJ VISION FILES
 #
 CJ_VISION_SRCS = $(call rwildcard,main/,*.cpp)
@@ -53,15 +62,15 @@ SPDLOG_LIB_HEADERS = -I$(SPDLOG_LIB_LOC)/include
 
 # Obejcts from cpp files
 ENTRY_OBJ := $(patsubst $(ENTRY_DIR)/%.cpp, $(OUTDIR)/%.o, $(ENTRY_SRC))
+COPROC_OBJ := $(patsubst $(COPROC_SRC_DIR)/%.cpp, $(OUTDIR)/%.o, $(COPROC_SRCS))
 CJ_VISION_OBJ := $(patsubst $(CJ_VISION_SRC_DIR)/%.cpp, $(OUTDIR)/%.o, $(CJ_VISION_SRCS))
 COMMON_OBJ := $(patsubst $(COMMON_SRC_DIR)/%.cpp, $(OUTDIR)/%.o, $(COMMON_SRCS))
 UDP_TRANSFERNT_LIB_OBJ := $(patsubst $(UDP_TRANSFERNT_LIB_SRC_DIR)/%.cpp, $(OUTDIR)/%.o, $(UDP_TRANSFERNT_LIB_SRCS))
 
 # All
-ALL_HEADERS = $(CJ_VISION_HEADERS) $(COMMON_HEADERS) $(UDP_TRANSFERNT_LIB_HEADERS) $(SPDLOG_LIB_HEADERS)
-ALL_OBJ = $(ENTRY_OBJ) $(CJ_VISION_OBJ) $(COMMON_OBJ) $(UDP_TRANSFERNT_LIB_OBJ)
-ALL_DEP = $(ENTRY_DEP) $(CJ_VISION_DEP) $(COMMON_DEP) $(UDP_TRANSFERNT_LIB_DEP)
-ALL_SRCS = $(ENTRY_SRC) $(CJ_VISION_SRCS) $(COMMON_SRCS) $(UDP_TRANSFERNT_LIB_SRCS)
+ALL_HEADERS = $(CJ_VISION_HEADERS) $(COMMON_HEADERS) $(UDP_TRANSFERNT_LIB_HEADERS) $(SPDLOG_LIB_HEADERS) $(COPROC_HEADERS)
+ALL_OBJ = $(ENTRY_OBJ) $(CJ_VISION_OBJ) $(COMMON_OBJ) $(UDP_TRANSFERNT_LIB_OBJ) $(COPROC_OBJ)
+ALL_SRCS = $(ENTRY_SRC) $(CJ_VISION_SRCS) $(COMMON_SRCS) $(UDP_TRANSFERNT_LIB_SRCS) $(COPROC_SRCS)
 
 # Compile script
 MK_OUT = mkdir -p $@; rm -rf $@
@@ -73,21 +82,31 @@ $(PROG): $(ALL_OBJ)
 	@echo Building program
 	$(COMPILE_PROG)
 
+# entry
 $(OUTDIR)/%.o: $(ENTRY_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
 	$(COMPILE_OBJ)
 
+# coproc
+$(OUTDIR)/%.o: $(COPROC_SRC_DIR)/%.cpp
+	@echo Building objects
+	$(MK_OUT)
+	$(COMPILE_OBJ)
+
+# core
 $(OUTDIR)/%.o: $(CJ_VISION_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
 	$(COMPILE_OBJ)
 
+# common
 $(OUTDIR)/%.o: $(COMMON_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
 	$(COMPILE_OBJ)
 
+# udp transfer nt
 $(OUTDIR)/%.o: $(UDP_TRANSFERNT_LIB_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)

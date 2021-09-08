@@ -1,34 +1,45 @@
 #include "Vision.h" // required before other #includes
 
-CJ::Camera::Cam cam;
-CJ::Image inputImage;
+bool closeApp = false;
 
-void Vision::Init() {
-	/**
-	 * Logic/Code that is placed in this function runs only once, used to perform
-	 * initial setup of the program before the looping code
-	 */
-	CJ::Core::init();
+/**
+ * Example Layer for Vision App
+ */
+class ExampleLayer : public CJ::Layer {
+ public:
+	ExampleLayer() : Layer("Example Layer") {
+		CJ_PRINT_INFO("Example Layer Created");
+	}
 
-	cam.config = {
-		0,
-		cv::CAP_ANY,
-		30,
-		640,
-		480,
-		0.1,
-		true,
-		"CJ Cam"
-	};
+	void onAttach() override {
+		CJ_PRINT_INFO("Example Layer Attached");
+	}
 
-	CJ::Core::setupVision(&inputImage, &cam); // bind the image to the camera, and run cam in loop
-}
+	void onDetach() override {
+		CJ_PRINT_WARN("Example Layer Detached");
+	}
 
-void Vision::Periodic() {
- /**
-	* Logic here will run periodically (looping). Place code in here that needs constant processing
-	* (Contour detection, networking, colour filtering....)
-	*/
+	void onUpdate() override {
+		// CJ_PRINT("Example Layer update");
+		CJ_PRINT_TRACE("Example Layer On Update");
+		// closeApp = true;
+	}
+};
 
-	CJ::Output::Display(&inputImage); // display the image locally (doesn't display on coproc)
-}
+
+/**
+ * Example Vision application
+ */
+class ExampleVisionApplication : public CJ::Application {
+ public:
+	ExampleVisionApplication() : CJ::Application(closeApp, "Example App") {
+		CJ_PRINT_INFO("Example App created");
+		pushLayer(new ExampleLayer());
+	}
+
+	~ExampleVisionApplication() {
+		CJ_PRINT_WARN("Test App Destroyed");
+	}
+};
+
+CJ_CREATE_APPLICATION(ExampleVisionApplication);

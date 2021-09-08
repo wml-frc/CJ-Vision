@@ -1,2 +1,0 @@
-#include "Logging/Log.h"
-

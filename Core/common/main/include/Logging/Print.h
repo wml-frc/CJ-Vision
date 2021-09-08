@@ -21,14 +21,15 @@ namespace CJ {
 	}
 }
 
-#ifdef DEBUG_CJ
-	#define CJ_CORE_PRINT(...) ::CJ::print(__VA__ARGS__)
+
+#ifndef DISSABLE_LOGGER
+	#define CJ_CORE_PRINT(...) ::CJ::println(__VA_ARGS__)
 	#define CJ_CORE_PRINT_INFO(...) ::CJ::Log::getCoreLogger()->info(__VA_ARGS__)
 	#define CJ_CORE_PRINT_ERROR(...) ::CJ::Log::getCoreLogger()->error(__VA_ARGS__)
 	#define CJ_CORE_PRINT_WARN(...) ::CJ::Log::getCoreLogger()->warn(__VA_ARGS__)
 	#define CJ_CORE_PRINT_TRACE(...) ::CJ::Log::getCoreLogger()->trace(__VA_ARGS__)
 
-	#define CJ_PRINT(...) ::CJ::print(__VA__ARGS__)
+	#define CJ_PRINT(...) ::CJ::println(__VA_ARGS__)
 	#define CJ_PRINT_INFO(...) ::CJ::Log::getClientLogger()->info(__VA_ARGS__)
 	#define CJ_PRINT_ERROR(...) ::CJ::Log::getClientLogger()->error(__VA_ARGS__)
 	#define CJ_PRINT_WARN(...) ::CJ::Log::getClientLogger()->warn(__VA_ARGS__)
