@@ -47,8 +47,8 @@ UDP_TRANSFERNT_LIB_HEADERS = -I$(UDP_TRANSFERNT_LIB_LOC)/main/public
 #
 # spdlog files
 # NOTE: spdlog is a header only lib
-SPDLOG_LIB_LOC = $(COMMON_HEADERS)/libs/spdlog
-SPDLOG_LIB_HEADERS = $(SPDLOG_LIB_LOC)/include
+SPDLOG_LIB_LOC = $(COMMON_LOC)/libs/spdlog
+SPDLOG_LIB_HEADERS = -I$(SPDLOG_LIB_LOC)/include
 
 
 # Obejcts from cpp files
