@@ -1,3 +1,6 @@
 [submodule "Core/common/libs/UDP_TransferNT"]
 	path = Core/common/libs/UDP_TransferNT
 	url = https://github.com/wml-frc/UDP_TransferNT.git
+[submodule "Core/common/libs/spdlog"]
+	path = Core/common/libs/spdlog
+	url = https://github.com/gabime/spdlog.git
