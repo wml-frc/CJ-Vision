@@ -3,17 +3,32 @@
 namespace CJ {
 	Application *Application::_instance = nullptr;
 
-	Application::Application(bool &bindClose, const std::string &name) : _close(bindClose) {
+	Application::Application(const std::string &name) {
 		CJ_CORE_ASSERT(!_instance, "An application already exists. Cannot create another");
 		_instance = this;
 		_name = name;
 
 		// Set the runner
 		_running = true;
+		_layers_running = true;
 	}
 
-	Application::~Application() {
+	Application::~Application() {}
 
+	void Application::setRunning(bool status) {
+		_running = status;
+	}
+	
+	void Application::setLayersRunning(bool status) {
+		_layers_running = status;
+	}
+
+	bool Application::getRunning() {
+		return _running;
+	}
+
+	bool Application::getLayersRunning() {
+		return _layers_running;
 	}
 
 	void Application::pushLayer(Layer *layer) {
@@ -38,10 +53,11 @@ namespace CJ {
 
 	void Application::run() {
 		while (_running) {
-			if (_close) { _running = false; }
 			// Update Layers
-			for (Layer *layer : _layerStack) {
-				layer->onUpdate();
+			if (_layers_running) {
+				for (Layer *layer : _layerStack) {
+					layer->onUpdate();
+				}
 			}
 		}
 	}

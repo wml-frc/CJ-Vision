@@ -15,13 +15,14 @@ int main(int argc, char **argv) {
 	 * Create Application, supports only one
 	 */
 	auto app = CJ::createApplication();
-	CJ::Log::setClientName("[ Runtime - " + app->getName() + "]");
+	CJ::Log::setClientName("[Runtime - " + app->getName() + "]");
 
 	/**
 	 * Super loop runner
 	 */
 	app->run();
 
+	CJ::Log::setClientName("[Killtime - " + app->getName() + "]");
 
 	/**
 	 * App cleanup

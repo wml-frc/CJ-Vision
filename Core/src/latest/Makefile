@@ -7,6 +7,15 @@ PROG_NAME = cjVision
 PROG = build/$(PROG_NAME)
 CFLAGS = -pthread
 
+# Some weird ju ju happened now i have a bunch (Should be pkg-config opencv or opencv4)
+OPENCV = `pkg-config opencv --cflags --libs`
+OPENCV2 = `pkg-config opencv2 --cflags --libs`
+OPENCV3 = `pkg-config opencv3 --cflags --libs`
+OPENCV4 = `pkg-config opencv4 --cflags --libs`
+
+LIBS = $(OPENCV)
+LIBS4 = $(OPENCV4)
+
 #
 # Entry
 #
@@ -33,7 +42,6 @@ CJ_VISION_SRCS = $(call rwildcard,main/,*.cpp)
 CJ_VISION_SRC_DIR = main/cpp
 
 CJ_VISION_HEADERS= -Imain/include
-
 
 #
 # COMMON FILES
@@ -75,9 +83,12 @@ ALL_SRCS = $(ENTRY_SRC) $(CJ_VISION_SRCS) $(COMMON_SRCS) $(UDP_TRANSFERNT_LIB_SR
 # Compile script
 MK_OUT = mkdir -p $@; rm -rf $@
 
-COMPILE_OBJ = $(CC) -c -o $@ $(CFLAGS) $< $(ALL_HEADERS)
+COMPILE_OBJ = $(COMPILE_OBJ4) || $(COMPILE_OBJ1)
+COMPILE_OBJ1 = $(CC) -c -o $@ $(CFLAGS) $< $(ALL_HEADERS) $(LIBS)
+COMPILE_OBJ4 = $(CC) -c -o $@ $(CFLAGS) $< $(ALL_HEADERS) $(LIBS4)
 COMPILE_PROG = $(CC) -o $@ $(CFLAGS) $(LDFLAGS) $(ALL_OBJ) $(ALL_HEADERS)
 
+# Build program with cv 1
 $(PROG): $(ALL_OBJ)
 	@echo Building program
 	$(COMPILE_PROG)

@@ -10,7 +10,7 @@ namespace CJ {
 	 */
 	class Application {
 	 public:
-		Application(bool &bindClose, const std::string &name = "CJ-Vision Application");
+		Application(const std::string &name = "CJ-Vision Application");
 		virtual ~Application();
 		void run();
 
@@ -20,6 +20,18 @@ namespace CJ {
 		static Application &get() {
 			return *_instance;
 		}
+
+		/**
+		 * setter for application & layers
+		 */
+		void setRunning(bool status);
+		void setLayersRunning(bool status);
+
+		/**
+		 * getter for application and layers
+		 */
+		bool getRunning();
+		bool getLayersRunning();
 
 		/**
 		 * Push layer onto stack
@@ -49,7 +61,7 @@ namespace CJ {
 		// Application
 		static Application *_instance;
 		bool _running = false;
-		bool &_close;
+		bool _layers_running = false;
 
 		// application args
 		std::string _name;

@@ -10,9 +10,9 @@ plugins {
 project.ext.set("framework_version", "2021.3.1") // main program version (minimum is 2020.3.2)
 project.ext.set("core_version", "latest") // core version. [legacy/latest]. Default leave at latest
 
-def stupid_lock = true // stupid people might try to regenerate the framework with their code still inside
+def anna_lock = true // stupid people might try to regenerate the framework with their code still inside
 apply from: rootProject.file("locations.gradle")
-project.ext.set("stupid_lock", stupid_lock)
+project.ext.set("anna_lock", anna_lock)
 
 // Deploy code to device
 apply from: rootProject.file("deploy.gradle")
@@ -46,15 +46,15 @@ task generateFramework {
 
 		// Generate framework
 		if (force) {
-			project.stupid_lock = false
+			project.anna_lock = false
 		}
 
 		if (!file("../Coproc").isDirectory()) {
-			project.stupid_lock = false
+			project.anna_lock = false
 		}
 
-		if (project.stupid_lock) {
-			ant.fail("[WARNING STUPID_LOCK ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
+		if (project.anna_lock) {
+			ant.fail("[WARNING 'ANNA_LOCK' ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
 		} else {
 			description "Generate `Coproc` folder with version framework and files"
 			println "Generating framework version <$project.framework_version>"

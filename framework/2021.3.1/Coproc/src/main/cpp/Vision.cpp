@@ -1,13 +1,11 @@
 #include "Vision.h" // required before other #includes
 
-bool closeApp = false;
-
 /**
  * Example Layer for Vision App
  */
 class ExampleLayer : public CJ::Layer {
  public:
-	ExampleLayer() : Layer("Example Layer") {
+	ExampleLayer(CJ::Application &app) : _app(app), Layer("Example Layer") {
 		CJ_PRINT_INFO("Example Layer Created");
 	}
 
@@ -20,10 +18,12 @@ class ExampleLayer : public CJ::Layer {
 	}
 
 	void onUpdate() override {
-		// CJ_PRINT("Example Layer update");
-		CJ_PRINT_TRACE("Example Layer On Update");
-		// closeApp = true;
+		CJ_PRINT_INFO("Example Layer update");
+		_app.setRunning(false);
 	}
+
+ private:
+	CJ::Application &_app;
 };
 
 
@@ -32,9 +32,9 @@ class ExampleLayer : public CJ::Layer {
  */
 class ExampleVisionApplication : public CJ::Application {
  public:
-	ExampleVisionApplication() : CJ::Application(closeApp, "Example App") {
+	ExampleVisionApplication() : CJ::Application("Example App") {
 		CJ_PRINT_INFO("Example App created");
-		pushLayer(new ExampleLayer());
+		pushLayer(new ExampleLayer(get()));
 	}
 
 	~ExampleVisionApplication() {
