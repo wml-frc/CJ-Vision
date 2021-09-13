@@ -5,7 +5,7 @@
  */
 class ExampleLayer : public CJ::Layer {
  public:
-	ExampleLayer(CJ::Application &app) : _app(app), Layer("Example Layer") {
+	ExampleLayer(CJ::Application &app) : Layer("Example Layer"), _app(app) {
 		CJ_PRINT_INFO("Example Layer Created");
 	}
 
@@ -42,4 +42,4 @@ class ExampleVisionApplication : public CJ::Application {
 	}
 };
 
-CJ_CREATE_APPLICATION(ExampleVisionApplication);
+CJ_CREATE_APPLICATION(ExampleVisionApplication)
