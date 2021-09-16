@@ -54,12 +54,10 @@ COMMON_HEADERS = -I$(COMMON_LOC)/main/include
 
 #
 # UDP_TransferNT
+# NOTE: UDP_TransferNT is a header only lib (no need for src like common)
 #
-UDP_TRANSFERNT_LIB_LOC = $(COMMON_LOC)/libs/UDP_TransferNT/lib/src
-UDP_TRANSFERNT_LIB_SRCS = $(call rwildcard,$(UDP_TRANSFERNT_LIB_LOC)/main/,*.cpp)
-UDP_TRANSFERNT_LIB_SRC_DIR = $(UDP_TRANSFERNT_LIB_LOC)/main/cpp
-
-UDP_TRANSFERNT_LIB_HEADERS = -I$(UDP_TRANSFERNT_LIB_LOC)/main/public
+UDP_TRANSFERNT_LIB_LOC = $(COMMON_LOC)/libs/UDP_TransferNT/UDP_TransferNT
+UDP_TRANSFERNT_LIB_HEADERS = -I$(UDP_TRANSFERNT_LIB_LOC)/include
 
 #
 # spdlog files
@@ -73,12 +71,11 @@ ENTRY_OBJ := $(patsubst $(ENTRY_DIR)/%.cpp, $(OUTDIR)/%.o, $(ENTRY_SRC))
 COPROC_OBJ := $(patsubst $(COPROC_SRC_DIR)/%.cpp, $(OUTDIR)/%.o, $(COPROC_SRCS))
 CJ_VISION_OBJ := $(patsubst $(CJ_VISION_SRC_DIR)/%.cpp, $(OUTDIR)/%.o, $(CJ_VISION_SRCS))
 COMMON_OBJ := $(patsubst $(COMMON_SRC_DIR)/%.cpp, $(OUTDIR)/%.o, $(COMMON_SRCS))
-UDP_TRANSFERNT_LIB_OBJ := $(patsubst $(UDP_TRANSFERNT_LIB_SRC_DIR)/%.cpp, $(OUTDIR)/%.o, $(UDP_TRANSFERNT_LIB_SRCS))
 
 # All
 ALL_HEADERS = $(CJ_VISION_HEADERS) $(COMMON_HEADERS) $(UDP_TRANSFERNT_LIB_HEADERS) $(SPDLOG_LIB_HEADERS) $(COPROC_HEADERS)
-ALL_OBJ = $(ENTRY_OBJ) $(CJ_VISION_OBJ) $(COMMON_OBJ) $(UDP_TRANSFERNT_LIB_OBJ) $(COPROC_OBJ)
-ALL_SRCS = $(ENTRY_SRC) $(CJ_VISION_SRCS) $(COMMON_SRCS) $(UDP_TRANSFERNT_LIB_SRCS) $(COPROC_SRCS)
+ALL_OBJ = $(ENTRY_OBJ) $(CJ_VISION_OBJ) $(COMMON_OBJ) $(COPROC_OBJ)
+ALL_SRCS = $(ENTRY_SRC) $(CJ_VISION_SRCS) $(COMMON_SRCS) $(COPROC_SRCS)
 
 # Compile script
 MK_OUT = mkdir -p $@; rm -rf $@
@@ -113,12 +110,6 @@ $(OUTDIR)/%.o: $(CJ_VISION_SRC_DIR)/%.cpp
 
 # common
 $(OUTDIR)/%.o: $(COMMON_SRC_DIR)/%.cpp
-	@echo Building objects
-	$(MK_OUT)
-	$(COMPILE_OBJ)
-
-# udp transfer nt
-$(OUTDIR)/%.o: $(UDP_TRANSFERNT_LIB_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
 	$(COMPILE_OBJ)

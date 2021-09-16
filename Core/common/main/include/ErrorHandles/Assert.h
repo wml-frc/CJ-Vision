@@ -5,10 +5,10 @@
 
 #if __has_include(<filesystem>)
 	#include <filesystem>
-	namespace cj_filesytem = std::filesystem;
+	#define cj_filesystem std::filesystem;
 #elif __has_include(<experimental/filesystem>)
 	#include <experimental/filesystem>
-	namespace cj_filesystem = std::experimental::filesystem;
+	#define cj_filesystem std::experimental::filesystem;
 #else
 	// without filesystem the program will break. So disable asserts
 	#define CJ_DISABLE_ASSERTS
