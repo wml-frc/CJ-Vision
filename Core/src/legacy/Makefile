@@ -15,8 +15,8 @@ COPROC_DEVICE_CPP = $(UserProgram_Folder)/main/cpp/*.cpp
 COPROC_DEVICE_HEADERS = -I$(UserProgram_Folder)/main/include
 
 # Lib dirs
-LIB_CPP = ../../common/libs/UDP_TransferNT/lib/src/main/cpp/*.cpp
-LIB_HEADERS = -I../../common/libs/UDP_TransferNT/lib/src/main/public
+LIB_CPP = 
+LIB_HEADERS = -I../../common/libs/UDP_TransferNT/UDP_TransferNT/include
 
 # Main dirs
 CPP = cpp/*.cpp $(LIB_CPP)

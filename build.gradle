@@ -1,16 +1,15 @@
 import static org.apache.tools.ant.taskdefs.condition.Os.*
 plugins {
+	id "cpp"
 	id "edu.wpi.first.GradleRIO" version "2021.3.1"
 	id "google-test-test-suite"
-	id "java-test-fixtures"
 	id "groovy"
-	id "cpp"
 }
 
 project.ext.set("framework_version", "2021.3.1") // main program version (minimum is 2020.3.2)
 project.ext.set("core_version", "latest") // core version. [legacy/latest]. Default leave at latest
 
-def anna_lock = true // stupid people might try to regenerate the framework with their code still inside
+def anna_lock = true // some people might try to regenerate the framework with their code still inside
 apply from: rootProject.file("locations.gradle")
 project.ext.set("anna_lock", anna_lock)
 
@@ -75,7 +74,7 @@ task generateFramework {
 // Run buldVision when user runs ./gradlew build
 build.dependsOn(preBuild)
 if (isFamily(FAMILY_WINDOWS)) { // windows config
-	task runVision(dependsOn: "simulateCjVisionDebugExecutable")
+	task runVision(dependsOn: "simulateCjVision${wpi.platforms.desktop.capitalize()}DebugExecutable")
 } else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) { // linux config
 	clean.dependsOn(cleanUNIX)
 	build.finalizedBy(buildVisionUNIX) // finalize if linux/unix

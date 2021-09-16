@@ -2,39 +2,32 @@ import static org.apache.tools.ant.taskdefs.condition.Os.*
 apply from: rootProject.file("platforms/platform.gradle")
 
 model { // gradle compiler (used with windows and gradlerio only)
-
-	platforms {
-		x86 {
-			if (operatingSystem.macOsX) {
-				architecture "x64"
-			} else {
-				architecture "x86"
-			}
-		}
-	}
 	components {
 		cjVision(NativeExecutableSpec) {
 			if (!isFamily(FAMILY_WINDOWS)) { // if not windows leave don't continue
 				return
 			}
-			
+
+			targetPlatform wpi.platforms.roborio
 			targetPlatform wpi.platforms.desktop
-			//targetPlatform "x86"
+
+			println wpi.platforms.desktop
+			
 			sources.cpp {
 				source {
 					if (project.hasProperty("debugMode")) {
-						srcDirs = cj_vision_src + libs_src
+						srcDirs = cj_vision_src //+ libs_src
 					} else {
-						srcDirs = cj_vision_src + libs_src + coproc_vision_src
+						srcDirs = vision_all_src
 					}
-					includes = ['**/*.cpp', '**/*.cc', '**/*.c']
+					include '**/*.cpp', '**/*.cc', '**/*.c'
 				}
 
 				exportedHeaders {
 					if (project.hasProperty("debugMode")) {
 						srcDirs = cj_vision_headers + libs_headers
 					} else {
-						srcDirs = cj_vision_headers + libs_headers + coproc_vision_headers
+						srcDirs = vision_all_headers
 					}
 				}
 			}
@@ -43,10 +36,13 @@ model { // gradle compiler (used with windows and gradlerio only)
 				if (project.hasProperty("debugMode")) {
 					cppCompiler.define 'DEBUG_CJ'
 				}
+
+				// cppCompiler.args '-std=c++17'
+				// linker.args '-std=c++17'
 			}
 
-			wpi.deps.vendor.cpp(it)
 			wpi.deps.wpilib(it)
+			wpi.deps.vendor.cpp(it)
 			wpi.deps.googleTest(it)
 		}
 	}
