@@ -12,8 +12,8 @@ COPROC_CPP = ../../UserProgram/main/cpp/*.cpp
 COPROC_HEADERS = -I../../UserProgram/main/include
 
 # Lib Dirs
-CPP = cpp/*.cpp libs/UDP_TransferNT/lib/src/main/cpp/*.cpp
-HEADERS = -Iinclude -Ilibs/UDP_TransferNT/lib/src/main/public
+CPP = cpp/*.cpp
+HEADERS = -Iinclude -Ilibs/UDP_TransferNT/UDP_TransferNT/include
 CFLAGS = -pthread
 
 # Some weird ju ju happened now i have a bunch (Should be pkg-config opencv)
@@ -41,7 +41,7 @@ COPROC_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(COPROC_HEADER
 DEBUG_COMPILE = $(CC) $(CFLAGS) -o $(OUTDIR)/$(PROG) $(HEADERS) $(ENTRY) $(CPP)
 
 all: # Maker for Desktop
-	$(MAKE) all1 || $(MAKE) all4
+	$(MAKE) all4 || $(MAKE) all1
 
 all1:
 	$(MKDIR) $(OUTDIR)
