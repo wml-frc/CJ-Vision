@@ -5,11 +5,6 @@
 #include <iostream>
 #include <string>
 
-// Network
-#ifdef CJ_PLATFORM_LINUX
-#include "UDP_TransferNT.h" // UDP is only linux currently
-#endif
-
 // CV
 #include <opencv2/opencv.hpp>
 #include <opencv2/objdetect.hpp>
@@ -23,5 +18,9 @@
 // Our common headers
 #include "Utils/Utils.h"
 #include "ErrorHandles/Assert.h"
+#include "Logging/Print.h"
+
+// override the NT logger with the CJ_CORE_PRINTER
+#define DEFAULT_NT_LOGGER(...) CJ_CORE_PRINT_WARN(__VA_ARGS__)
 
 #endif

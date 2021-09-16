@@ -16,7 +16,7 @@ model { // gradle compiler (used with windows and gradlerio only)
 			sources.cpp {
 				source {
 					if (project.hasProperty("debugMode")) {
-						srcDirs = cj_vision_src + libs_src
+						srcDirs = cj_vision_src //+ libs_src
 					} else {
 						srcDirs = vision_all_src
 					}
