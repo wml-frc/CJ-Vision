@@ -39,23 +39,23 @@
 		CJ::Contours::detectContours(&filteredImage, &contourOutput, 100);
 
 		#ifdef __linux__
-		UDP_TransferNT::Server server;
-		UDP_TransferNT::Client client;
+		// UDP_TransferNT::Server server;
+		// UDP_TransferNT::Client client;
 
-		client.getSocket().setIP("127.0.0.1");
-		server.init();
-		client.init();
+		// client.getSocket().setIP("127.0.0.1");
+		// server.init();
+		// client.init();
 
-		UDP_TransferNT::DataPacket dpSend, dpRecv;
-		float value = 1;
+		// UDP_TransferNT::DataPacket dpSend, dpRecv;
+		// float value = 1;
 
-		dpSend.setDecimals(0, value);
+		// dpSend.setDecimals(0, value);
 		// server.registerSend(dpSend);
 		// client.registerRecv(dpRecv);
 
 		while (PROG::PROG_RUNNING()) {
-			server.send(dpSend);
-			client.recv(dpRecv);
+			// server.send(dpSend);
+			// client.recv(dpRecv);
 			// system("clear");
 			// std::cout << "Client receive: " << dpRecv.getDecimals(0) << std::endl;
 			// value += 0.001;
