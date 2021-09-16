@@ -22,7 +22,7 @@ namespace CJ {
 }
 
 
-#ifndef DISSABLE_LOGGER
+#ifndef DISABLE_LOGGER
 	#define CJ_CORE_PRINT(...) ::CJ::println(__VA_ARGS__)
 	#define CJ_CORE_PRINT_INFO(...) ::CJ::Log::getCoreLogger()->info(__VA_ARGS__)
 	#define CJ_CORE_PRINT_ERROR(...) ::CJ::Log::getCoreLogger()->error(__VA_ARGS__)
