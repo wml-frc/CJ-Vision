@@ -21,6 +21,6 @@
 #include "Logging/Print.h"
 
 // override the NT logger with the CJ_CORE_PRINTER
-#define DEFAULT_NT_LOGGER(...) CJ_CORE_PRINT_WARN(__VA_ARGS__)
+#define DEFAULT_NT_LOGGER(...) CJ_PRINT_WARN(__VA_ARGS__)
 
 #endif
