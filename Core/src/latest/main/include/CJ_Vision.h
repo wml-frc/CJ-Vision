@@ -6,4 +6,7 @@
 
 // Vision
 #include "ImageContainer.h"
-#endif // CJ_VISION_HB
+#include "Output.h"
+#include "Capture/Camera.h"
+#include "ImageProcessing/ColourFilter.h"
+#endif // CJ_VISION_H
