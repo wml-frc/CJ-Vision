@@ -15,6 +15,15 @@ namespace CJ {
 	class ColourFilter {
 	 public:
 
+		static const int RETRO_HL = 50;
+		static const int RETRO_HH = 70;
+
+		static const int RETRO_SL = 250;
+		static const int RETRO_SH = 255;
+
+		static const int RETRO_VL = 30;
+		static const int RETRO_VH = 255;
+
 		/**
 		 * HSV Options
 		 */
@@ -62,7 +71,7 @@ namespace CJ {
 		/**
 		 * Filter using gray scale (Adds live trackbar for development)
 		 */
-		static void createFilterDev(Image &image, Image &output, GrayScale_Options options);
+		static void createFilterTrackbar(GrayScale_Options &options);
 	};
 }
 

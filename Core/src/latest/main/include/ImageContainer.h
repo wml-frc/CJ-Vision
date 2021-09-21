@@ -8,13 +8,13 @@ namespace CJ {
 		/**
 		 * Data
 		 */
-		cv::Mat data; // Main image data
+		// std::shared_ptr<cv::Mat> data; // Main data pointer
+		cv::Mat data;
 		std::string name = "Image"; // Name
 
 		/**
 		 * Operators
 		 */
-
 		// mat operator
 		operator cv::Mat() {
 			return data;

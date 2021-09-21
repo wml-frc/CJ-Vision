@@ -2,6 +2,7 @@
 #include <thread>
 
 namespace CJ {
+	cv::Mat localMat;
 	void ColourFilter::filter(Image &input, Image &output, HSV_Options options) {
 		if (input.data.empty()) {
 			CJ_CORE_PRINT_ERROR("Can't get input image. (Colour Filter)");
