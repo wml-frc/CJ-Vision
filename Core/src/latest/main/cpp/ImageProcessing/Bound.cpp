@@ -54,12 +54,4 @@ namespace CJ {
 
 		return center;
 	}
-
-	void Bound::createBoundingTrackbar(int &size) {
-		#ifndef COPROC
-		std::string windowName = "Bounding size threshold Editor";
-		cv::namedWindow(windowName);
-		cv::createTrackbar("Contour Size", windowName, &size, 255);
-		#endif
-	}
 }
