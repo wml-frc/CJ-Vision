@@ -69,7 +69,7 @@ namespace CJ {
 		static void filter(Image &input, Image &output, GrayScale_Options options);
 
 		/**
-		 * Filter using gray scale (Adds live trackbar for development)
+		 * (Adds live trackbar for development)
 		 */
 		static void createFilterTrackbar(GrayScale_Options &options);
 	};
