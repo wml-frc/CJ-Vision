@@ -13,10 +13,13 @@ namespace CJ {
 
 		/**
 		 * Internal extras
-		 * (Contours and vectors)
+		 * (Contours, hull vectors etc...)
 		 */
 		std::vector<std::vector<cv::Point>> contours;
+		// std::vector<std::vector<cv::Point>> contours_poly;
+		// std::vector<cv::Rect> boundRect;
 		std::vector<cv::Vec4i> hierarchy;
+		std::vector<std::vector<cv::Point>> hull;
 
 		/**
 		 * Operators

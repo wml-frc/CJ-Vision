@@ -10,4 +10,6 @@
 #include "Capture/Camera.h"
 #include "ImageProcessing/ColourFilter.h"
 #include "ImageProcessing/Contours.h"
+#include "ImageProcessing/Bound.h"
+
 #endif // CJ_VISION_H
