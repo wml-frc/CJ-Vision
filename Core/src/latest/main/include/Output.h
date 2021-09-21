@@ -24,7 +24,7 @@ namespace CJ {
 		static void display(T image, Args... rest) {
 			#ifndef COPROC
 			if (image.data.empty()) {
-				CJ_CORE_PRINT_ERROR("Display Error, " + image.name + ": is empty");
+				CJ_CORE_PRINT_ERROR("Display Error: " + image.name + ". Is empty");
 			} else {
 				cv::imshow(image.name, image.data);
 			}
@@ -37,7 +37,7 @@ namespace CJ {
 		static int display(int wait_ms, T image, Args... rest) {
 			#ifndef COPROC
 			if (image.data.empty()) {
-				CJ_CORE_PRINT_ERROR("Display Error, " + image.name + ": is empty");
+				CJ_CORE_PRINT_ERROR("Display Error: " + image.name + ". Is empty");
 				return -1;
 			} else {
 				cv::imshow(image.name, image.data);

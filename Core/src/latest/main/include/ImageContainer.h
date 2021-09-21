@@ -8,16 +8,37 @@ namespace CJ {
 		/**
 		 * Data
 		 */
-		// std::shared_ptr<cv::Mat> data; // Main data pointer
 		cv::Mat data;
 		std::string name = "Image"; // Name
 
 		/**
+		 * Internal extras
+		 * (Contours and vectors)
+		 */
+		std::vector<std::vector<cv::Point>> contours;
+		std::vector<cv::Vec4i> hierarchy;
+
+		/**
 		 * Operators
 		 */
-		// mat operator
+		// data
 		operator cv::Mat() {
 			return data;
+		}
+
+		// name
+		operator std::string() {
+			return name;
+		}
+
+		// contours
+		operator std::vector<std::vector<cv::Point>>() {
+			return contours;
+		}
+
+		// hierarchy
+		operator std::vector<cv::Vec4i>() {
+			return hierarchy;
 		}
 	};
 }
