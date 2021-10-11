@@ -1,5 +1,5 @@
 # Global/General Config
-CC = g++
+CC = g++ -std=c++17
 
 MKDIR = mkdir -p
 OUTDIR = build

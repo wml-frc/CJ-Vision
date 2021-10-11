@@ -77,21 +77,38 @@ pip install numpy scipy matplotlib scikit-image scikit-learn ipython pandas
 deactivate
 ######################################
 
+brew install cmake
 brew install opencv
+brew install pkg-config
+export PKG_CONFIG_PATH="/usr/local/opt/opencv@4/lib/pkgconfig"
+export PKG_CONFIG_PATH="/usr/local/opt/opencv@/lib/pkgconfig"
 
+# ############ For Python 2 ############
+# # This is a single line command.
+# echo /usr/local/opt/opencv/lib/python2.7/site-packages >>
+# /usr/local/lib/python2.7/site-packages/opencv3.pth
 
-############ For Python 2 ############
-# This is a single line command.
-echo /usr/local/opt/opencv/lib/python2.7/site-packages >>
-/usr/local/lib/python2.7/site-packages/opencv3.pth
+# ############ For Python 3 ############
+# # This is a single line command
+# echo /usr/local/opt/opencv/lib/python3.6/site-packages >>
+# /usr/local/lib/python3.6/site-packages/opencv3.pth
 
-############ For Python 3 ############
-# This is a single line command
-echo /usr/local/opt/opencv/lib/python3.6/site-packages >>
-/usr/local/lib/python3.6/site-packages/opencv3.pth
+# find /usr/local/opt/opencv3/lib/ -name cv2*.so
 
-find /usr/local/opt/opencv3/lib/ -name cv2*.so
+# ############ For Python 3 ############
+# cd ~/.virtualenvs/facecourse-py3/lib/python3.6/site-packages/
+# ln -s /usr/local/opt/opencv3/lib/python3.6/site-packages/cv2.cpython-36m-darwin.so cv2.so
 
-############ For Python 3 ############
-cd ~/.virtualenvs/facecourse-py3/lib/python3.6/site-packages/
-ln -s /usr/local/opt/opencv3/lib/python3.6/site-packages/cv2.cpython-36m-darwin.so cv2.so
+# brew install cmake
+
+# cd /opt
+# sudo git clone https://github.com/opencv/opencv.git
+# sudo git clone https://github.com/opencv/opencv_contrib.git
+
+# cd opencv
+# sudo mkdir release
+# cd release
+# sudo cmake -D BUILD_TIFF=ON -D WITH_CUDA=OFF -D ENABLE_AVX=OFF -D WITH_OPENGL=OFF -D WITH_OPENCL=OFF -D WITH_IPP=OFF -D WITH_TBB=ON -D BUILD_TBB=ON -D WITH_EIGEN=OFF -D WITH_V4L=OFF -D WITH_VTK=OFF -D BUILD_TESTS=OFF -D BUILD_PERF_TESTS=OFF -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules /opt/opencv/
+# sudo make -j4
+# sudo make install
+# sudo update_dyld_shared_cache
