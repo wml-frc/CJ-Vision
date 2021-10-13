@@ -18,7 +18,7 @@
 
 - UNIX-based deployment (uses Embedded tools for building/deploying to UNIX based systems)
 
-- Socket networking (sends CV data through custom socket programming)
+- Socket networking (sends CV data through custom socket programming https://github.com/wml-frc/UDP_TransferNT)
 
 # Local Setup
 
@@ -36,7 +36,7 @@ If all downloaded correctly, it should read `BUILD SUCCESSFUL`
 
 2. If you are running a Debian-based machine, then an easier option is to use the included bootstrap for local machines. Use `sudo wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap/bootstrapLocal.sh?raw=1 | bash`
 
-3. Alternatively you can install it manually
+1. Alternatively you can install it manually
 ```shell
 # Update & Install required packages
 sudo apt-get update
@@ -48,7 +48,7 @@ sudo modprobe bcm2835-v4l2
 sudo apt-get install -y libatlas-base-dev gfortran
 ```
 
-4. OpenCV will also need to be installed on your local machine to run this program. You can use the included script.
+2. OpenCV will also need to be installed on your local machine to run this program. You can use the included script.
 ```shell
 # Install OpenCV
 sudo wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap/openCV.sh?raw=1 | bash
@@ -60,7 +60,7 @@ sudo wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap/openC
 
 2. You can utilize the bootstrap script using `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/wml-frc/CJ-Vision/cj-vision-2.0/bootstrap/bootstrapLocal_mac.sh)"`
 
-- Or you can install it manually from opencv's page https://medium.com/@jaskaranvirdi/setting-up-opencv-and-c-development-environment-in-xcode-b6027728003
+1. Or you can install it manually from opencv's page https://medium.com/@jaskaranvirdi/setting-up-opencv-and-c-development-environment-in-xcode-b6027728003
 
 
 # Coprocessor
