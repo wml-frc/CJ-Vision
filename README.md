@@ -53,8 +53,14 @@ sudo apt-get install -y libatlas-base-dev gfortran
 # Install OpenCV
 sudo wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap/openCV.sh?raw=1 | bash
 ```
-
 - Or you can install it manually from OpenCV's official page https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html
+
+### Mac
+1. Download Xcode from the app store https://apps.apple.com/au/app/xcode/id497799835?mt=12
+
+2. You can utilize the bootstrap script using `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/wml-frc/CJ-Vision/cj-vision-2.0/bootstrap/bootstrapLocal_mac.sh)"`
+
+- Or you can install it manually from opencv's page https://medium.com/@jaskaranvirdi/setting-up-opencv-and-c-development-environment-in-xcode-b6027728003
 
 
 # Coprocessor
