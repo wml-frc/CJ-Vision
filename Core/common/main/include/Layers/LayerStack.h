@@ -1,5 +1,5 @@
 #ifndef LAYERSTACK_H
-#define LAYERSTACL_H
+#define LAYERSTACK_H
 
 #include "common_headers.h"
 #include "Layers/Layer.h"
