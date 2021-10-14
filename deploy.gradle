@@ -30,7 +30,7 @@ if (project.core_version == "legacy") {
 				dependsOn('build')
 				predeploy << {
 					if (project.hasProperty('purge')) {
-						execute('sudo rm -r run.sh system/ Coproc/ cjVision/')
+						execute('sudo rm -r *')
 						execute('echo 0000 | sudo tee /home/vision/team')
 					}
 				}
