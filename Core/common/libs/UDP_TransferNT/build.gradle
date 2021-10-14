@@ -1,0 +1,69 @@
+import static org.apache.tools.ant.taskdefs.condition.Os.*
+
+plugins {
+	id "cpp"
+	id "google-test-test-suite"
+	id "groovy"
+}
+
+model {
+	components {
+		udp_transferNT(NativeExecutableSpec) {
+			sources.cpp {
+				source {
+					srcDirs = ['UDP_TransferNT/test']
+					include '**/*.cpp', '**/*.cc', '**/*.c'
+				}
+
+				exportedHeaders {
+					srcDirs = ['UDP_TransferNT/include']
+				}
+			}
+
+			binaries.all {
+				linker.args '-pthread'
+				cppCompiler.args '-pthread'
+			}
+		}
+	}
+}
+
+[FAMILY_WINDOWS, FAMILY_UNIX, FAMILY_MAC].each { osName ->
+	// Create Task
+	if (!project.tasks.findByName("$osName")) {
+		tasks.create(osName) {
+			description "OS is ${osName}"
+			
+			// Add condition to check operating system.
+			onlyIf { isFamily(osName) }
+
+			doLast {
+				println "Execution Family: '${it.name}'"
+			}
+		}
+
+		// Add task as dependency for the os task
+		build.dependsOn(osName)
+	}
+}
+
+task run {
+	doLast {
+		exec {
+			workingDir "build/exe/udp_transferNT"
+			if (isFamily(FAMILY_WINDOWS)) {
+				commandLine "cmd", "/c", "start", "udp_transferNT.exe"
+			} else if (isFamily(FAMILY_UNIX)) {
+				commandLine "./udp_transferNT"
+			} else {
+				ant.fail("Unknown platform. Cannot run. Please run manually")
+			}
+		}
+	}
+}
+
+run.dependsOn(build)
+
+wrapper {
+	gradleVersion = "6.0"
+}
