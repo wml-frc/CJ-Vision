@@ -44,10 +44,19 @@ rootProject.ext.set("vision_all_src", cj_vision_src + coproc_vision_src /*+ libs
 rootProject.ext.set("vision_all_headers", cj_vision_headers + coproc_vision_headers + libs_headers)
 
 
-
 //
 // On device location. (E.g, folder structure for raspberry pi)
 //
-rootProject.ext.set("device_cj_vision_dir", "cjVisionLib/src")
-rootProject.ext.set("device_cj_vision_src", "$device_cj_vision_dir/cpp")
-rootProject.ext.set("device_cj_vision_headers", "$device_cj_vision_dir/include")
+rootProject.ext.set("device_cjVision_core", "cjVision/Core")
+rootProject.ext.set("device_cjVision_src", "$device_cjVision_core/src/$rootProject.core_version")
+rootProject.ext.set("device_cjVision_common", "$device_cjVision_core/common")
+rootProject.ext.set("device_coproc_src", "Coproc/src/main")
+rootProject.ext.set("device_coproc_deploy", "Coproc/deploy")
+
+//
+// On device location.
+// Legacy
+//
+rootProject.ext.set("legacy_device_cj_vision_dir", "cjVisionLib/src")
+rootProject.ext.set("legacy_device_cj_vision_src", "$legacy_device_cj_vision_dir/cpp")
+rootProject.ext.set("legacy_device_cj_vision_headers", "$legacy_device_cj_vision_dir/include")

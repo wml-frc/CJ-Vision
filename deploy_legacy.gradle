@@ -1,5 +1,6 @@
 apply from: rootProject.file("locations.gradle")
 
+// Deploying
 deploy {
 	targets {
 		target('coprocessor') {
@@ -28,13 +29,13 @@ deploy {
 
 		// Deploy CJ Vision Library CPP
 		fileTreeArtifact("libCpp") {
-			directory = "$device_cj_vision_src"
+			directory = "$legacy_device_cj_vision_src"
 			files = fileTree(dir: "$cj_vision_src") 
 		}
 
 		// Deploy CJ Vision Headers
 		fileTreeArtifact('cjVisionLibHEADERS') {
-			directory = "$device_cj_vision_headers"
+			directory = "$legacy_device_cj_vision_headers"
 			files = fileTree(dir: "$cj_vision_headers")
 		}
 
@@ -72,7 +73,7 @@ deploy {
 
 		// Deploy Makefile and run project
 		fileArtifact('makeFileDeploy') {
-			directory = "$device_cj_vision_dir"
+			directory = "$legacy_device_cj_vision_dir"
 			file = file('src/Makefile')
 			predeploy << {
 				execute('sudo systemctl stop vision || true')

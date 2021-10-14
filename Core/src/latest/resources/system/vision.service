@@ -4,7 +4,7 @@ Description=CJ-Vision Service
 [Service]
 Type=simple
 Restart=always
-ExecStart=/home/vision/cjVisionLib/src/build/cjVision
+ExecStart=/home/vision/cjVision/Core/src/latest/build/cjVision
 WorkingDirectory=/home/vision
 
 [Install]
