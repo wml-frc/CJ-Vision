@@ -1,12 +1,11 @@
 #include "Vision.h" // required before other #includes
 #include "UDP_TransferNT.h"
 
+using namespace UDP_TransferNT;
+
 /**
  * Example Layer for Vision App
  */
-using namespace UDP_TransferNT;
-
-
 class ExampleLayer : public CJ::Layer {
  public:
 	ExampleLayer(CJ::Application &app) : Layer("Example Layer"), _app(app) {
@@ -29,7 +28,7 @@ class ExampleLayer : public CJ::Layer {
 
  private:
 	CJ::Application &_app;
-	std::shared_ptr<Network> network;
+	std::shared_ptr<Network> network; // UDP_TransferNT::
 };
 
 

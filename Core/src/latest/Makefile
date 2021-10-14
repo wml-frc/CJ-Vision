@@ -91,31 +91,56 @@ COMPILE_PROG = $(COMPILE_PROG4) || $(COMPILE_PROG1)
 # Build program with cv 1
 $(PROG): $(ALL_OBJ)
 	@echo Building program
+ifdef coproc
+	@echo coproc enabled
+	$(COMPILE_PROG) -DCOPROC
+else
 	$(COMPILE_PROG)
+endif
 
 # entry
 $(OUTDIR)/%.o: $(ENTRY_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
+ifdef coproc
+	@echo coproc enabled
+	$(COMPILE_OBJ) -DCOPROC
+else
 	$(COMPILE_OBJ)
+endif
 
 # coproc
 $(OUTDIR)/%.o: $(COPROC_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
+ifdef coproc
+	@echo coproc enabled
+	$(COMPILE_OBJ) -DCOPROC
+else
 	$(COMPILE_OBJ)
+endif
 
 # core
 $(OUTDIR)/%.o: $(CJ_VISION_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
+ifdef coproc
+	@echo coproc enabled
+	$(COMPILE_OBJ) -DCOPROC
+else
 	$(COMPILE_OBJ)
+endif
 
 # common
 $(OUTDIR)/%.o: $(COMMON_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
+ifdef coproc
+	@echo coproc enabled
+	$(COMPILE_OBJ) -DCOPROC
+else
 	$(COMPILE_OBJ)
+endif
 
 
 clean:

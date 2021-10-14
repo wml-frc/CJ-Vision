@@ -71,4 +71,4 @@ Get started with the coprocessors.
 ## [Getting Started](docs/gettingStarted.md)
 Get started with the library.
 
-<sub><sup>readme written by [@CJBuchel](https://github.com/CJBuchel), 21/09/21</sup></sub>
+<sub><sup>readme written by [@CJBuchel](https://github.com/CJBuchel), 14/10/21</sup></sub>
