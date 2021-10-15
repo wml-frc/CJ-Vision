@@ -15,11 +15,14 @@ namespace CJ {
 		 * Input wait in ms, and diplay image/s
 		 * Returns waitkey output, or returns -1 on error
 		 */
-
 		static void display() {
 			return;
 		}
 
+		/**
+		 * Input wait in ms, and diplay image/s
+		 * Returns waitkey output, or returns -1 on error
+		 */
 		template<typename T, typename... Args>
 		static void display(T image, Args... rest) {
 			#ifndef COPROC
@@ -33,6 +36,10 @@ namespace CJ {
 			#endif
 		}
 
+		/**
+		 * Input wait in ms, and diplay image/s
+		 * Returns waitkey output, or returns -1 on error
+		 */
 		template<typename T, typename... Args>
 		static int display(int wait_ms, T image, Args... rest) {
 			#ifndef COPROC
@@ -53,10 +60,6 @@ namespace CJ {
 			#endif
 			return 0;
 		}
-
-	 private:
-		// template<typename Img, typename ... Imgs>
-		// static int _display(Img image, Imgs... images);
 	};
 }
 

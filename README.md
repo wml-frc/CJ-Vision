@@ -16,7 +16,7 @@
 
 - Uses layering system for programmable design
 
-- UNIX-based deployment (uses Embedded tools for building/deploying to UNIX based systems)
+- Debian UNIX-based deployment (uses Embedded tools for building/deploying to Debian UNIX-based systems)
 
 - Socket networking (sends CV data through custom socket programming https://github.com/wml-frc/UDP_TransferNT)
 
@@ -24,8 +24,13 @@
 
 ## Installing
 
+### All platforms
+1. Clone or download the project.
+
 ### Windows
-1. Download Java (JDK 11 for best support "https://www.oracle.com/java/technologies/javase-jdk11-downloads.html")
+1. Download Java (JDK 11 for best support https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+
+2. "Desktop development with C++" from VS required for local debugging https://visualstudio.microsoft.com/downloads/
 
 2. Once complete, download or clone the project either into existing code (using the lib as a submodule) or download as is.
 Then inside the root dir of the lib run `gradlew generateFramework build`
@@ -48,19 +53,15 @@ sudo modprobe bcm2835-v4l2
 sudo apt-get install -y libatlas-base-dev gfortran
 ```
 
-2. OpenCV will also need to be installed on your local machine to run this program. You can use the included script.
-```shell
-# Install OpenCV
-sudo wget -qO - https://github.com/wml-frc/CJ-Vision/blob/master/bootstrap/openCV.sh?raw=1 | bash
-```
-- Or you can install it manually from OpenCV's official page https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html
+2. OpenCV will also need to be installed on your local machine to run this program. (Bootstrap script installs it for you. Skip this step if used).
+- You can install it manually from OpenCV's official page https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html
 
 ### Mac
 1. Download Xcode from the app store https://apps.apple.com/au/app/xcode/id497799835?mt=12
 
 2. You can utilize the bootstrap script using `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/wml-frc/CJ-Vision/cj-vision-2.0/bootstrap/bootstrapLocal_mac.sh)"`
 
-1. Or you can install it manually from opencv's page https://medium.com/@jaskaranvirdi/setting-up-opencv-and-c-development-environment-in-xcode-b6027728003
+1. Or you can install OpenCV manually https://medium.com/@jaskaranvirdi/setting-up-opencv-and-c-development-environment-in-xcode-b6027728003
 
 
 # Coprocessor
@@ -70,4 +71,4 @@ Get started with the coprocessors.
 ## [Getting Started](docs/gettingStarted.md)
 Get started with the library.
 
-<sub><sup>readme written by [@CJBuchel](https://github.com/CJBuchel), 21/09/21</sup></sub>
+<sub><sup>readme written by [@CJBuchel](https://github.com/CJBuchel), 14/10/21</sup></sub>
