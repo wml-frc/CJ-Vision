@@ -1,13 +1,13 @@
 # Getting Started with the platform
 
 ## Project setup:
-- CJ-Vision uses a directory structure where the program you build is seperated from the platform compiler and library. Compared to other, more traditional methods where your project is inside the platform directory.
+- CJ-Vision uses a directory structure where the user program built is seperated from the platform compiler and library. Compared to other, more traditional methods where your project is inside the platform directory.
 
 - The project uses gradle as it's main front end for compiling, debugging, running and deploying the code.
 
 - If you have cloned the project and submodules using `git submodule update --init` then you should be able to go into the `CJ-Vision` directory and use the command `./gradlew generateFramework`.
 
-- This should build a framework next to the `CJ-Vision` directory with a quick example for outputting a webcam. If the build fails with `ANNA_LOCK` then the framework already exists, but can be overwritten with `./gradlew generateFramework -Pforce`
+- This should build a framework next to the `CJ-Vision` directory with a small single layer example for outputting a webcam. If the build fails with `ANNA_LOCK` then the framework already exists, but can be overwritten with `./gradlew generateFramework -Pforce`
 
 - Note that you can change both the version of the frame work (2020.3.2/2021.3.1 etc...) and the version of the internal library (legacy or latest). By default it should use the latest of both these versions. However, can be changed in the `build.gradle`.
 
@@ -57,11 +57,11 @@ MainProject
 
 1. Layout of Coproc
 
-- The Coproc directory is where you write code for your Coprocessor, and uses the tools and methods inside of CJ-Vision.
+- The Coproc directory is where you write code for your Coprocessor. This directory is linked to the `CJ-Vision` directory and can access the same headers.
 
 - Your main structure is seen inside of `src/main`. In this location you will put your compiled code (`.cpp`) inside `cpp/` and your header files (`.h`) inside `include/`
 
-- The deploy folder is an option given to users who want other files/folders to be deployed over to the coprocessor. You can place any file type and folder structure inside here, and it will be deployed to the coprocessor with the same relative pathing. E.g `cpp/Vision.cpp` location for deploy is `../../deploy` and is the same on the coprocessor.
+- The deploy folder is an option given to users who want other files/folders to be deployed over to the coprocessor. You can place any file type and folder structure inside here, and it will be deployed to the coprocessor with the same relative pathing. E.g `cpp/Vision.cpp`'s location for deploy is `../../deploy` and is the same on the coprocessor.
 
 2. Compiling/Debugging Commands
 
@@ -75,7 +75,7 @@ MainProject
 
 3. Application & Layering System
 
-- The project is devised around two main concepts, a single application with access to internal programs like loggers, networking and common properties. Along with processing layers. Filtering layers, boinding layers, networking layers etc.... Which run one by one in a loop with onAttach, onUpdate and onDetach.
+- The project is devised around two main concepts, a single application with access to internal programs like loggers, networking and common properties. Along with processing layers. Filtering layers, bounding layers, networking layers etc.... Which run, one by one in a loop with onAttach, onUpdate and onDetach.
 
 - There can only be one application class for a single project. Multiple will result in a build fail.
 
@@ -101,7 +101,7 @@ CJ_CREATE_APPLICATION(ExampleVisionApplication)
 
 - This class constructs and builds an application with the name `"Example App"` (will show up in logger for anything that originates from the App). It then pushes a processing layer `ExampleLayer` onto the Layer stack.
 
-- A Layer can either be a default `Layer` or an `Overlay`. Layers are pushed one by one and attach/update/detach in the sequence it was added to the stack. If an Overlay is pushed, it will run after other layers have updated. E.g if Overlay1 -> Overlay2 -> Layer1 are added in that sequence to the stack. Then Layer1 will run first, after Overlay1 and Overlay2 will then run in that order.
+- A Layer can either be a default `Layer` or an `Overlay`. Layers are pushed one by one and attach/update/detach in the sequence it was added to the stack. If an Overlay is pushed, it will run after other layers have updated. E.g if Overlay1 -> Overlay2 -> Layer1 are added in that sequence to the stack. Then Layer1 will run first. Then Overlay1 and Overlay2 will then run after in that order.
 
 - The strucure for a layer is seen as follows
 ```cpp
@@ -131,7 +131,33 @@ class ExampleLayer : public CJ::Layer {
 
 - Where onAttach runs when the Example layer is placed on the stack. onUpdate runs every loop. And onDetach runs when the layer is taken off the stack (will also run at the end of the program)
 
-- You can push/pop layers using the following functions from the application class
+- A few methods can be accessed from the application. These can be seen throughout the examples for setting the app to no longer run or to push and pop layers. A list of these main Application methods can be seen below.
+
+```cpp
+/**
+ * Statically get application
+ */
+static Application &get();
+
+/**
+ * setter for application & layers
+ */
+void setRunning(bool status);
+void setLayersRunning(bool status);
+
+/**
+ * getter for application and layers
+ */
+bool getRunning();
+bool getLayersRunning();
+
+/**
+ * Get App name
+ */
+std::string getName();
+```
+
+- You can also push/pop layers along with other methods, using the following from the application class
 ```cpp
 /**
  * Push layer onto stack (places it after the last layer pushed)
@@ -155,7 +181,6 @@ void popLayer(Layer *layer);
 void popOverlay(Layer *overlay);
 ```
 
-- You can also access functions of the layer `begin(), end(), rbegin(), rend()`. where `r` means reverse.
 
 4. Logging
 
@@ -207,4 +232,117 @@ CJ_CORE_ASSERT(i > 5); // If false, will log the error and line number to the co
 ```
 
 - You can also disable the asserts via defining `#define CJ_DISABLE_ASSERTS` before including `CJ_Vision.h`
+
+7. Images & Camera's
+
+- OpenCV is utilized in this project as the main method for vision processing. A few methods and structures have been wrapped around to make the process of tracking objects easier. But raw OpenCV code is also available to the user.
+
+- `CJ::Image` is a small image structure wrapping around the existing `cv::Mat` structure. While also providing a string for the name. And also internal vectors commonly used for line detection, contours and hulls around objects. (This can be seperated, but is placed in one location for ease of use.)
+
+- Multiple images can be created, generally used for seperating certain steps in tracking. E.g, an original unchanged image, colour filtered image, contours image etc....
+
+- The `Camera` class built in uses OpenCV's `cv::ViceoCapture` class. And wraps around the concept for reduced lines in configuring the Camera. Multiple Camera classes can be created as well.
+
+- The Camera class contains a `config`, the raw capture from opencv `cap`, an initialization method `init()` and a capture method meant to be used in the update loop `capture(CJ::Image &image)`. Note that the capture methods requires an image, as to pass the data from the camera to the image placed as a parameter.
+
+- The config structure has default values but can be overridden. The structure is seen below
+
+```cpp
+struct Config {
+	int port = 0;
+	int apiID = cv::CAP_ANY;
+	int fps = 30;
+	int resWidth = 640;
+	int resHeight = 480;
+	float exposure = 0.1;
+	bool autoExposure = true;
+	std::string name = "Cam";
+
+	float cap_prop_autoExpose = 0.75; // default value to set camera for auto exposure ON
+	float cap_prop_manualExpose = 0.25; // default value to set camera for auto exposure OFF
+};
+```
+
+
+- An example (using a camera Layer) for using the Camera on port 0, then passed to an origin image is seen below.
+- The image is taken externally from the Layer so it can be used in other layers. Similar to the `&app` reference.
+
+```cpp
+class CameraLayer : public CJ::Layer {
+ public:
+	CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
+		CJ_PRINT_INFO("Example Layer created");
+	}
+
+	void onAttach() override {
+		_image.name = "Input Image"; // Set name for image. (used mainly for debugging)
+		_cam.config.port = 0; // Port number (normally webcams are 0)
+		_cam.config.name = "Input Camera"; // Set name for camera
+
+		if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
+			_app.setRunning(false);
+		}
+		CJ_PRINT_INFO("Camera Created");
+	}
+
+	void onDetach() override {
+		CJ_PRINT_WARN("Example Layer Detached");
+	}
+
+	void onUpdate() override {
+		_cam.capture(_image);
+	}
+
+ private:
+	CJ::Application &_app;
+	CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
+
+	CJ::Camera _cam; // Camera instance
+}
+```
+
+8. Output
+
+- Outputting images is generally only for the debugging stage as there are usually no screens on a coprocessor. The exception to this would be setting up a system to send the images over the network.
+
+- The output/display structure is a static templated verdict function with two required parameters. But expandable to as many paramaters (images to output) as needed. In OpenCV a waitkey is required for the processing to be completed for the image and to output it properly. This slows down the program, but is only needed when debugging or when you want to output an image.
+
+- The output function does this automatically, but you need to specify the length of time in ms you want the program to wait.
+
+- An example taken from before but with the output can be seen below.
+
+```cpp
+class CameraLayer : public CJ::Layer {
+ public:
+	CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
+		CJ_PRINT_INFO("Example Layer created");
+	}
+
+	void onAttach() override {
+		_image.name = "Input Image"; // Set name for image. (used mainly for debugging)
+		_cam.config.port = 0; // Port number (normally webcams are 0)
+		_cam.config.name = "Input Camera"; // Set name for camera
+
+		if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
+			_app.setRunning(false);
+		}
+		CJ_PRINT_INFO("Camera Created");
+	}
+
+	void onDetach() override {
+		CJ_PRINT_WARN("Example Layer Detached");
+	}
+
+	void onUpdate() override {
+		_cam.capture(_image);
+		CJ::Output::display(30, _image); // Can input more images. E.g display(30, image1, image2, ...)
+	}
+
+ private:
+	CJ::Application &_app;
+	CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
+
+	CJ::Camera _cam; // Camera instance
+}
+```
 
