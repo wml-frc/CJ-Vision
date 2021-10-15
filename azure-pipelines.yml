@@ -29,7 +29,7 @@ jobs:
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean generateFramework build'
-      options: '-Pno-roborio -Pforce -Ptoolchain-optional-roboRio'
+      options: '-Pno-roborio -PazureBuild -Pforce -Ptoolchain-optional-roboRio'
 
 - job: windows
   pool:
