@@ -346,3 +346,257 @@ class CameraLayer : public CJ::Layer {
 }
 ```
 
+9. Filtering & Thresholding Image
+
+- Filtering an image through colour and thresholding can be done with the `ColourFilter` class. Giving options for filtering out certain colours in the HSV spectrum. Or Grayscaling the image.
+
+- The Filter class also has a built in trackbar which can be used to change the filtering of the spectrum live.
+
+- There are four main static methods inside the `ColourFilter` class. Seen below
+```cpp
+/**
+ * Filter using hsv
+ */
+static void filter(Image &input, Image &output, HSV_Options options);
+
+/**
+ * (Adds live trackbar for development)
+ */
+static void createFilterTrackbar(HSV_Options &options);
+
+/**
+ * Filter using gray scale
+ */
+static void filter(Image &input, Image &output, GrayScale_Options options);
+
+/**
+ * (Adds live trackbar for development)
+ */
+static void createFilterTrackbar(GrayScale_Options &options);
+```
+
+- The only difference between the first two methods and the second two methods. Is the ability to either Grayscale the image. Or HSV filter the image.
+
+- The main filter methods have an input and an output image. It's possible to have both the input image and the output image as the same image. And it will overwrite the original data. However this can sometimes lead to bleedthrough, but is a more efficient method for storing the images if you are memory limited.
+
+- The filter method also utlizes a structure for options. Where you can change the HSV spectrum, along with erosion, dilation, blur and binary thresholds. The default value & layout of the struct can be seen below.
+
+```cpp
+/**
+ * HSV Options
+ */
+struct HSV_Options {
+	int HL = 0,		// hue low
+			HH = 255,	// hue high
+			SL = 0,		// sat low
+			SH = 255,	// sat high
+			VL = 0,		// value low
+			VH = 255;	// value high
+
+	int erosionSize = 0;
+	int dilationSize = 0;
+	int blur = 0;
+	int binaryThreshold_Low = 0;
+	int binaryThreshold_High = 0;
+};
+```
+
+- And the grayscale version is the same but without the HSV spectrum.
+```cpp
+/**
+ * Gray Scale Options
+ */
+struct GrayScale_Options {
+	int erosionSize = 0;
+	int dilationSize = 0;
+	int blur = 0;
+	int binaryThreshold_Low = 0;
+	int binaryThreshold_High = 0;
+};
+```
+
+- You can also modify the values inside of options live with the `createFilterTrackbar(Options options)` method. 
+
+- An example of filtering for a green colour with a trackbar for tuning can be seen below.
+	- Note that this is a new layer, and the camera image is done in a seperate layer. Along with the `display` of the output image also done in a seperate layer after the filter layer has executed `onUpdate()`.
+
+```cpp
+class FilterLayer : public CJ::Layer {
+ public:
+	FilterLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Filter Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
+		CJ_PRINT_INFO("Filter Layer Created");
+	}
+
+	void onAttach() override {
+		CJ_PRINT_INFO("Filter Layer Attached");
+		_outputImg.name = "Filtered Image";
+
+		options.HL = 50;   // hue low
+		options.HH = 70;   // hue high
+
+		options.SL = 0;    // sat low
+		options.SH = 255;  // sat high
+
+		options.VL = 0;    // value low
+		options.VH = 255;  // value high
+
+		CJ::ColourFilter::createFilterTrackbar(options); // allows live edit of options
+	}
+
+	void onDetach() override {
+		CJ_PRINT_WARN("Filter Layer Detached");
+	}
+
+	void onUpdate() override {
+		CJ::ColourFilter::filter(_inputImg, _outputImg, options); // filter image every update
+	}
+
+ private:
+	CJ::Application &_app;
+	CJ::Image &_inputImg;
+	CJ::Image &_outputImg;
+
+	CJ::ColourFilter::HSV_Options options;
+};
+```
+
+- The above can be replicated for a grayscale image with grayscale options as well.
+
+10. Contours/Line Detection
+
+- Contours/Line detection is generally the next step after filtering an image. And is used to get proper point maps of a specified object. Which can later be used to detect shapes and center points for other wanted calculations.
+
+- The `Contours` class provides three static methods for detecting contours. Using the same syntax and style as filter, with an input, an output. And some type of option. In this case, either threshold, or a boolean value to disable draw (will come back to this option later).
+
+- The methods are as follows
+```cpp
+/**
+ * Detect Edges using canny algorithm
+ */
+static void cannyTrack(Image &input, Image &output, int threshold);
+
+/**
+ * Detect contours (Stores inside Image)
+ * Disable draw is false by deault. Speed up prograb by setting true
+ */
+static void detectContours(Image &input, Image &output, bool disableDraw = false);
+
+/**
+ * Creates live trackbar for contours
+ */
+static void createContoursTrackbar(int &threshold);
+```
+
+- The `cannyTrack` algorithm is optional, and is better for certain use cases if users need it. However, can be ignored. Instead just the `detectContors` method is really needed. The final method allows us to create a trackbar to modify the threshold value. Only useful for cannyTrack.
+
+- In our example we will just focus on `detectContours` and continue on from the previous examples of getting an input image. Filtering it, and now detecting the contours.
+
+- The contours values are stored inside the `image` container as a vector which was previously mentioned. So there is no method output needed. This vector on contours can later be used by the user, or by the bounding methods which will be covered later.
+
+- We can also disable the drawing of the detectContours method. Which will not draw the contours onto the output image to be seen visually. Instead the output image will only contain the vector of contours inside of it.
+
+- Disabling the draw dramatically increases the speed as drawing the contours onto the image requires looping through the vector of contours to draw onto the image. For debugging visually seeing the contours can be great. However, for speed in a competition. It is not needed. Only the very final output can be displayed on release. And this can be sent to your main processor (roboRio or other).
+
+- Below is an example of using the contours method. It is almost identical to the `FilterLayer` example.
+
+```cpp
+class ContoursLayer : public CJ::Layer {
+ public:
+	ContoursLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Contours Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
+		CJ_PRINT_INFO("Contours Layer Created");
+	}
+
+	void onAttach() override {
+		CJ_PRINT_INFO("Contours Layer Attached");
+		_outputImg.name = "Contour Image";
+	}
+
+	void onDetach() override {
+		CJ_PRINT_WARN("Contours Layer Detached");
+	}
+
+	void onUpdate() override {
+		CJ::Contours::detectContours(_inputImg, _outputImg); // disable fraw is false. (it will draw the contours onto the output image and we can display it later)
+	}
+
+ private:
+	CJ::Application &_app;
+	CJ::Image &_inputImg;
+	CJ::Image &_outputImg;
+};
+```
+
+11. Bounding & Final Imaging
+
+- After detecting the contours, the contours vector is available to use by the user via `_outputImg.contours` which provides a vector of points `std::vector<std::vector<cv::Point>> contours;`. These values are free to use in shape detection, blob detection and other methods or means that the user needs.
+
+- The most common of which is to draw a convex hull (https://learnopencv.com/convex-hull-using-opencv-in-python-and-c/)
+
+- Then draw a bounding box around this hull before finally providing center values (x,y coordinates) of where the object is relative to the screen.
+
+- While this is the most common next steps after drawing contours, there are lots of methods users will use to detect objects. And some may not want to go through these simillar steps. However, a `Bound` class is provided to those who do want such steps. Which will utilize the vector inside the image and optionally draw the hull, bounding box and center points onto the image. Along with returning two center `BoundingPoints`.
+
+- There are only two methods inside this class. And simillar to the contour detection. We can also disable the drawing of these methods to speed up processing. As drawing the images requires looping through multiple vectors.
+
+- The following is the available bounding points structure, and the drawing methods.
+```cpp
+struct BoundingPoints {
+	double center_x = 0, center_y = 0;
+};
+
+/**
+ * bind hull around contours (convex hull)
+ * Use disable draw to stop drawing
+ */
+static void drawConvexHull(Image &input, Image &output, bool disableDraw = false);
+
+/**
+ * Draw bounding box
+ * Define size threshold to draw box around blob/hull
+ * Use disable draw to stop drawing (only outputs bounding points)
+ */
+static BoundingPoints drawBoundingBox(Image &input, Image &output, bool disableDraw = false);
+```
+
+- A full example can be seen below.
+
+```cpp
+class BoundingLayer : public CJ::Layer {
+ public:
+	ContoursLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Bounding Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
+		CJ_PRINT_INFO("Bounding Layer Created");
+	}
+
+	void onAttach() override {
+		CJ_PRINT_INFO("Bounding Layer Attached");
+		_outputImg.name = "Bounding Image";
+	}
+
+	void onDetach() override {
+		CJ_PRINT_WARN("Bounding Layer Detached");
+	}
+
+	void onUpdate() override {
+		CJ::Bound::drawConvexHull(_inputImg, _contourImg); // draw hull onto _contourImg
+		object_xy = CJ::Bound::drawBoundingBox(_contourImg, _outputImg); // draw bounding box and get center points
+
+		// We can use these points and send them over the network. Or do something internally with them. For now, we will just output them to the console
+		CJ_PRINT_INFO("Points (x,y): " + std::to_string(object_xy.center_x) + "," + std::to_string(object_xy.center_y));
+	}
+
+ private:
+	CJ::Application &_app;
+	CJ::Image &_inputImg;
+	CJ::Image _contourImg;
+	CJ::Image &_outputImg;
+
+	CJ::BoundingPoints object_xy;
+};
+```
+
+12. Networking
+
+### Networking 
+- This library uses a custom UDP networking library to send data between devices (Due to issues implementing Network Tables on coprocessors like jetsons and tinkerboards in a stable manner). The networking is written in pure C++ headers using simple networking wrappers around winsock and unix sockets. It provides a custom configuration (ip, port setting, etc...) for sending data between machines.
+
+The library submodule docs can be viewed here https://github.com/wml-frc/UDP_TransferNT. You need to have the library on both the coprocessor and the roborio in order to send and receive between the two devices. It is a simple header library, which makes it an easy implementation for FRC code. As there is no compiling or linking required. Just include the headers and or place them in a directory which is seen by the rest of your src files.
