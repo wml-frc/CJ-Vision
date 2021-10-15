@@ -26,8 +26,8 @@ sudo adduser vision audio
 echo "vision:CJfrc" | sudo chpasswd
 
 # Set hostname, user and password
-echo CJvision | sudo tee /etc/hostname
-echo "127.0.0.1 CJvision" | sudo tee /etc/hosts
+echo CJVision | sudo tee /etc/hostname
+echo "127.0.0.1 CJVision" | sudo tee /etc/hosts
 
 # Turn off WiFi and HDMI for power consumption (Pi takes 3amps... output for robot is 2)
 # sudo tvservice --off
