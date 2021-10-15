@@ -4,7 +4,7 @@ apply from: rootProject.file("platforms/platform.gradle")
 model { // gradle compiler (used with windows and gradlerio only)
 	components {
 		cjVision(NativeExecutableSpec) {
-			if (!isFamily(FAMILY_WINDOWS)) { // if not windows leave don't continue
+			if (!isFamily(FAMILY_WINDOWS) && !project.hasProperty("azureBuild")) { // if not windows leave don't continue
 				return
 			}
 

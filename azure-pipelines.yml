@@ -25,61 +25,42 @@ jobs:
     inputs:
       workingDirectory: ''
       gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
+      gradleOptions: '-Xmx4096m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build'
-      options: '-Pno-roborio -PdebugMode'
+      tasks: 'clean generateFramework build'
+      options: '-Pno-roborio -PazureBuild -Pforce -Ptoolchain-optional-roboRio'
 
-# - job: windows
-#   pool:
-#     vmImage: 'windows-2019'
-#   steps:
-#   - template: azure-init.yml
-#   - script: git submodule update --init
-#   - script: git submodule update --remote -f
-#     displayName: 'Download JDK'
-#   # - task: Gradle@2
-#   #   inputs:
-#   #     workingDirectory: ''
-#   #     gradleWrapperFile: 'gradlew'
-#   #     gradleOptions: '-Xmx2048'
-#   #     publishJUnitResults: false
-#   #     tasks: 'downloadAll'
-#   #     options: '-Pno-roborio -PdebugMode'
-#   - task: Gradle@2
-#     inputs:
-#       gradleWrapperFile: 'gradlew'
-#       options: '-Pno-roborio -PdebugMode'
-#       tasks: 'clean build'
-#       publishJUnitResults: false
-#       javaHomeOption: 'JDKVersion'
-#       jdkVersionOption: '1.11'
-#       gradleOptions: '-Xmx3072'
-#       sonarQubeRunAnalysis: false
+- job: windows
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+  - template: azure-init.yml
+  - script: git submodule update --init
+  - script: git submodule update --remote -f
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx4096m'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'clean generateFramework build'
+      options: '-Pno-roborio -PazureBuild -Pforce -Ptoolchain-optional-roboRio'
 
-  
-
-
-# - job: Mac
-#   pool:
-#     vmImage: 'macOS-10.14'
-
-#   steps:
-#     - checkout: self  # self represents the repo where the initial Pipelines YAML file was found
-#       submodules: true
-#     - script: |
-#         mkdir build
-#         export JAVA_HOME=`/usr/libexec/java_home -v 11`
-#         brew install ant binutils
-#       displayName: 'Setup JDK Ant and Binutils'
-#     - task: Gradle@2
-#       inputs:
-#         workingDirectory: ''
-#         gradleWrapperFile: 'gradlew'
-#         gradleOptions: '-Xmx3072m'
-#         jdkVersionOption: '1.11'
-#         publishJUnitResults: false
-#         testResultsFiles: '**/TEST-*.xml'
-#         tasks: 'clean build'
-#         options: '-Pno-roborio -PdebugMode'
+- job: mac
+  pool:
+    vmImage: 'macOS-10.14'
+  steps:
+  - template: azure-init.yml
+  - script: git submodule update --init
+  - script: git submodule update --remote -f
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx4096m'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'clean generateFramework build'
+      options: '-Pno-roborio -PazureBuild -Pforce -Ptoolchain-optional-roboRio'
