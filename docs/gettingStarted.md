@@ -241,7 +241,7 @@ CJ_CORE_ASSERT(i > 5); // If false, will log the error and line number to the co
 
 - Multiple images can be created, generally used for separating certain steps in tracking. E.g, an original unchanged image, colour filtered image, contours image etc....
 
-- The `Camera` class built in uses OpenCV's `cv::ViceoCapture` class. And wraps around the concept for reduced lines in configuring the Camera. Multiple Camera classes can be created as well.
+- The `Camera` class built in uses OpenCV's `cv::VideoCapture` class. And wraps around the concept for reduced lines in configuring the Camera. Multiple Camera classes can be created as well.
 
 - The Camera class contains a `config`, the raw capture from opencv `cap`, an initialisation method `init()` and a capture method meant to be used in the update loop `capture(CJ::Image &image)`. Note that the capture methods requires an image, as to pass the data from the camera to the image placed as a parameter.
 
