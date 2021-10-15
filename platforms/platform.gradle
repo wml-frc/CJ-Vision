@@ -1,0 +1,19 @@
+import static org.apache.tools.ant.taskdefs.condition.Os.*
+[FAMILY_WINDOWS, FAMILY_UNIX, FAMILY_MAC].each { osName ->
+	// Create Task
+	if (!project.tasks.findByName("$osName")) {		
+		tasks.create(osName) {
+			description "OS is ${osName}"
+			
+			// Add condition to check operating system.
+			onlyIf { isFamily(osName) }
+
+			doLast {
+				println "Execution Family: '${it.name}'"
+			}
+		}
+
+		// Add task as dependency for the os task
+		build.dependsOn(osName)
+	}
+}

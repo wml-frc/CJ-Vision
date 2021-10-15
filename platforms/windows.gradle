@@ -1,0 +1,49 @@
+import static org.apache.tools.ant.taskdefs.condition.Os.*
+apply from: rootProject.file("platforms/platform.gradle")
+
+model { // gradle compiler (used with windows and gradlerio only)
+	components {
+		cjVision(NativeExecutableSpec) {
+			if (!isFamily(FAMILY_WINDOWS) && !project.hasProperty("azureBuild")) { // if not windows leave don't continue
+				return
+			}
+
+			targetPlatform wpi.platforms.roborio
+			targetPlatform wpi.platforms.desktop
+
+			println wpi.platforms.desktop
+			
+			sources.cpp {
+				source {
+					if (project.hasProperty("debugMode")) {
+						srcDirs = cj_vision_src //+ libs_src
+					} else {
+						srcDirs = vision_all_src
+					}
+					include '**/*.cpp', '**/*.cc', '**/*.c'
+				}
+
+				exportedHeaders {
+					if (project.hasProperty("debugMode")) {
+						srcDirs = cj_vision_headers + libs_headers
+					} else {
+						srcDirs = vision_all_headers
+					}
+				}
+			}
+
+			binaries.all {
+				if (project.hasProperty("debugMode")) {
+					cppCompiler.define 'DEBUG_CJ'
+				}
+
+				// cppCompiler.args '-std=c++17'
+				// linker.args '-std=c++17'
+			}
+
+			wpi.deps.wpilib(it)
+			wpi.deps.vendor.cpp(it)
+			wpi.deps.googleTest(it)
+		}
+	}
+}
