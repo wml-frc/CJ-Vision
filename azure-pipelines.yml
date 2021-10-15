@@ -38,37 +38,29 @@ jobs:
   - template: azure-init.yml
   - script: git submodule update --init
   - script: git submodule update --remote -f
-    displayName: 'Download JDK'
   - task: Gradle@2
     inputs:
       workingDirectory: ''
       gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx2048'
+      gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean generateFramework build'
-      options: '-Pno-roborio -PdebugMode'
-
-  
-
+      options: '-Pno-roborio'
 
 - job: mac
   pool:
     vmImage: 'macOS-10.14'
   steps:
-    - checkout: self  # self represents the repo where the initial Pipelines YAML file was found
-      submodules: true
-    - script: |
-        mkdir build
-        export JAVA_HOME=`/usr/libexec/java_home -v 11`
-        brew install ant binutils
-      displayName: 'Setup JDK Ant and Binutils'
-    - task: Gradle@2
-      inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        jdkVersionOption: '1.11'
-        publishJUnitResults: false
-        testResultsFiles: '**/TEST-*.xml'
-        tasks: 'clean generateFramework build'
-        options: '-Pno-roborio'
+  - template: azure-init.yml
+  - script: git submodule update --init
+  - script: git submodule update --remote -f
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      publishJUnitResults: false
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'clean generateFramework build'
+      options: '-Pno-roborio'
