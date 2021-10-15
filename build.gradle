@@ -73,7 +73,7 @@ task generateFramework {
  */
 // Run buldVision when user runs ./gradlew build
 build.dependsOn(preBuild)
-if (isFamily(FAMILY_WINDOWS)) { // windows config
+if (isFamily(FAMILY_WINDOWS) || project.hasProperty("azureBuild")) { // windows config
 	task runVision(dependsOn: "simulateCjVision${wpi.platforms.desktop.capitalize()}DebugExecutable")
 } else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) { // linux config
 	clean.dependsOn(cleanUNIX)

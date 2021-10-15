@@ -25,11 +25,11 @@ jobs:
     inputs:
       workingDirectory: ''
       gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
+      gradleOptions: '-Xmx4096m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean generateFramework build'
-      options: '-Pno-roborio'
+      options: '-Pno-roborio -Pforce -Ptoolchain-optional-roboRio'
 
 - job: windows
   pool:
@@ -42,11 +42,11 @@ jobs:
     inputs:
       workingDirectory: ''
       gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
+      gradleOptions: '-Xmx4096m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean generateFramework build'
-      options: '-Pno-roborio'
+      options: '-Pno-roborio -PazureBuild -Pforce -Ptoolchain-optional-roboRio'
 
 - job: mac
   pool:
@@ -59,8 +59,8 @@ jobs:
     inputs:
       workingDirectory: ''
       gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
+      gradleOptions: '-Xmx4096m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean generateFramework build'
-      options: '-Pno-roborio'
+      options: '-Pno-roborio -PazureBuild -Pforce -Ptoolchain-optional-roboRio'
