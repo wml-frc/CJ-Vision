@@ -6,7 +6,7 @@
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/WML/_apis/build/status/wml-frc.CJ-Vision?branchName=master)](https://dev.azure.com/ConnorBuchel0890/WML/_build/latest?definitionId=12&branchName=master)
 
 ### Features:
-- Platform to build on
+- Platform to build C++ on
 
 - Common OpenCV wrapper functions
 
