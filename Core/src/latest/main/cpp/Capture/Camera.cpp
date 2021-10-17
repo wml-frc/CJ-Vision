@@ -11,6 +11,7 @@ namespace CJ {
 
 		cap.set(cv::CAP_PROP_FPS, config.fps);
 		cap.open(config.port, config.apiID);
+		cv::waitKey(3000);
 		if (!cap.isOpened()) {
 			CJ_CORE_PRINT_ERROR(config.name + " Failed to open on port: " + std::to_string(config.port));
 			return 1;
