@@ -1,6 +1,6 @@
 # CJ-Vision
 
-## Layered computer vision platform with C++ UDP networking for data transfer and embedded tools for easy deployment to UNIX-based coprocessors.
+## Layered computer vision platform with C++ UDP networking for data transfer and embedded tools for easy deployment to UNIX-based processors.
 
 #### Build Status
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/WML/_apis/build/status/wml-frc.CJ-Vision?branchName=master)](https://dev.azure.com/ConnorBuchel0890/WML/_build/latest?definitionId=12&branchName=master)
