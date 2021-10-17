@@ -6,7 +6,7 @@
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/WML/_apis/build/status/wml-frc.CJ-Vision?branchName=master)](https://dev.azure.com/ConnorBuchel0890/WML/_build/latest?definitionId=12&branchName=master)
 
 ### Features:
-- Complete framework allows you to build programs on top of the framework without the need for prior programming or other frameworks. E.g., FRC timed robot skeleton.
+- Platform to build on
 
 - Common OpenCV wrapper functions
 
