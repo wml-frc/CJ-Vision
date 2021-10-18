@@ -1,4 +1,6 @@
 #include "Application.h"
+#include <chrono>
+using namespace std::chrono;
 
 namespace CJ {
 	Application *Application::_instance = nullptr;
@@ -52,13 +54,29 @@ namespace CJ {
 	}
 
 	void Application::run() {
+		// Timers
+		auto start = high_resolution_clock::now();
+		auto stop = high_resolution_clock::now();
+		auto duration = duration_cast<milliseconds>(stop - start);
+		CJ_CORE_PRINT_WARN("Chrono DT enabled");
+
 		while (_running) {
+			// Update timer and DT
+			_currTime = duration.count();
+			_dt = _currTime - _prevTime;
+			_dt /= 1000; // convert from ms to s
+
+
 			// Update Layers
 			if (_layers_running) {
 				for (Layer *layer : _layerStack) {
 					layer->onUpdate();
 				}
 			}
+
+			stop = high_resolution_clock::now();
+			duration = duration_cast<milliseconds>(stop - start);
+			_prevTime = _currTime;
 		}
 	}
 }

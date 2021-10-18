@@ -3,7 +3,6 @@
 extern CJ::Application *CJ::createApplication();
 
 int main(int argc, char **argv) {
-	std::cout << "Test" << std::endl;
 	/**
 	 * @TODO:
 	 * Create startup procedures + loggers and handlers
@@ -15,6 +14,7 @@ int main(int argc, char **argv) {
 	 * Create Application, supports only one
 	 */
 	auto app = CJ::createApplication();
+	std::cout << "App Name: " + app->getName() << std::endl;
 	CJ::Log::setClientName("[Runtime - " + app->getName() + "]");
 
 	/**

@@ -57,11 +57,24 @@ namespace CJ {
 			return _name;
 		}
 
+		/**
+		 * Get current time in ms
+		 */
+		double getCurrentTime() {
+			return _currTime;
+		}
+
+		double getDt() {
+			return _dt;
+		}
+
 	 private:
 		// Application
 		static Application *_instance;
 		bool _running = false;
 		bool _layers_running = false;
+
+		double _dt = 0, _prevTime = 0, _currTime = 0;
 
 		// application args
 		std::string _name;

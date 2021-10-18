@@ -80,6 +80,10 @@ ALL_SRCS = $(ENTRY_SRC) $(CJ_VISION_SRCS) $(COMMON_SRCS) $(COPROC_SRCS)
 # Compile script
 MK_OUT = mkdir -p $@; rm -rf $@
 
+ifdef coproc
+	CFLAGS += -DCOPROC
+endif
+
 COMPILE_OBJ1 = $(CC) -c -o $@ $(CFLAGS) $< $(ALL_HEADERS) $(LIBS)
 COMPILE_OBJ4 = $(CC) -c -o $@ $(CFLAGS) $< $(ALL_HEADERS) $(LIBS4)
 COMPILE_OBJ = $(COMPILE_OBJ4) || $(COMPILE_OBJ1)
@@ -90,58 +94,31 @@ COMPILE_PROG = $(COMPILE_PROG4) || $(COMPILE_PROG1)
 
 # Build program with cv 1
 $(PROG): $(ALL_OBJ)
-	@echo Building program
-ifdef coproc
-	@echo coproc enabled
-	$(COMPILE_PROG) -DCOPROC
-else
 	$(COMPILE_PROG)
-endif
 
 # entry
 $(OUTDIR)/%.o: $(ENTRY_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
-ifdef coproc
-	@echo coproc enabled
-	$(COMPILE_OBJ) -DCOPROC
-else
 	$(COMPILE_OBJ)
-endif
 
 # coproc
 $(OUTDIR)/%.o: $(COPROC_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
-ifdef coproc
-	@echo coproc enabled
-	$(COMPILE_OBJ) -DCOPROC
-else
 	$(COMPILE_OBJ)
-endif
 
 # core
 $(OUTDIR)/%.o: $(CJ_VISION_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
-ifdef coproc
-	@echo coproc enabled
-	$(COMPILE_OBJ) -DCOPROC
-else
 	$(COMPILE_OBJ)
-endif
 
 # common
 $(OUTDIR)/%.o: $(COMMON_SRC_DIR)/%.cpp
 	@echo Building objects
 	$(MK_OUT)
-ifdef coproc
-	@echo coproc enabled
-	$(COMPILE_OBJ) -DCOPROC
-else
 	$(COMPILE_OBJ)
-endif
-
 
 clean:
 	rm -rf ${OUTDIR}
