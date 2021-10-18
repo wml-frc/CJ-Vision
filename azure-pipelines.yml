@@ -15,7 +15,7 @@ jobs:
 
 - job: linux
   pool:
-    vmImage: 'Ubuntu 16.04'
+    vmImage: 'Ubuntu-latest'
   container: bionic
   steps:
   - template: azure-init.yml
