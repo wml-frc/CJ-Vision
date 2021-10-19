@@ -1,6 +1,8 @@
 #ifndef COMMON_HEADERS_H
 #define COMMON_HEADERS_H
 
+#include "Platform/PlatformDetection.h"
+
 // System common headers
 #include <iostream>
 #include <string>

@@ -3,6 +3,10 @@
 
 #include "ImageContainer.h"
 
+#ifdef CJ_PLATFORM_LINUX
+#include "MJPEGWriter.h"
+#endif
+
 namespace CJ {
 
 	/**
@@ -10,6 +14,47 @@ namespace CJ {
 	 */
 	class Output {
 	 public:
+
+		class Stream {
+		 public:
+			Stream(int port) {
+				#ifdef CJ_PLATFORM_LINUX
+				CJ_CORE_PRINT_INFO("Streamer Active");
+				_writer = std::make_shared<MJPEGWriter>(port);
+				#else
+				CJ_CORE_PRINT_INFO("Not linux platform. Streamer Inactive");
+				#endif
+			}
+
+			~Stream() {
+				#ifdef CJ_PLATFORM_LINUX
+				_writer->release();
+				_writer->stop();
+				#endif
+			}
+
+			void start() {
+				#ifdef CJ_PLATFORM_LINUX
+				_writer->start();
+				#endif
+			}
+
+			void stop() {
+				#ifdef CJ_PLATFORM_LINUX
+				_writer->stop();
+				#endif
+			}
+
+			void output(Image image) {
+				#ifdef CJ_PLATFORM_LINUX
+				_writer->write(image.data);
+				#endif
+			}
+		 private:
+			#ifdef CJ_PLATFORM_LINUX
+			std::shared_ptr<MJPEGWriter> _writer;
+			#endif
+		};
 
 		/**
 		 * Input wait in ms, and diplay image/s
