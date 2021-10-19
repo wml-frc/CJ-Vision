@@ -303,7 +303,7 @@ class CameraLayer : public CJ::Layer {
 
 8. Output
 
-- Outputting images is generally only for the debugging stage as there are usually no screens on a coprocessor. The exception to this would be setting up a system to send the images over the network.
+- Outputting images is generally only for the debugging stage as there are usually no screens on a coprocessor. The exception to this is using the output stream. Which will set up a MJPEG stream on a serperate thread from the main program.
 
 - The output/display structure is a static templated verdict function with two required parameters. But expandable to as many parameters (images to output) as needed. In OpenCV a waitkey is required for the processing to be completed for the image and to output it properly. This slows down the program, but is only needed when debugging or when you want to output an image.
 
@@ -345,6 +345,85 @@ class CameraLayer : public CJ::Layer {
 	CJ::Camera _cam; // Camera instance
 }
 ```
+
+- On the coprocessor the display method is disabled and using it will do nothing. It won't have a waitkey either. It's done in this way to avoid crashing the coprocessor that cannot display a video.
+
+- If you wish to display a video stream then you can utilise the `Stream` class inside of `Output`. This will setup a video stream on a seprate thread and write an MJPEG video to a certain port number, e.g `8080`. Note that legal ports in frc are `5800:5810`.
+
+- The streamer class has 3 non-static methods along with the Constructor/Decondtructor.
+```cpp
+/**
+ * Create Stream on port number
+ */
+Stream(int port);
+
+/**
+ * Stops threads, releases socket and deconstructs video stream
+ */
+~Stream();
+
+/**
+ * Start stream thread
+ */
+void start();
+
+/**
+ * Stop stream thread
+ */
+void stop();
+
+/**
+ * Output image to video stream
+ */
+void output(Image image);
+```
+
+- The mjpeg stream however, only runs on linux platforms. And hence when running the stream on a your local machine (unless linux) will not output any data.
+
+- However, this should not be an issue. As your local machine can utilise display. The key difference is when deployed to the coprocessor it should be a linux platform and will run this output stream. Which users can view via a browser. I.e `cjVision.local:8080`.
+
+- The below example uses both display and stream. And will use the mjpeg stream on the coprocessor, but use the display when running locally.
+
+```cpp
+class CameraLayer : public CJ::Layer {
+ public:
+	CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
+		CJ_PRINT_INFO("Example Layer created");
+	}
+
+	void onAttach() override {
+		_image.name = "Input Image"; // Set name for image. (used mainly for debugging)
+		_cam.config.port = 0; // Port number (normally webcams are 0)
+		_cam.config.name = "Input Camera"; // Set name for camera
+
+		if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
+			_app.setRunning(false);
+		}
+		CJ_PRINT_INFO("Camera Created");
+
+		_streamer.start();
+		CJ_PRINT_INFO("Created Streaming Thread");
+	}
+
+	void onDetach() override {
+		CJ_PRINT_WARN("Example Layer Detached");
+	}
+
+	void onUpdate() override {
+		_cam.capture(_image);
+		_streamer.output(_image); // Only enables itself on linux platforms. Does nothing otherwise
+		CJ::Output::display(30, _image); // Only enables itself when running locally. On coprocessor, does nothing
+	}
+
+ private:
+	CJ::Application &_app;
+	CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
+
+	CJ::Camera _cam; // Camera instance
+	CJ::Output::Stream _streamer{8080}; // Create video output stream on port 8080
+}
+```
+
 
 9. Filtering & Thresholding Image
 

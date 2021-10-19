@@ -7,7 +7,7 @@
 #elif defined(__linux__)
 	#define CJ_PLATFORM_LINUX
 
-#elif defined (__APPLE__) || defined(__MACH__)
+#elif defined(__APPLE__) || defined(__MACH__)
 	#include <TargetConditionals.h>
 
 	#if TARGET_IPHONE_SIMULATOR == 1

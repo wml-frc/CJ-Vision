@@ -75,7 +75,7 @@ task generateFramework {
 build.dependsOn(preBuild)
 if (isFamily(FAMILY_WINDOWS) || project.hasProperty("azureBuild")) { // windows config
 	task runVision(dependsOn: "simulateCjVision${wpi.platforms.desktop.capitalize()}DebugExecutable")
-} else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) { // linux config
+} else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) { // unix config
 	clean.dependsOn(cleanUNIX)
 	build.finalizedBy(buildVisionUNIX) // finalize if linux/unix
 	runVisionUNIX.dependsOn(buildVisionUNIX) // run depends on build
