@@ -78,4 +78,4 @@ namespace CJ {
 		cv::createTrackbar("Binary Thresh High", windowName, &options.binaryThreshold_High, 255);
 		#endif
 	}
-};
+}
