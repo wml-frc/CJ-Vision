@@ -15,8 +15,16 @@ namespace CJ {
 	class Output {
 	 public:
 
+		/**
+		 * Video Stream class.
+		 * Outputs MJPEG stream to a port number
+		 */
 		class Stream {
 		 public:
+
+			/**
+			 * Create Stream on port number
+			 */
 			Stream(int port) {
 				#ifdef CJ_PLATFORM_LINUX
 				CJ_CORE_PRINT_INFO("Streamer Active");
@@ -32,24 +40,34 @@ namespace CJ {
 				_writer->stop();
 				#endif
 			}
-
+			
+			/**
+			 * Start stream thread
+			 */
 			void start() {
 				#ifdef CJ_PLATFORM_LINUX
 				_writer->start();
 				#endif
 			}
 
+			/**
+			 * Stop stream thread
+			 */
 			void stop() {
 				#ifdef CJ_PLATFORM_LINUX
 				_writer->stop();
 				#endif
 			}
 
+			/**
+			 * Output image to video stream
+			 */
 			void output(Image image) {
 				#ifdef CJ_PLATFORM_LINUX
 				_writer->write(image.data);
 				#endif
 			}
+
 		 private:
 			#ifdef CJ_PLATFORM_LINUX
 			std::shared_ptr<MJPEGWriter> _writer;
