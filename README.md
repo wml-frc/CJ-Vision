@@ -20,6 +20,8 @@
 
 - Socket networking (sends CV data through custom socket programming https://github.com/wml-frc/UDP_TransferNT)
 
+- Stream MJPEG Video to browser or MJPEG Viewer
+
 # Local Setup
 
 ## Installing
