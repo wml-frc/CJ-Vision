@@ -1,4 +1,4 @@
-# CJ-Vision
+# CJ-Vision: Menace to Society
 
 ## Layered computer vision platform with C++ UDP networking for data transfer and embedded tools for easy deployment to UNIX-based processors.
 
