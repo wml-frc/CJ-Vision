@@ -5,7 +5,8 @@ plugins {
 	id "groovy"
 }
 
-apply from: project.file("sharedGradle/mainBuilder.gradle")
+project.ext.set('projectRoot', ".")
+apply from: project.file("$projectRoot/sharedGradle/mainBuilder.gradle")
 
 wrapper {
 	gradleVersion = '6.8'

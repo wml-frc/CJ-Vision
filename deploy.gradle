@@ -1,7 +1,7 @@
-apply from: rootProject.file("locations.gradle")
+apply from: project.file("$projectRoot/locations.gradle")
 
 if (project.core_version == "legacy") {
-	apply from: rootProject.file("deploy_legacy.gradle")
+	apply from: project.file("deploy_legacy.gradle")
 } else {
 	deploy {
 		targets {

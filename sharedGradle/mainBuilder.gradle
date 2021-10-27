@@ -4,15 +4,15 @@ project.ext.set("framework_version", "2021.3.1") // main program version (minimu
 project.ext.set("core_version", "latest") // core version. [legacy/latest]. Default leave at latest
 
 def anna_lock = true // some people might try to regenerate the framework with their code still inside
-apply from: project.file("locations.gradle")
+apply from: project.file("$projectRoot/locations.gradle")
 project.ext.set("anna_lock", anna_lock)
 
 // Deploy code to device
-apply from: project.file("deploy.gradle")
+apply from: project.file("$projectRoot/deploy.gradle")
 
 // local building (Platform dependent)
-apply from: project.file("platforms/windows.gradle")
-apply from: project.file("platforms/unix_linux.gradle")
+apply from: project.file("$projectRoot/platforms/windows.gradle")
+apply from: project.file("$projectRoot/platforms/unix_linux.gradle")
 
 task preBuild {
 	doLast {
