@@ -1,0 +1,7 @@
+apply plugin: 'cpp'
+apply plugin: 'google-test-test-suite'
+apply plugin: 'edu.wpi.first.GradleRIO'
+apply plugin: 'groovy'
+
+project.ext.set('projectRoot', "..") // needs to be relative
+apply from: project.file("$projectRoot/sharedGradle/mainBuilder.gradle")

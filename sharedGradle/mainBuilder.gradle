@@ -1,0 +1,79 @@
+import static org.apache.tools.ant.taskdefs.condition.Os.*
+
+project.ext.set("framework_version", "2021.3.1") // main program version (minimum is 2020.3.2)
+project.ext.set("core_version", "latest") // core version. [legacy/latest]. Default leave at latest
+
+def anna_lock = true // some people might try to regenerate the framework with their code still inside
+apply from: project.file("$projectRoot/locations.gradle")
+project.ext.set("anna_lock", anna_lock)
+
+// Deploy code to device
+apply from: project.file("$projectRoot/deploy.gradle")
+
+// local building (Platform dependent)
+apply from: project.file("$projectRoot/platforms/windows.gradle")
+apply from: project.file("$projectRoot/platforms/unix_linux.gradle")
+
+task preBuild {
+	doLast {
+		if (!project.hasProperty("debugMode")) {
+			if (!file("$coproc_folder").isDirectory()) {
+				println("'Coproc' folder not found one level up from build.gradle. Generate using './gradlew generateFramework'")
+				ant.fail("`Coproc` folder not found")
+			}
+		}
+	}
+}
+
+// Generate coprocessor file using framework version
+task generateFramework {
+	doLast {
+		description "Generates framework for user. If the framework exists, it will override if forced to do so"
+
+		// Configure for args
+		def force = project.hasProperty("force") // force property
+
+		if (!file("framework/$project.framework_version").isDirectory()) {
+			ant.fail("[WARNING] <$project.framework_version> is not supported. Only supported frameworks are allowed")
+		}
+
+		// Generate framework
+		if (force) {
+			project.anna_lock = false
+		}
+
+		if (!file("../Coproc").isDirectory()) {
+			project.anna_lock = false
+		}
+
+		if (project.anna_lock) {
+			ant.fail("[WARNING 'ANNA_LOCK' ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
+		} else {
+			description "Generate `Coproc` folder with version framework and files"
+			println "Generating framework version <$project.framework_version>"
+			delete "../Coproc"
+			copy {
+				from "framework/$project.framework_version/"
+				into "../"
+			}
+		}
+	}
+}
+
+/** 
+ *
+ * task configuration
+ *
+ */
+// Run buldVision when user runs ./gradlew build
+build.dependsOn(preBuild)
+if (isFamily(FAMILY_WINDOWS) || project.hasProperty("azureBuild")) { // windows config
+	task runVision(dependsOn: "simulateCjVision${wpi.platforms.desktop.capitalize()}DebugExecutable")
+} else if (isFamily(FAMILY_UNIX) || isFamily(FAMILY_MAC)) { // unix config
+	clean.dependsOn(cleanUNIX)
+	build.finalizedBy(buildVisionUNIX) // finalize if linux/unix
+	runVisionUNIX.dependsOn(buildVisionUNIX) // run depends on build
+	task runVision(dependsOn: "runVisionUNIX")
+} else {
+	ant.fail("Unknown Platform detected")
+}

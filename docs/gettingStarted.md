@@ -9,7 +9,7 @@
 
 - This should build a framework next to the `CJ-Vision` directory with a small single layer example for outputting a webcam. If the build fails with `ANNA_LOCK` then the framework already exists, but can be overwritten with `./gradlew generateFramework -Pforce`
 
-- Note that you can change both the version of the frame work (2020.3.2/2021.3.1 etc...) and the version of the internal library (legacy or latest). By default it should use the latest of both these versions. However, can be changed in the `build.gradle`.
+- Note that you can change both the version of the frame work (2020.3.2/2021.3.1 etc...) and the version of the internal library (legacy or latest). By default it should use the latest of both these versions. However, can be changed in the `sharedGradle/mainBuilder.gradle`.
 
 - After you have completed this setup, the following is what your directory should look like. 
 
@@ -55,6 +55,56 @@ MainProject
 ```
 
 
+## Multi Project/Submodule addition
+- Note that CJ-Vision supports being inside of a multi gradle project (if you have the necessary gradle plugins)
+
+- To do so you will need to add the following to your root project `build.gradle` unless already existing
+```gradle
+plugins {
+	id "cpp"
+	id "edu.wpi.first.GradleRIO" version "2021.3.1"
+	id "google-test-test-suite"
+	id "groovy"
+}
+```
+
+- And in `settings.gradle` add the following to link up CJ-Vision to your main project
+```gradle
+// CJ-Vision
+include 'CJ-Vision'
+project(':CJ-Vision').projectDir = file('CJ-Vision/multiProject') // or where CJ-Vision is located
+```
+
+- Doing so will allow you to use all of CJ-Vision's tasks without needing to be inside of CJ-Vision's directory. (Useful for FRC teams who may want to deploy everything over to the robot using `./gradlew deploy`) instead of separately deploying robot code and vision code.
+
+- Optionally if your main project/ one of your sub projects also needs the UDP_TransferNT (listed below in detail) for communication between `device1` and CJ-Vision. Then you can also append your `build.gradle` to add the library. Assuming that CJ-Vision is added as a submodule.
+
+```gradle
+model {
+	components {
+		udpTransferNT(NativeLibrarySpec) {
+			targetPlatform wpi.platforms.roborio
+			sources {
+				cpp {
+					exportedHeaders {
+						srcDir rootProject.file('CJ-Vision/Core/common/libs/UDP_TransferNT/UDP_TransferNT/include')
+					}
+				}
+			}
+		}
+
+		frcUserProgram(...) {
+			//---
+			binaries.all {
+				lib library: 'udpTransferNT', linkage: 'shared' // can also be static
+			}
+			//---
+		}
+	}
+}
+```
+
+## General Structure
 1. Layout of Coproc
 
 - The Coproc directory is where you write code for your Coprocessor. This directory is linked to the `CJ-Vision` directory and can access the same headers.

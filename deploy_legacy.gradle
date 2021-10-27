@@ -1,4 +1,4 @@
-apply from: rootProject.file("locations.gradle")
+apply from: project.file("$projectRoot/locations.gradle")
 
 // Deploying
 deploy {

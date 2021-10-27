@@ -1,5 +1,5 @@
 import static org.apache.tools.ant.taskdefs.condition.Os.*
-apply from: rootProject.file("platforms/platform.gradle")
+apply from: project.file("$projectRoot/platforms/platform.gradle")
 
 model { // gradle compiler (used with windows and gradlerio only)
 	components {
