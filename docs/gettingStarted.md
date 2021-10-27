@@ -9,7 +9,7 @@
 
 - This should build a framework next to the `CJ-Vision` directory with a small single layer example for outputting a webcam. If the build fails with `ANNA_LOCK` then the framework already exists, but can be overwritten with `./gradlew generateFramework -Pforce`
 
-- Note that you can change both the version of the frame work (2020.3.2/2021.3.1 etc...) and the version of the internal library (legacy or latest). By default it should use the latest of both these versions. However, can be changed in the `build.gradle`.
+- Note that you can change both the version of the frame work (2020.3.2/2021.3.1 etc...) and the version of the internal library (legacy or latest). By default it should use the latest of both these versions. However, can be changed in the `sharedGradle/mainBuilder.gradle`.
 
 - After you have completed this setup, the following is what your directory should look like. 
 
