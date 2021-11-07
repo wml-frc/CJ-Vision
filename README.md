@@ -10,7 +10,7 @@
 
 - Common OpenCV wrapper functions
 
-- Allows local debugging with webcam
+- Local debugging with webcam
 
 - Your choice in coprocessor, RPI, Jetson, Tinker Board, etc...
 
