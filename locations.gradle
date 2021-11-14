@@ -27,6 +27,11 @@ project.ext.set("coproc_vision_src", ["$coproc_vision_main/cpp"])
 project.ext.set("coproc_vision_headers", ["$coproc_vision_main/include"])
 
 
+//
+// Framwork folders
+//
+project.ext.set("frameworkFolder", "$projectRoot/framework")
+
 
 //
 // Libs folders

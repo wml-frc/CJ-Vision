@@ -33,7 +33,7 @@ task generateFramework {
 		// Configure for args
 		def force = project.hasProperty("force") // force property
 
-		if (!file("framework/$project.framework_version").isDirectory()) {
+		if (!file("$frameworkFolder/$project.framework_version").isDirectory()) {
 			ant.fail("[WARNING] <$project.framework_version> is not supported. Only supported frameworks are allowed")
 		}
 
