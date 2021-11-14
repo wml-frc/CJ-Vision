@@ -5,7 +5,7 @@ plugins {
 	id "groovy"
 }
 
-project.ext.set('projectRoot', ".")
+project.ext.set('projectRoot', "$projectDir")
 apply from: project.file("$projectRoot/sharedGradle/mainBuilder.gradle")
 
 wrapper {

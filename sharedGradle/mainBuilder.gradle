@@ -42,7 +42,7 @@ task generateFramework {
 			project.anna_lock = false
 		}
 
-		if (!file("../Coproc").isDirectory()) {
+		if (!file("$coproc_folder").isDirectory()) {
 			project.anna_lock = false
 		}
 
@@ -50,11 +50,11 @@ task generateFramework {
 			ant.fail("[WARNING 'ANNA_LOCK' ACTIVE] Old coproc might still be present. Run with `./gradlew generateFramework -Pforce` if you're sure")
 		} else {
 			description "Generate `Coproc` folder with version framework and files"
-			println "Generating framework version <$project.framework_version>"
-			delete "../Coproc"
+			println "Generating framework version <$project.framework_version> into $coproc_folder"
+			delete "$coproc_folder"
 			copy {
-				from "framework/$project.framework_version/"
-				into "../"
+				from "$frameworkFolder/$project.framework_version/"
+				into "$projectRoot/../"
 			}
 		}
 	}
