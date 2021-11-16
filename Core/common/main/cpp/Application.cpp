@@ -58,7 +58,7 @@ namespace CJ {
 		auto start = high_resolution_clock::now();
 		auto stop = high_resolution_clock::now();
 		auto duration = duration_cast<milliseconds>(stop - start);
-		CJ_CORE_PRINT_WARN("Chrono DT enabled");
+		// CJ_CORE_PRINT_WARN("Chrono DT enabled");
 
 		while (_running) {
 			// Update timer and DT

@@ -2,3 +2,6 @@
 	path = Core/common/libs/UDP_TransferNT
 	url = https://github.com/wml-frc/UDP_TransferNT.git
 	branch = master
+[submodule "Core/common/libs/PropTop"]
+	path = Core/common/libs/PropTop
+	url = https://github.com/A-Loose-Screw/PropTop.git

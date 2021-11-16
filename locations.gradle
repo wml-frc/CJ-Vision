@@ -38,7 +38,12 @@ project.ext.set("frameworkFolder", "$projectRoot/framework")
 //
 if (isFamily(FAMILY_UNIX)) {
 	project.ext.set("libs_src", [
-		"$cj_vision_common_dir/libs/MJPEGWriter/main/cpp"
+		"$cj_vision_common_dir/libs/MJPEGWriter/main/cpp",
+		"$cj_vision_common_dir/libs/PropTop/lib/src/main/cpp"
+	])
+} else {
+	project.ext.set("libs_src", [
+		"$cj_vision_common_dir/libs/PropTop/lib/src/main/cpp"
 	])
 }
 
@@ -49,12 +54,14 @@ if (isFamily(FAMILY_UNIX)) {
 	project.ext.set("libs_headers", [
 		"$cj_vision_common_dir/libs/UDP_TransferNT/UDP_TransferNT/include",
 		"$cj_vision_common_dir/libs/spdlog/include",
-		"$cj_vision_common_dir/libs/MJPEGWriter/main/include"
+		"$cj_vision_common_dir/libs/MJPEGWriter/main/include",
+		"$cj_vision_common_dir/libs/PropTop/lib/src/main/public"
 	])
 } else {
 	project.ext.set("libs_headers", [
 		"$cj_vision_common_dir/libs/UDP_TransferNT/UDP_TransferNT/include",
-		"$cj_vision_common_dir/libs/spdlog/include"
+		"$cj_vision_common_dir/libs/spdlog/include",
+		"$cj_vision_common_dir/libs/PropTop/lib/src/main/public"
 	])
 }
 
