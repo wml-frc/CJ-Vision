@@ -1,3 +1,5 @@
+#include "common_headers.h"
+#ifdef CJ_PLATFORM_LINUX
 #ifndef MJPEG_WRITER_H
 #define MJPEG_WRITER_H
 
@@ -12,7 +14,6 @@
 #define TIMEOUT_M       200000
 #define NUM_CONNECTIONS 10
 
-#include "common_headers.h"
 #include "UDP_TransferNT.h"
 #include <sys/signal.h>
 #include <pthread.h>
@@ -173,4 +174,5 @@ private:
 		void ClientWrite(clientFrame &cf);
 };
 
+#endif
 #endif
