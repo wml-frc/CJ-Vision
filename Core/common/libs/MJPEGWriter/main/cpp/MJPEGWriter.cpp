@@ -1,4 +1,5 @@
 #include "MJPEGWriter.h"
+#ifdef CJ_PLATFORM_LINUX
 #include <fstream>
 void
 MJPEGWriter::Listener()
@@ -129,3 +130,4 @@ MJPEGWriter::ClientWrite(clientFrame & cf)
 		pthread_mutex_unlock(&mutex_client);
 		pthread_exit(NULL);
 }
+#endif
