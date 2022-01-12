@@ -1,13 +1,15 @@
 plugins {
-	id "cpp"
-	id "edu.wpi.first.GradleRIO" version "2021.3.1"
-	id "google-test-test-suite"
-	id "groovy"
+  id "cpp"
+  id "edu.wpi.first.GradleRIO" version "2022.1.1" apply false
+  id "edu.wpi.first.DeployUtils" version "2022.3.0" apply false
+  // id "jaci.gradle.EmbeddedTools" version "2020.12.23"
+  id "google-test-test-suite"
+  id "groovy"
 }
 
 project.ext.set('projectRoot', "$projectDir")
 apply from: project.file("$projectRoot/sharedGradle/mainBuilder.gradle")
 
 wrapper {
-	gradleVersion = '6.8'
+  gradleVersion = '7.1.1'
 }

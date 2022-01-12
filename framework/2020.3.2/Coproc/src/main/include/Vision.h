@@ -4,13 +4,13 @@
 #include "Core.h"
 
 class Vision {
- public:
+public:
 
-	// Initialization/setup
-	void Init();
+  // Initialization/setup
+  void Init();
 
-	// looping code/runtime
-	void Periodic();
+  // looping code/runtime
+  void Periodic();
 };
 
 #endif // VISION_H
