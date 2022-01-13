@@ -1,115 +1,116 @@
+// import edu.wpi.first.deployutils.deploy.target.location.SshDeployLocation
 apply from: project.file("$projectRoot/locations.gradle")
 apply plugin: "edu.wpi.first.DeployUtils"
+
 
 if (project.core_version == "legacy") {
   apply from: project.file("deploy_legacy.gradle")
 } else {
   deploy {
     targets {
-      target('coprocessor') {
+      coprocessor(getTargetTypeClass('RemoteTarget')) {
         directory = '/home/vision/'
         maxChannels = 1
         timeout = 3
         failOnMissing = true
 
         locations {
-          ssh {
+          ssh(SshDeployLocation) {
+
             address = "CJVision.local"
             user = 'vision'
             password = 'CJfrc'
             ipv6 = false
           }
         }
-      }
-    }
 
-    artifacts {
+        artifacts {
 
-      // Common properties
-      all {
-        targets << 'coprocessor'
-        dependsOn('build')
-        predeploy << {
-          if (project.hasProperty('purge')) {
-            execute('sudo rm -r *')
-            execute('echo 0000 | sudo tee /home/vision/team')
-          }
-        }
-      }
-
-
-
-      if (!project.hasProperty('purge')) {
-        // Deploy cj-vision src dir
-        fileTreeArtifact("cjVision_main") {
-          directory = "$device_cjVision_src/main"
-          files = fileTree(dir: "$cj_vision_dir/main")
-        }
-
-        // Deploy cj-vision src dir entry
-        fileTreeArtifact("cjVision_entry") {
-          directory = "$device_cjVision_src/entry"
-          files = fileTree(dir: "$cj_vision_dir/entry")
-        }
-
-        // Deploy cj-vision common dir
-        fileTreeArtifact("cjVision_common") {
-          directory = "$device_cjVision_common"
-          files = fileTree(dir: "$cj_vision_common_dir")
-        }
-
-        // Deploy User files
-        fileTreeArtifact("coproc_user_src") {
-          directory = "$device_coproc_src"
-          files = fileTree(dir: "$coproc_vision_main")
-        }
-
-        // Deploy User deploy
-        fileTreeArtifact("coproc_user_deploy") {
-          directory = "$device_coproc_deploy"
-          files = fileTree(dir: "$coproc_vision_deploy")
-        }
-
-
-
-
-        /**
-        * Makefile and resources (compiling and services)
-        */
-        // Deploy resources (compiles and starts up service)
-        fileTreeArtifact("vision_resources") {
-          files = fileTree(dir: "$cj_vision_dir/resources")
-          postdeploy << {
-            execute('sudo ln -sf $(pwd)/system/vision.service /etc/systemd/system')
-            execute('sudo systemctl daemon-reload; sudo systemctl enable vision')
+          // Common properties
+          all {
+            dependsOn('build')
+            predeploy << {
+              if (project.hasProperty('purge')) {
+                execute('sudo rm -r *')
+                execute('echo 0000 | sudo tee /home/vision/team')
+              }
+            }
           }
 
-          postdeploy << {
-            execute('sudo cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.old')
-            execute('sudo cp $(pwd)/system/sshd_config /etc/ssh/sshd_config')
-          }
-        }
+          if (!project.hasProperty('purge')) {
+            // Deploy cj-vision src dir
+            fileTreeArtifact("cjVision_main") {
+              directory = "$device_cjVision_src/main"
+              files = fileTree(dir: "$cj_vision_dir/main")
+            }
 
-        fileArtifact("makefile") {
-          directory = "$device_cjVision_src"
-          file = file("$cj_vision_dir/Makefile")
-          predeploy << {
-            execute('sudo systemctl stop vision || true')
-          }
+            // Deploy cj-vision src dir entry
+           fileTreeArtifact("cjVision_entry") {
+             directory = "$device_cjVision_src/entry"
+             files = fileTree(dir: "$cj_vision_dir/entry")
+           }
 
-          postdeploy << {
-            execute('make coproc=1 build/cjVision || false')
-            execute('chmod +x build/cjVision')
+            // Deploy cj-vision common dir
+            fileTreeArtifact("cjVision_common") {
+              directory = "$device_cjVision_common"
+              files = fileTree(dir: "$cj_vision_common_dir")
+            }
 
-            if (project.hasProperty('stop')) {
-              execute('sudo systemctl daemon-reload; sudo service vision stop; sudo service vision status')
-            } else {
-              execute('sudo systemctl daemon-reload; sudo service vision restart; sudo service vision status')
+            // Deploy User files
+            fileTreeArtifact("coproc_user_src") {
+              directory = "$device_coproc_src"
+              files = fileTree(dir: "$coproc_vision_main")
+            }
+
+            // Deploy User deploy
+            fileTreeArtifact("coproc_user_deploy") {
+              directory = "$device_coproc_deploy"
+              files = fileTree(dir: "$coproc_vision_deploy")
+            }
+
+
+
+
+            /**
+            * Makefile and resources (compiling and services)
+            */
+            // Deploy resources (compiles and starts up service)
+            fileTreeArtifact("vision_resources") {
+              files = fileTree(dir: "$cj_vision_dir/resources")
+              postdeploy << {
+                execute('sudo ln -sf $(pwd)/system/vision.service /etc/systemd/system')
+                execute('sudo systemctl daemon-reload; sudo systemctl enable vision')
+              }
+
+              postdeploy << {
+                execute('sudo cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.old')
+                execute('sudo cp $(pwd)/system/sshd_config /etc/ssh/sshd_config')
+              }
+            }
+
+            fileArtifact("makefile") {
+              directory = "$device_cjVision_src"
+              file = file("$cj_vision_dir/Makefile")
+              predeploy << {
+                execute('sudo systemctl stop vision || true')
+              }
+
+              postdeploy << {
+                execute('make coproc=1 build/cjVision || false')
+                execute('chmod +x build/cjVision')
+
+                if (project.hasProperty('stop')) {
+                  execute('sudo systemctl daemon-reload; sudo service vision stop; sudo service vision status')
+                } else {
+                  execute('sudo systemctl daemon-reload; sudo service vision restart; sudo service vision status')
+                }
+              }
             }
           }
         }
       }
     }
+
 
   }
 }
