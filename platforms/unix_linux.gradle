@@ -3,35 +3,35 @@ apply from: project.file("$projectRoot/platforms/platform.gradle")
 
 // Build using makefile
 task buildVisionUNIX {
-	description "Builds vision locally"
-	doLast {
-		exec {
-			workingDir "$cj_vision_dir"
+  description "Builds vision locally"
+  doLast {
+    exec {
+      workingDir "$cj_vision_dir"
 
-			println "$cj_vision_dir"
-			println "Building Vision Project..."
-			if (project.hasProperty("debugMode")) {
-				commandLine 'make', 'debug'
-			} else {
-				commandLine 'make'
-			}
-		}
-	}
+      println "$cj_vision_dir"
+      println "Building Vision Project..."
+      if (project.hasProperty("debugMode")) {
+        commandLine 'make', 'debug'
+      } else {
+        commandLine 'make'
+      }
+    }
+  }
 }
 
 task cleanUNIX {
-	description "Clean binary output directory"
-	doLast {
-		exec {
-			workingDir "$cj_vision_dir"
-			commandLine 'make', 'clean'
-		}
-	}
+  description "Clean binary output directory"
+  doLast {
+    exec {
+      workingDir "$cj_vision_dir"
+      commandLine 'make', 'clean'
+    }
+  }
 }
 
 // Run Vision locally
 task runVisionUNIX(type:Exec) {
-	description "Run Vision Locally with webcam to test"
-	workingDir "$cj_vision_dir/build"
-	commandLine './cjVision'
+  description "Run Vision Locally with webcam to test"
+  workingDir "$cj_vision_dir/build"
+  commandLine './cjVision'
 }

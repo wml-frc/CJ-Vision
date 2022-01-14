@@ -1,15 +1,31 @@
+// buildscript {
+//   repositories {
+//     mavenLocal()
+//   }
+//   dependencies {
+//     classpath "edu.wpi.first:DeployUtils:2022.3.0"
+//   }
+// }
+
 plugins {
   id "cpp"
   id "edu.wpi.first.GradleRIO" version "2022.1.1" apply false
-  id "edu.wpi.first.DeployUtils" version "2022.3.0" apply false
-  // id "jaci.gradle.EmbeddedTools" version "2020.12.23"
+  id "edu.wpi.first.DeployUtils" version "2022.3.0"
+  // id "jaci.gradle.EmbeddedTools" version "2020.12.23" apply false
   id "google-test-test-suite"
   id "groovy"
 }
+
+import  edu.wpi.first.deployutils.deploy.target.location.SshDeployLocation;
+
+// WPI Didn't Export a helper function to obtain SshDeployLocationd, and importing in partials doesn't work.
+// So we have to do a little hack here to make sure it's available to the deploy file. It sucks, but it's the
+// best shim we have at the moment. -Jaci
+project.ext.set("SshDeployLocation", SshDeployLocation)
 
 project.ext.set('projectRoot', "$projectDir")
 apply from: project.file("$projectRoot/sharedGradle/mainBuilder.gradle")
 
 wrapper {
-  gradleVersion = '7.1.1'
+  gradleVersion = '7.3.3'
 }

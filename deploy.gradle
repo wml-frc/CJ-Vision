@@ -1,7 +1,7 @@
-// import edu.wpi.first.deployutils.deploy.target.location.SshDeployLocation
-apply from: project.file("$projectRoot/locations.gradle")
 apply plugin: "edu.wpi.first.DeployUtils"
+apply from: project.file("$projectRoot/locations.gradle")
 
+// import edu.wpi.first.deployutils.deploy.target.location.DeployLocation;
 
 if (project.core_version == "legacy") {
   apply from: project.file("deploy_legacy.gradle")
@@ -15,8 +15,7 @@ if (project.core_version == "legacy") {
         failOnMissing = true
 
         locations {
-          ssh(SshDeployLocation) {
-
+          ssh(project.ext.SshDeployLocation) {
             address = "CJVision.local"
             user = 'vision'
             password = 'CJfrc'
@@ -25,7 +24,6 @@ if (project.core_version == "legacy") {
         }
 
         artifacts {
-
           // Common properties
           all {
             dependsOn('build')
