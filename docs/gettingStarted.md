@@ -125,7 +125,7 @@ model {
 
 3. Application & Layering System
 
-- The project is devised around two main concepts, a single application with access to internal programs like loggers, networking and common properties. Along with processing layers. Filtering layers, bounding layers, networking layers etc.... Which run, one by one in a loop with onAttach, onUpdate and onDetach.
+- The project is devised around two main concepts, a single application with access to internal programs like loggers, networking and common properties. Along with processing layers, filtering layers, bounding layers, networking layers etc.... Which run, one by one in a loop with onAttach, onUpdate and onDetach.
 
 - There can only be one application class for a single project. Multiple will result in a build fail.
 
@@ -283,7 +283,7 @@ CJ_CORE_ASSERT(i > 5); // If false, will log the error and line number to the co
 
 - You can also disable the asserts via defining `#define CJ_DISABLE_ASSERTS` before including `CJ_Vision.h`
 
-7. Images & Camera's
+7. Images & Cameras
 
 - OpenCV is utilised in this project as the main method for vision processing. A few methods and structures have been wrapped around to make the process of tracking objects easier. But raw OpenCV code is also available to the user.
 
@@ -353,7 +353,7 @@ class CameraLayer : public CJ::Layer {
 
 8. Output
 
-- Outputting images is generally only for the debugging stage as there are usually no screens on a coprocessor. The exception to this is using the output stream. Which will set up a MJPEG stream on a serperate thread from the main program.
+- Outputting images is generally only for the debugging stage as there are usually no screens on a coprocessor. The exception to this is using the output stream. Which will set up a MJPEG stream on a separate thread from the main program.
 
 - The output/display structure is a static templated verdict function with two required parameters. But expandable to as many parameters (images to output) as needed. In OpenCV a waitkey is required for the processing to be completed for the image and to output it properly. This slows down the program, but is only needed when debugging or when you want to output an image.
 
@@ -398,9 +398,9 @@ class CameraLayer : public CJ::Layer {
 
 - On the coprocessor the display method is disabled and using it will do nothing. It won't have a waitkey either. It's done in this way to avoid crashing the coprocessor that cannot display a video.
 
-- If you wish to display a video stream then you can utilise the `Stream` class inside of `Output`. This will setup a video stream on a seprate thread and write an MJPEG video to a certain port number, e.g `8080`. Note that legal ports in frc are `5800:5810`.
+- If you wish to display a video stream then you can utilise the `Stream` class inside of `Output`. This will setup a video stream on a separate thread and write an MJPEG video to a certain port number, e.g `8080`. Note that legal ports in frc are `5800:5810`.
 
-- The streamer class has 3 non-static methods along with the Constructor/Decondtructor.
+- The streamer class has 3 non-static methods along with the Constructor/Deconstructor.
 ```cpp
 /**
  * Create Stream on port number
@@ -606,7 +606,7 @@ static void cannyTrack(Image &input, Image &output, int threshold);
 
 /**
  * Detect contours (Stores inside Image)
- * Disable draw is false by deault. Speed up prograb by setting true
+ * Disable draw is false by deault. Speed up program by setting true
  */
 static void detectContours(Image &input, Image &output, bool disableDraw = false);
 
@@ -645,7 +645,7 @@ class ContoursLayer : public CJ::Layer {
 	}
 
 	void onUpdate() override {
-		CJ::Contours::detectContours(_inputImg, _outputImg); // disable fraw is false. (it will draw the contours onto the output image and we can display it later)
+		CJ::Contours::detectContours(_inputImg, _outputImg); // disable draw is false. (it will draw the contours onto the output image and we can display it later)
 	}
 
  private:
@@ -692,7 +692,7 @@ static BoundingPoints drawBoundingBox(Image &input, Image &output, bool disableD
 ```cpp
 class BoundingLayer : public CJ::Layer {
  public:
-	ContoursLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Bounding Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
+	BoundingLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Bounding Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
 		CJ_PRINT_INFO("Bounding Layer Created");
 	}
 
@@ -718,7 +718,7 @@ class BoundingLayer : public CJ::Layer {
 	CJ::Image &_inputImg;
 	CJ::Image _contourImg;
 	CJ::Image &_outputImg;
-
+        //CJ::Harry-Was-Here
 	CJ::BoundingPoints object_xy;
 };
 ```
