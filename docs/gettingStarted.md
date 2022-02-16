@@ -17,16 +17,16 @@
 Coproc
 |
 |___src
-	|
-	|___deploy
-	|
-	|___main
-		|
-		|___cpp
-		|	Vision.cpp
-		|
-		|___include
-			Vision.h
+  |
+  |___deploy
+  |
+  |___main
+    |
+    |___cpp
+    |	Vision.cpp
+    |
+    |___include
+      Vision.h
 CJ-Vision
 |
 |___...
@@ -50,8 +50,8 @@ MainProject
 |			|___include
 |				Vision.h
 |___CJ-Vision
-	|
-	|___...
+  |
+  |___...
 ```
 
 
@@ -61,10 +61,10 @@ MainProject
 - To do so you will need to add the following to your root project `build.gradle` unless already existing
 ```gradle
 plugins {
-	id "cpp"
-	id "edu.wpi.first.GradleRIO" version "2021.3.1"
-	id "google-test-test-suite"
-	id "groovy"
+  id "cpp"
+  id "edu.wpi.first.GradleRIO" version "2021.3.1"
+  id "google-test-test-suite"
+  id "groovy"
 }
 ```
 
@@ -81,26 +81,26 @@ project(':CJ-Vision').projectDir = file('CJ-Vision/multiProject') // or where CJ
 
 ```gradle
 model {
-	components {
-		udpTransferNT(NativeLibrarySpec) {
-			targetPlatform wpi.platforms.roborio
-			sources {
-				cpp {
-					exportedHeaders {
-						srcDir rootProject.file('CJ-Vision/Core/common/libs/UDP_TransferNT/UDP_TransferNT/include')
-					}
-				}
-			}
-		}
+  components {
+    udpTransferNT(NativeLibrarySpec) {
+      targetPlatform wpi.platforms.roborio
+      sources {
+        cpp {
+          exportedHeaders {
+            srcDir rootProject.file('CJ-Vision/Core/common/libs/UDP_TransferNT/UDP_TransferNT/include')
+          }
+        }
+      }
+    }
 
-		frcUserProgram(...) {
-			//---
-			binaries.all {
-				lib library: 'udpTransferNT', linkage: 'shared' // can also be static
-			}
-			//---
-		}
-	}
+    frcUserProgram(...) {
+      //---
+      binaries.all {
+        lib library: 'udpTransferNT', linkage: 'shared' // can also be static
+      }
+      //---
+    }
+  }
 }
 ```
 
@@ -133,15 +133,15 @@ model {
 
 ```cpp
 class ExampleVisionApplication : public CJ::Application {
- public:
-	ExampleVisionApplication() : CJ::Application("Example App") {
-		CJ_PRINT_INFO("Example App created");
-		pushLayer(new ExampleLayer(get()));
-	}
+public:
+  ExampleVisionApplication() : CJ::Application("Example App") {
+    CJ_PRINT_INFO("Example App created");
+    pushLayer(new ExampleLayer(get()));
+  }
 
-	~ExampleVisionApplication() {
-		CJ_PRINT_WARN("Test App Destroyed");
-	}
+  ~ExampleVisionApplication() {
+    CJ_PRINT_WARN("Test App Destroyed");
+  }
 };
 
 CJ_CREATE_APPLICATION(ExampleVisionApplication)
@@ -156,26 +156,26 @@ CJ_CREATE_APPLICATION(ExampleVisionApplication)
 - The strucure for a layer is seen as follows
 ```cpp
 class ExampleLayer : public CJ::Layer {
- public:
-	ExampleLayer(CJ::Application &app) : Layer("Example Layer"), _app(app) {
-		CJ_PRINT_INFO("Example Layer Created");
-	}
+public:
+  ExampleLayer(CJ::Application &app) : Layer("Example Layer"), _app(app) {
+    CJ_PRINT_INFO("Example Layer Created");
+  }
 
-	void onAttach() override {
-		CJ_PRINT_INFO("Example Layer Attached");
-	}
+  void onAttach() override {
+    CJ_PRINT_INFO("Example Layer Attached");
+  }
 
-	void onDetach() override {
-		CJ_PRINT_WARN("Example Layer Detached");
-	}
+  void onDetach() override {
+    CJ_PRINT_WARN("Example Layer Detached");
+  }
 
-	void onUpdate() override {
-		CJ_PRINT_INFO("Example Layer update");
-		_app.setRunning(false); // Sets app to no longer running. Stops the program after one cycle.
-	}
+  void onUpdate() override {
+    CJ_PRINT_INFO("Example Layer update");
+    _app.setRunning(false); // Sets app to no longer running. Stops the program after one cycle.
+  }
 
- private:
-	CJ::Application &_app;
+private:
+  CJ::Application &_app;
 };
 ```
 
@@ -186,24 +186,24 @@ class ExampleLayer : public CJ::Layer {
 ```cpp
 /**
  * Statically get application
- */
+  */
 static Application &get();
 
 /**
  * setter for application & layers
- */
+  */
 void setRunning(bool status);
 void setLayersRunning(bool status);
 
 /**
  * getter for application and layers
- */
+  */
 bool getRunning();
 bool getLayersRunning();
 
 /**
  * Get App name
- */
+  */
 std::string getName();
 ```
 
@@ -211,23 +211,23 @@ std::string getName();
 ```cpp
 /**
  * Push layer onto stack (places it after the last layer pushed)
- */
+  */
 void pushLayer(Layer *layer);
 
 /**
  * Push overlay onto stack (places overlay at the end of the stack after all layers)
- * Overlays are always after layers. And are placed acordingly
- */
+  * Overlays are always after layers. And are placed acordingly
+  */
 void pushOverlay(Layer *overlay);
 
 /**
  * Delete a layer (shuffles stack afterwards)
- */
+  */
 void popLayer(Layer *layer);
 
 /**
  * Delete overlay (shuffles stack afterwards)
- */
+  */
 void popOverlay(Layer *overlay);
 ```
 
@@ -299,17 +299,17 @@ CJ_CORE_ASSERT(i > 5); // If false, will log the error and line number to the co
 
 ```cpp
 struct Config {
-	int port = 0;
-	int apiID = cv::CAP_ANY;
-	int fps = 30;
-	int resWidth = 640;
-	int resHeight = 480;
-	float exposure = 0.1;
-	bool autoExposure = true;
-	std::string name = "Cam";
+  int port = 0;
+  int apiID = cv::CAP_ANY;
+  int fps = 30;
+  int resWidth = 640;
+  int resHeight = 480;
+  float exposure = 0.1;
+  bool autoExposure = true;
+  std::string name = "Cam";
 
-	float cap_prop_autoExpose = 0.75; // default value to set camera for auto exposure ON
-	float cap_prop_manualExpose = 0.25; // default value to set camera for auto exposure OFF
+  float cap_prop_autoExpose = 0.75; // default value to set camera for auto exposure ON
+  float cap_prop_manualExpose = 0.25; // default value to set camera for auto exposure OFF
 };
 ```
 
@@ -319,35 +319,35 @@ struct Config {
 
 ```cpp
 class CameraLayer : public CJ::Layer {
- public:
-	CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
-		CJ_PRINT_INFO("Example Layer created");
-	}
+public:
+  CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
+    CJ_PRINT_INFO("Example Layer created");
+  }
 
-	void onAttach() override {
-		_image.name = "Input Image"; // Set name for image. (used mainly for debugging)
-		_cam.config.port = 0; // Port number (normally webcams are 0)
-		_cam.config.name = "Input Camera"; // Set name for camera
+  void onAttach() override {
+    _image.name = "Input Image"; // Set name for image. (used mainly for debugging)
+    _cam.config.port = 0; // Port number (normally webcams are 0)
+    _cam.config.name = "Input Camera"; // Set name for camera
 
-		if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
-			_app.setRunning(false);
-		}
-		CJ_PRINT_INFO("Camera Created");
-	}
+    if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
+      _app.setRunning(false);
+    }
+    CJ_PRINT_INFO("Camera Created");
+  }
 
-	void onDetach() override {
-		CJ_PRINT_WARN("Example Layer Detached");
-	}
+  void onDetach() override {
+    CJ_PRINT_WARN("Example Layer Detached");
+  }
 
-	void onUpdate() override {
-		_cam.capture(_image);
-	}
+  void onUpdate() override {
+    _cam.capture(_image);
+  }
 
- private:
-	CJ::Application &_app;
-	CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
+private:
+  CJ::Application &_app;
+  CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
 
-	CJ::Camera _cam; // Camera instance
+  CJ::Camera _cam; // Camera instance
 }
 ```
 
@@ -363,36 +363,36 @@ class CameraLayer : public CJ::Layer {
 
 ```cpp
 class CameraLayer : public CJ::Layer {
- public:
-	CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
-		CJ_PRINT_INFO("Example Layer created");
-	}
+public:
+  CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
+    CJ_PRINT_INFO("Example Layer created");
+  }
 
-	void onAttach() override {
-		_image.name = "Input Image"; // Set name for image. (used mainly for debugging)
-		_cam.config.port = 0; // Port number (normally webcams are 0)
-		_cam.config.name = "Input Camera"; // Set name for camera
+  void onAttach() override {
+    _image.name = "Input Image"; // Set name for image. (used mainly for debugging)
+    _cam.config.port = 0; // Port number (normally webcams are 0)
+    _cam.config.name = "Input Camera"; // Set name for camera
 
-		if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
-			_app.setRunning(false);
-		}
-		CJ_PRINT_INFO("Camera Created");
-	}
+    if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
+      _app.setRunning(false);
+    }
+    CJ_PRINT_INFO("Camera Created");
+  }
 
-	void onDetach() override {
-		CJ_PRINT_WARN("Example Layer Detached");
-	}
+  void onDetach() override {
+    CJ_PRINT_WARN("Example Layer Detached");
+  }
 
-	void onUpdate() override {
-		_cam.capture(_image);
-		CJ::Output::display(30, _image); // Can input more images. E.g display(30, image1, image2, ...)
-	}
+  void onUpdate() override {
+    _cam.capture(_image);
+    CJ::Output::display(30, _image); // Can input more images. E.g display(30, image1, image2, ...)
+  }
 
- private:
-	CJ::Application &_app;
-	CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
+private:
+  CJ::Application &_app;
+  CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
 
-	CJ::Camera _cam; // Camera instance
+  CJ::Camera _cam; // Camera instance
 }
 ```
 
@@ -403,28 +403,28 @@ class CameraLayer : public CJ::Layer {
 - The streamer class has 3 non-static methods along with the Constructor/Deconstructor.
 ```cpp
 /**
- * Create Stream on port number
- */
+  * Create Stream on port number
+  */
 Stream(int port);
 
 /**
- * Stops threads, releases socket and deconstructs video stream
- */
+  * Stops threads, releases socket and deconstructs video stream
+  */
 ~Stream();
 
 /**
- * Start stream thread
- */
+  * Start stream thread
+  */
 void start();
 
 /**
- * Stop stream thread
- */
+  * Stop stream thread
+  */
 void stop();
 
 /**
- * Output image to video stream
- */
+  * Output image to video stream
+  */
 void output(Image image);
 ```
 
@@ -436,41 +436,41 @@ void output(Image image);
 
 ```cpp
 class CameraLayer : public CJ::Layer {
- public:
-	CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
-		CJ_PRINT_INFO("Example Layer created");
-	}
+public:
+  CameraLayer(CJ::Application &app, CJ::Image &image) : Layer("Camera Layer"), _app(app), _image(image) {
+    CJ_PRINT_INFO("Example Layer created");
+  }
 
-	void onAttach() override {
-		_image.name = "Input Image"; // Set name for image. (used mainly for debugging)
-		_cam.config.port = 0; // Port number (normally webcams are 0)
-		_cam.config.name = "Input Camera"; // Set name for camera
+  void onAttach() override {
+    _image.name = "Input Image"; // Set name for image. (used mainly for debugging)
+    _cam.config.port = 0; // Port number (normally webcams are 0)
+    _cam.config.name = "Input Camera"; // Set name for camera
 
-		if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
-			_app.setRunning(false);
-		}
-		CJ_PRINT_INFO("Camera Created");
+    if (_cam.init() != 0) { // Initialize the camera. And stop the program if it fails.
+      _app.setRunning(false);
+    }
+    CJ_PRINT_INFO("Camera Created");
 
-		_streamer.start();
-		CJ_PRINT_INFO("Created Streaming Thread");
-	}
+    _streamer.start();
+    CJ_PRINT_INFO("Created Streaming Thread");
+  }
 
-	void onDetach() override {
-		CJ_PRINT_WARN("Example Layer Detached");
-	}
+  void onDetach() override {
+    CJ_PRINT_WARN("Example Layer Detached");
+  }
 
-	void onUpdate() override {
-		_cam.capture(_image);
-		_streamer.output(_image); // Only enables itself on linux platforms. Does nothing otherwise
-		CJ::Output::display(30, _image); // Only enables itself when running locally. On coprocessor, does nothing
-	}
+  void onUpdate() override {
+    _cam.capture(_image);
+    _streamer.output(_image); // Only enables itself on linux platforms. Does nothing otherwise
+    CJ::Output::display(30, _image); // Only enables itself when running locally. On coprocessor, does nothing
+  }
 
- private:
-	CJ::Application &_app;
-	CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
+private:
+  CJ::Application &_app;
+  CJ::Image &_image; // Input image reference. Getting image from outside of camera layer so it can be used externally
 
-	CJ::Camera _cam; // Camera instance
-	CJ::Output::Stream _streamer{8080}; // Create video output stream on port 8080
+  CJ::Camera _cam; // Camera instance
+  CJ::Output::Stream _streamer{8080}; // Create video output stream on port 8080
 }
 ```
 
@@ -484,23 +484,23 @@ class CameraLayer : public CJ::Layer {
 - There are four main static methods inside the `ColourFilter` class. Seen below
 ```cpp
 /**
- * Filter using hsv
- */
+  * Filter using hsv
+  */
 static void filter(Image &input, Image &output, HSV_Options options);
 
 /**
- * (Adds live trackbar for development)
- */
+  * (Adds live trackbar for development)
+  */
 static void createFilterTrackbar(HSV_Options &options);
 
 /**
- * Filter using gray scale
- */
+  * Filter using gray scale
+  */
 static void filter(Image &input, Image &output, GrayScale_Options options);
 
 /**
- * (Adds live trackbar for development)
- */
+  * (Adds live trackbar for development)
+  */
 static void createFilterTrackbar(GrayScale_Options &options);
 ```
 
@@ -512,80 +512,80 @@ static void createFilterTrackbar(GrayScale_Options &options);
 
 ```cpp
 /**
- * HSV Options
- */
+  * HSV Options
+  */
 struct HSV_Options {
-	int HL = 0,		// hue low
-			HH = 255,	// hue high
-			SL = 0,		// sat low
-			SH = 255,	// sat high
-			VL = 0,		// value low
-			VH = 255;	// value high
+  int HL = 0,		// hue low
+      HH = 255,	// hue high
+      SL = 0,		// sat low
+      SH = 255,	// sat high
+      VL = 0,		// value low
+      VH = 255;	// value high
 
-	int erosionSize = 0;
-	int dilationSize = 0;
-	int blur = 0;
-	int binaryThreshold_Low = 0;
-	int binaryThreshold_High = 0;
+  int erosionSize = 0;
+  int dilationSize = 0;
+  int blur = 0;
+  int binaryThreshold_Low = 0;
+  int binaryThreshold_High = 0;
 };
 ```
 
 - And the grayscale version is the same but without the HSV spectrum.
 ```cpp
 /**
- * Gray Scale Options
- */
+  * Gray Scale Options
+  */
 struct GrayScale_Options {
-	int erosionSize = 0;
-	int dilationSize = 0;
-	int blur = 0;
-	int binaryThreshold_Low = 0;
-	int binaryThreshold_High = 0;
+  int erosionSize = 0;
+  int dilationSize = 0;
+  int blur = 0;
+  int binaryThreshold_Low = 0;
+  int binaryThreshold_High = 0;
 };
 ```
 
 - You can also modify the values inside of options live with the `createFilterTrackbar(Options options)` method. 
 
 - An example of filtering for a green colour with a trackbar for tuning can be seen below.
-	- Note that this is a new layer, and the camera image is done in a serparate layer. Along with the `display` of the output image also done in a serparate layer after the filter layer has executed `onUpdate()`.
+  - Note that this is a new layer, and the camera image is done in a serparate layer. Along with the `display` of the output image also done in a serparate layer after the filter layer has executed `onUpdate()`.
 
 ```cpp
 class FilterLayer : public CJ::Layer {
- public:
-	FilterLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Filter Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
-		CJ_PRINT_INFO("Filter Layer Created");
-	}
+public:
+  FilterLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Filter Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
+    CJ_PRINT_INFO("Filter Layer Created");
+  }
 
-	void onAttach() override {
-		CJ_PRINT_INFO("Filter Layer Attached");
-		_outputImg.name = "Filtered Image";
+  void onAttach() override {
+    CJ_PRINT_INFO("Filter Layer Attached");
+    _outputImg.name = "Filtered Image";
 
-		options.HL = 50;   // hue low
-		options.HH = 70;   // hue high
+    options.HL = 50;   // hue low
+    options.HH = 70;   // hue high
 
-		options.SL = 0;    // sat low
-		options.SH = 255;  // sat high
+    options.SL = 0;    // sat low
+    options.SH = 255;  // sat high
 
-		options.VL = 0;    // value low
-		options.VH = 255;  // value high
+    options.VL = 0;    // value low
+    options.VH = 255;  // value high
 
-		CJ::ColourFilter::createFilterTrackbar(options); // allows live edit of options
-	}
+    CJ::ColourFilter::createFilterTrackbar(options); // allows live edit of options
+  }
 
-	void onDetach() override {
-		CJ_PRINT_WARN("Filter Layer Detached");
-	}
+  void onDetach() override {
+    CJ_PRINT_WARN("Filter Layer Detached");
+  }
 
-	void onUpdate() override {
-		CJ::ColourFilter::filter(_inputImg, _outputImg, options); // filter image every update
-	}
+  void onUpdate() override {
+    CJ::ColourFilter::filter(_inputImg, _outputImg, options); // filter image every update
+  }
 
- private:
-	CJ::Application &_app;
-	CJ::Image &_inputImg;
-	CJ::Image &_outputImg;
+private:
+  CJ::Application &_app;
+  CJ::Image &_inputImg;
+  CJ::Image &_outputImg;
 
-	CJ::ColourFilter::HSV_Options options;
+  CJ::ColourFilter::HSV_Options options;
 };
 ```
 
@@ -600,19 +600,19 @@ class FilterLayer : public CJ::Layer {
 - The methods are as follows
 ```cpp
 /**
- * Detect Edges using canny algorithm
- */
+  * Detect Edges using canny algorithm
+  */
 static void cannyTrack(Image &input, Image &output, int threshold);
 
 /**
- * Detect contours (Stores inside Image)
- * Disable draw is false by deault. Speed up program by setting true
- */
+  * Detect contours (Stores inside Image)
+  * Disable draw is false by deault. Speed up program by setting true
+  */
 static void detectContours(Image &input, Image &output, bool disableDraw = false);
 
 /**
- * Creates live trackbar for contours
- */
+  * Creates live trackbar for contours
+  */
 static void createContoursTrackbar(int &threshold);
 ```
 
@@ -630,28 +630,28 @@ static void createContoursTrackbar(int &threshold);
 
 ```cpp
 class ContoursLayer : public CJ::Layer {
- public:
-	ContoursLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Contours Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
-		CJ_PRINT_INFO("Contours Layer Created");
-	}
+public:
+  ContoursLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Contours Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
+    CJ_PRINT_INFO("Contours Layer Created");
+  }
 
-	void onAttach() override {
-		CJ_PRINT_INFO("Contours Layer Attached");
-		_outputImg.name = "Contour Image";
-	}
+  void onAttach() override {
+    CJ_PRINT_INFO("Contours Layer Attached");
+    _outputImg.name = "Contour Image";
+  }
 
-	void onDetach() override {
-		CJ_PRINT_WARN("Contours Layer Detached");
-	}
+  void onDetach() override {
+    CJ_PRINT_WARN("Contours Layer Detached");
+  }
 
-	void onUpdate() override {
-		CJ::Contours::detectContours(_inputImg, _outputImg); // disable draw is false. (it will draw the contours onto the output image and we can display it later)
-	}
+  void onUpdate() override {
+    CJ::Contours::detectContours(_inputImg, _outputImg); // disable draw is false. (it will draw the contours onto the output image and we can display it later)
+  }
 
- private:
-	CJ::Application &_app;
-	CJ::Image &_inputImg;
-	CJ::Image &_outputImg;
+private:
+  CJ::Application &_app;
+  CJ::Image &_inputImg;
+  CJ::Image &_outputImg;
 };
 ```
 
@@ -670,20 +670,20 @@ class ContoursLayer : public CJ::Layer {
 - The following is the available bounding points structure, and the drawing methods.
 ```cpp
 struct BoundingPoints {
-	double center_x = 0, center_y = 0;
+  double center_x = 0, center_y = 0;
 };
 
 /**
- * bind hull around contours (convex hull)
- * Use disable draw to stop drawing
- */
+  * bind hull around contours (convex hull)
+  * Use disable draw to stop drawing
+  */
 static void drawConvexHull(Image &input, Image &output, bool disableDraw = false);
 
 /**
- * Draw bounding box
- * Define size threshold to draw box around blob/hull
- * Use disable draw to stop drawing (only outputs bounding points)
- */
+  * Draw bounding box
+  * Define size threshold to draw box around blob/hull
+  * Use disable draw to stop drawing (only outputs bounding points)
+  */
 static BoundingPoints drawBoundingBox(Image &input, Image &output, bool disableDraw = false);
 ```
 
@@ -691,35 +691,34 @@ static BoundingPoints drawBoundingBox(Image &input, Image &output, bool disableD
 
 ```cpp
 class BoundingLayer : public CJ::Layer {
- public:
-	BoundingLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Bounding Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
-		CJ_PRINT_INFO("Bounding Layer Created");
-	}
+public:
+  BoundingLayer(CJ::Application &app, CJ::Image &inputImg, CJ::Image &outputImg) : Layer("Bounding Layer"), _app(app), _inputImg(inputimg), _outputImg(outputImg) {
+    CJ_PRINT_INFO("Bounding Layer Created");
+  }
 
-	void onAttach() override {
-		CJ_PRINT_INFO("Bounding Layer Attached");
-		_outputImg.name = "Bounding Image";
-	}
+  void onAttach() override {
+    CJ_PRINT_INFO("Bounding Layer Attached");
+    _outputImg.name = "Bounding Image";
+  }
 
-	void onDetach() override {
-		CJ_PRINT_WARN("Bounding Layer Detached");
-	}
+  void onDetach() override {
+    CJ_PRINT_WARN("Bounding Layer Detached");
+  }
 
-	void onUpdate() override {
-		CJ::Bound::drawConvexHull(_inputImg, _contourImg); // draw hull onto _contourImg
-		object_xy = CJ::Bound::drawBoundingBox(_contourImg, _outputImg); // draw bounding box and get center points
+  void onUpdate() override {
+    CJ::Bound::drawConvexHull(_inputImg, _contourImg); // draw hull onto _contourImg
+    object_xy = CJ::Bound::drawBoundingBox(_contourImg, _outputImg); // draw bounding box and get center points
 
-		// We can use these points and send them over the network. Or do something internally with them. For now, we will just output them to the console
-		CJ_PRINT_INFO("Points (x,y): " + std::to_string(object_xy.center_x) + "," + std::to_string(object_xy.center_y));
-	}
+    // We can use these points and send them over the network. Or do something internally with them. For now, we will just output them to the console
+    CJ_PRINT_INFO("Points (x,y): " + std::to_string(object_xy.center_x) + "," + std::to_string(object_xy.center_y));
+  }
 
- private:
-	CJ::Application &_app;
-	CJ::Image &_inputImg;
-	CJ::Image _contourImg;
-	CJ::Image &_outputImg;
-        //CJ::Harry-Was-Here
-	CJ::BoundingPoints object_xy;
+private:
+  CJ::Application &_app;
+  CJ::Image &_inputImg;
+  CJ::Image _contourImg;
+  CJ::Image &_outputImg;
+  CJ::BoundingPoints object_xy;
 };
 ```
 
