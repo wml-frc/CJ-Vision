@@ -15,16 +15,16 @@
 Coproc
 |
 |___src
-	|
-	|___deploy
-	|
-	|___main
-		|
-		|___cpp
-		|	Vision.cpp
-		|
-		|___include
-			Vision.h
+  |
+  |___deploy
+  |
+  |___main
+    |
+    |___cpp
+    |	Vision.cpp
+    |
+    |___include
+      Vision.h
 CJ-Vision
 |
 |___...
@@ -48,8 +48,8 @@ MainProject
 |			|___include
 |				Vision.h
 |___CJ-Vision
-	|
-	|___...
+  |
+  |___...
 ```
 
 This is the required directory structure when building your vision program. (deploy is optional) The names need to be correct as well for the vision lib to detect and compile it. Place your c/cpp files inside the `cpp` dir, and place your headers inside `include`. The program searches for and builds Vision.cpp/.h, this will be your entry for the program.
@@ -59,11 +59,11 @@ This is the required directory structure when building your vision program. (dep
 #include "Vision.h"
 
 void Vision::Init() {
-	// Logic here will run once (Initialization)
+  // Logic here will run once (Initialization)
 }
 
 void Vision::Periodic() {
-	// Logic here will run periodicly (Looping)
+  // Logic here will run periodicly (Looping)
 }
 ```
 
@@ -74,12 +74,12 @@ void Vision::Periodic() {
 #include "Core.h"
 
 class Vision {
- public:
-	// Initialization
-	void Init();
+public:
+  // Initialization
+  void Init();
 
-	// Periodic Looping
-	void Periodic();
+  // Periodic Looping
+  void Periodic();
 };
 
 #endif // VISION_H
@@ -105,30 +105,30 @@ CJ::Camera::Cam cam;
 CJ::Image inputImage;
 
 void Vision::Init() {
-	CJ::Core::init();
+  CJ::Core::init();
 
-	/**
-	 * Config is a struct. So you can use both cam.config = {640, 480, ...} or cam.config.ResWidth = 640; cam.config.ResHeight = 480; ... 
-	 */
+  /**
+   * Config is a struct. So you can use both cam.config = {640, 480, ...} or cam.config.ResWidth = 640; cam.config.ResHeight = 480; ... 
+    */
 
-	// Defaults
-	cam.config = {
-		640, // Resolution Width
-		480, // Resolution Height
-		0, // Camera Port
-		"Vision Camera", // Camera Name
-		false, // Auto Exposure (overides manual below)
-		50, // Manual exposure (different between cameras)
-		60 // Target FPS
-	};
+  // Defaults
+  cam.config = {
+    640, // Resolution Width
+    480, // Resolution Height
+    0, // Camera Port
+    "Vision Camera", // Camera Name
+    false, // Auto Exposure (overides manual below)
+    50, // Manual exposure (different between cameras)
+    60 // Target FPS
+  };
 
-	inputImage.name = "Input from Camera";
+  inputImage.name = "Input from Camera";
 
-	CJ::Core::setupVision(&inputImage, &cam);
+  CJ::Core::setupVision(&inputImage, &cam);
 }
 
 void Vision::Periodic() {
-	CJ::Output::Display(&inputImage);
+  CJ::Output::Display(&inputImage);
 }
 ```
 

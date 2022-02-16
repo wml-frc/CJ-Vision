@@ -17,9 +17,9 @@ named `ssh` this will allow headless ssh into the Coprocessor. May apply for oth
 - On windows (depending on the version) you can do the same in cmd, or you can download [puTTY](https://the.earth.li/~sgtatham/putty/latest/w64/putty-64bit-0.74-installer.msi)
 
 - Tinkerboard:
-	- Hostname: `tinkerboard`, Username: `linaro`, Password: `linaro`
+  - Hostname: `tinkerboard`, Username: `linaro`, Password: `linaro`
 - Pi:
-	- Hostname: `raspberrypi`, Username: `pi`, Password: `raspberry`
+  - Hostname: `raspberrypi`, Username: `pi`, Password: `raspberry`
 
 - The above and below assumes you are on the same Local Network as the Coprocessor with internet access.
 
