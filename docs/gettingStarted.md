@@ -297,6 +297,9 @@ CJ_CORE_ASSERT(i > 5); // If false, will log the error and line number to the co
 
 - The config structure has default values but can be overridden. The structure is seen below
 
+- Note that `useAbsoluteExposure` will use a shell script to set the exposure value. (Best used for exotic linux environemnts cameras and environments).
+  - e.g [`v4l2-ctl --set-ctrl=exposure_auto=1 --set-ctrl=exposure_absolute=${exposureValue}`]
+
 ```cpp
 struct Config {
   int port = 0;
@@ -304,12 +307,13 @@ struct Config {
   int fps = 30;
   int resWidth = 640;
   int resHeight = 480;
-  float exposure = 0.1;
   bool autoExposure = true;
+  bool useAbsoluteExposure = false; // overrides auto exposure (uses linux scripts)
+  float exposure = 0.1f;
   std::string name = "Cam";
 
-  float cap_prop_autoExpose = 0.75; // default value to set camera for auto exposure ON
-  float cap_prop_manualExpose = 0.25; // default value to set camera for auto exposure OFF
+  float cap_prop_autoExpose = 0.75f; // default value to set camera for auto exposure ON
+  float cap_prop_manualExpose = 0.25f; // default value to set camera for auto exposure OFF
 };
 ```
 
