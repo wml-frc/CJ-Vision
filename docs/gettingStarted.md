@@ -1,7 +1,7 @@
 # Getting Started with the platform
 
 ## Project setup:
-- CJ-Vision uses a directory structure where the user program built is serparated from the platform compiler and library. Compared to other, more traditional methods where your project is inside the platform directory.
+- CJ-Vision uses a directory structure where the user program built is separated from the platform compiler and library. Compared to other, more traditional methods where your project is inside the platform directory.
 
 - The project uses gradle as it's main front end for compiling, debugging, running and deploying the code.
 
