@@ -31,7 +31,8 @@ class CaptureLayer : public CJ::Layer {
 		CJ_PRINT_INFO("Capture Layer Attached");
 		_camera.config.port = 0;
 		_camera.config.fps = 60;
-		_camera.config.autoExposure = true;
+    _camera.config.useAbsoluteExposure = true;
+		// _camera.config.autoExposure = true;
 
 		_camera.config.name = "Cam";
 		_origin.name = "Origin Image";
